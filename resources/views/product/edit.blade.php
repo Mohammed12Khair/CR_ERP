@@ -281,7 +281,7 @@
           $product_custom_field4 = !empty($custom_labels['product']['custom_field_4']) ? $custom_labels['product']['custom_field_4'] : __('lang_v1.product_custom_field4');
         @endphp
         <!--custom fields-->
-        <div class="col-sm-3">
+        <!-- <div class="col-sm-3">
           <div class="form-group">
             {!! Form::label('product_custom_field1',  $product_custom_field1 . ':') !!}
             {!! Form::text('product_custom_field1', $product->product_custom_field1, ['class' => 'form-control', 'placeholder' => $product_custom_field1]); !!}
@@ -307,7 +307,7 @@
             {!! Form::label('product_custom_field4',  $product_custom_field4 . ':') !!}
             {!! Form::text('product_custom_field4', $product->product_custom_field4, ['class' => 'form-control', 'placeholder' => $product_custom_field4]); !!}
           </div>
-        </div>
+        </div> -->
         <!--custom fields-->
         @include('layouts.partials.module_form_part')
         </div>

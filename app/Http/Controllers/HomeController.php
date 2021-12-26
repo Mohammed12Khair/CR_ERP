@@ -224,9 +224,6 @@ class HomeController extends Controller
         }
         $sells_chart_4->labels($Data_labe_);
         $sells_chart_4->dataset(__('home.product_sell'), 'bar',  $Data_labe_v);
-
-        // Customer data End
-
         //Get Dashboard widgets from module
         $module_widgets = $this->moduleUtil->getModuleData('dashboard_widget');
 

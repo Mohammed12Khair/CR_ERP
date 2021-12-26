@@ -259,7 +259,7 @@
         @endphp
         <!--custom fields-->
         <div class="clearfix"></div>
-        <div class="col-sm-3">
+        <!-- <div class="col-sm-3">
           <div class="form-group">
             {!! Form::label('product_custom_field1',  $product_custom_field1 . ':') !!}
             {!! Form::text('product_custom_field1', !empty($duplicate_product->product_custom_field1) ? $duplicate_product->product_custom_field1 : null, ['class' => 'form-control', 'placeholder' => $product_custom_field1]); !!}
@@ -285,7 +285,7 @@
             {!! Form::label('product_custom_field4',  $product_custom_field4 . ':') !!}
             {!! Form::text('product_custom_field4', !empty($duplicate_product->product_custom_field4) ? $duplicate_product->product_custom_field4 : null, ['class' => 'form-control', 'placeholder' => $product_custom_field4]); !!}
           </div>
-        </div>
+        </div> -->
         <!--custom fields-->
         <div class="clearfix"></div>
         @include('layouts.partials.module_form_part')
