@@ -28,7 +28,7 @@
                             <th>@lang( 'tax_rate.name' )</th>
                             <th>@lang( 'lang_v1.description' )</th>
                             <th>@lang( 'lang_v1.packing_charge' )</th>
-                            <th>@lang( 'messages.action' )</th>
+                            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         </tr>
                     </thead>
                 </table>

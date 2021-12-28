@@ -40,7 +40,7 @@
                         <th>@lang( 'invoice.invoice_scheme' )</th>
                         <th>@lang('lang_v1.invoice_layout_for_pos')</th>
                         <th>@lang('lang_v1.invoice_layout_for_sale')</th>
-                        <th>@lang( 'messages.action' )</th>
+                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                     </tr>
                 </thead>
             </table>

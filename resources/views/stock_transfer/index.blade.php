@@ -30,7 +30,7 @@
                         <th>@lang('lang_v1.shipping_charges')</th>
                         <th>@lang('stock_adjustment.total_amount')</th>
                         <th>@lang('purchase.additional_notes')</th>
-                        <th>@lang('messages.action')</th>
+                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                     </tr>
                 </thead>
             </table>

@@ -56,7 +56,7 @@
                         <th>@lang('sale.location')</th>
                         <th>@lang('lang_v1.total_items')</th>
                         <th>@lang('lang_v1.added_by')</th>
-                        <th>@lang('messages.action')</th>
+                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                     </tr>
                 </thead>
             </table>

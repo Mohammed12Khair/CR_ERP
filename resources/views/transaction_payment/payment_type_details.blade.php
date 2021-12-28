@@ -64,6 +64,9 @@
 <div class="payment_details_div @if( $payment_line->method !== 'custom_pay_1' ) {{ 'hide' }} @endif" data-type="custom_pay_1" >
 	<div class="col-md-12">
 		<div class="form-group">
+			edit
+			
+		
 			{!! Form::label("transaction_no_1", __('lang_v1.transaction_no')) !!}
 			{!! Form::text("transaction_no_1", $payment_line->transaction_no, ['class' => 'form-control', 'placeholder' => __('lang_v1.transaction_no')]); !!}
 		</div>

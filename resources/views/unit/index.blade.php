@@ -35,7 +35,7 @@
                             <th>@lang( 'unit.name' )</th>
                             <th>@lang( 'unit.short_name' )</th>
                             <th>@lang( 'unit.allow_decimal' ) @show_tooltip(__('tooltip.unit_allow_decimal'))</th>
-                            <th>@lang( 'messages.action' )</th>
+                            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         </tr>
                     </thead>
                 </table>

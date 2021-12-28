@@ -11,7 +11,7 @@
                 <th>@lang('lang_v1.generated_invoices')</th>
                 <th>@lang('lang_v1.last_generated')</th>
                 <th>@lang('lang_v1.upcoming_invoice')</th>
-				<th>@lang('messages.action')</th>
+				<th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
 			</tr>
 		</thead>
 	</table>

@@ -46,7 +46,7 @@
                                     <th>@lang( 'invoice.start_number' ) @show_tooltip(__('tooltip.invoice_scheme_start_number'))</th>
                                     <th>@lang( 'invoice.invoice_count' ) @show_tooltip(__('tooltip.invoice_scheme_count'))</th>
                                     <th>@lang( 'invoice.total_digits' ) @show_tooltip(__('tooltip.invoice_scheme_total_digits'))</th>
-                                    <th>@lang( 'messages.action' )</th>
+                                    <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                                 </tr>
                             </thead>
                         </table>

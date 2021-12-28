@@ -30,7 +30,7 @@
                         <tr>
                             <th>@lang( 'tax_rate.name' )</th>
                             <th>@lang( 'tax_rate.rate' )</th>
-                            <th>@lang( 'messages.action' )</th>
+                            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         </tr>
                     </thead>
                 </table>
@@ -60,7 +60,7 @@
                             <th>@lang( 'tax_rate.name' )</th>
                             <th>@lang( 'tax_rate.rate' )</th>
                             <th>@lang( 'tax_rate.sub_taxes' )</th>
-                            <th>@lang( 'messages.action' )</th>
+                            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         </tr>
                     </thead>
                 </table>

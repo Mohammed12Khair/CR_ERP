@@ -52,7 +52,7 @@
                                 <th>@lang('account.invoice_ref_no')</th>
                                 <th>@lang('lang_v1.payment_type')</th>
                                 <th>@lang('account.account')</th>
-                                <th>@lang('messages.action')</th>
+                                <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                             </tr>
                         </thead>
                     </table>

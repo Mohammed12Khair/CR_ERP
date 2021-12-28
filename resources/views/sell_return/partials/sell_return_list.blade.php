@@ -10,7 +10,7 @@
                 <th>@lang('purchase.payment_status')</th>
                 <th>@lang('sale.total_amount')</th>
                 <th>@lang('purchase.payment_due')</th>
-                <th>@lang('messages.action')</th>
+                <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
             </tr>
         </thead>
         <tfoot>

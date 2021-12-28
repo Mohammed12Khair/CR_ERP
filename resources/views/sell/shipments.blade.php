@@ -71,7 +71,8 @@
                 <table class="table table-bordered table-striped ajax_view" id="sell_table" style="width: 100%;" >
                     <thead>
                         <tr>
-                            <th>@lang('messages.action')</th>
+                            <!-- <th>@lang('messages.action')</th> -->
+                            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                             <th>@lang('messages.date')</th>
                             <th>@lang('sale.invoice_no')</th>
                             <th>@lang('sale.customer_name')</th>

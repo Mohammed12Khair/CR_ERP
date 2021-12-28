@@ -85,7 +85,7 @@
                                 <th>@lang('lang_v1.customer_group')</th>
                                 <th>@lang('lang_v1.payment_method')</th>
                                 <th>@lang('sale.sale')</th>
-                                <th>@lang('messages.action')</th>
+                                <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                             </tr>
                         </thead>
                         <tfoot>

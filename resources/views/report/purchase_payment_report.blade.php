@@ -62,7 +62,7 @@
                                 <th>@lang('purchase.supplier')</th>
                                 <th>@lang('lang_v1.payment_method')</th>
                                 <th>@lang('lang_v1.purchase')</th>
-                                <th>@lang('messages.action')</th>
+                                <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                             </tr>
                         </thead>
                         <tfoot>

@@ -37,7 +37,7 @@
             				<th>@lang( 'restaurant.modifier_sets' )</th>
                             <th>@lang( 'restaurant.modifiers' )</th>
                             <th>@lang( 'restaurant.products' )</th>
-            				<th>@lang( 'messages.action' )</th>
+            				<th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
             			</tr>
             		</thead>
             	</table>

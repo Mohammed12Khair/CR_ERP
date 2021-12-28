@@ -26,7 +26,7 @@
                     <th>@lang( 'lang_v1.name' )</th>
                     <th>@lang( 'lang_v1.description' )</th>
                     <th>@lang( 'lang_v1.duration' )</th>
-                    <th>@lang( 'messages.action' )</th>
+                    <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                 </tr>
             </thead>
         </table>

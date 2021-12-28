@@ -41,7 +41,7 @@
                             <th>@lang( 'product.category' )</th>
                             <th>@lang( 'report.products' )</th>
                             <th>@lang( 'sale.location' )</th>
-                            <th>@lang( 'messages.action' )</th>
+                            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
             			</tr>
             		</thead>
                     <tfoot>

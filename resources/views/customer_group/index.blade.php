@@ -33,7 +33,8 @@
                             <th>@lang( 'lang_v1.customer_group_name' )</th>
                             <th>@lang( 'lang_v1.calculation_percentage' )</th>
                             <th>@lang( 'lang_v1.selling_price_group' )</th>
-                            <th>@lang( 'messages.action' )</th>
+                            <!-- <th>@lang( 'messages.action' )</th> -->
+                            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         </tr>
                     </thead>
                 </table>

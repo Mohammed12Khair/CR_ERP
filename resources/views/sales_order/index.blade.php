@@ -59,7 +59,7 @@
             <table class="table table-bordered table-striped ajax_view" id="sell_table">
                 <thead>
                     <tr>
-                        <th>@lang('messages.action')</th>
+                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         <th>@lang('messages.date')</th>
                         <th>@lang('restaurant.order_no')</th>
                         <th>@lang('sale.customer_name')</th>

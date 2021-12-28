@@ -196,7 +196,7 @@
             <th>@lang( 'contact.customer' )</th>
             <th>@lang( 'sale.invoice_no' )</th>
             <th>@lang( 'home.due_amount' )</th>
-            <th>@lang( 'messages.action' )</th>
+            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
           </tr>
         </thead>
       </table>
@@ -218,7 +218,7 @@
             <th>@lang( 'purchase.supplier' )</th>
             <th>@lang( 'purchase.ref_no' )</th>
             <th>@lang( 'home.due_amount' )</th>
-            <th>@lang( 'messages.action' )</th>
+            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
           </tr>
         </thead>
       </table>
@@ -286,7 +286,7 @@
         <table class="table table-bordered table-striped ajax_view" id="sales_order_table">
           <thead>
             <tr>
-              <th>@lang('messages.action')</th>
+              <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
               <th>@lang('messages.date')</th>
               <th>@lang('restaurant.order_no')</th>
               <th>@lang('sale.customer_name')</th>
@@ -318,7 +318,7 @@
         <table class="table table-bordered table-striped ajax_view" id="purchase_order_table" style="width: 100%;">
           <thead>
             <tr>
-              <th>@lang('messages.action')</th>
+              <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
               <th>@lang('messages.date')</th>
               <th>@lang('purchase.ref_no')</th>
               <th>@lang('purchase.location')</th>
@@ -347,7 +347,7 @@
     <table class="table table-bordered table-striped ajax_view" id="shipments_table">
       <thead>
         <tr>
-          <th>@lang('messages.action')</th>
+          <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
           <th>@lang('messages.date')</th>
           <th>@lang('sale.invoice_no')</th>
           <th>@lang('sale.customer_name')</th>

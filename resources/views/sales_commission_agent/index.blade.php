@@ -30,14 +30,14 @@
                             <th>@lang( 'lang_v1.contact_no' )</th>
                             <th>@lang( 'business.address' )</th>
                             <th>@lang( 'lang_v1.cmmsn_percent' )</th>
-                            <th>@lang( 'messages.action' )</th>
+                            <!-- <th>@lang( 'messages.action' )</th> -->
+                            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         </tr>
                     </thead>
                 </table>
             </div>
         @endcan
     @endcomponent
-
     <div class="modal fade commission_agent_modal" tabindex="-1" role="dialog" 
     	aria-labelledby="gridSystemModalLabel">
     </div>

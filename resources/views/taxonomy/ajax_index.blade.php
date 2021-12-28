@@ -19,7 +19,7 @@
                         <th>{{ $module_category_data['taxonomy_code_label'] ?? __( 'category.code' )}}</th>
                     @endif
                     <th>@lang( 'lang_v1.description' )</th>
-                    <th>@lang( 'messages.action' )</th>
+                    <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                 </tr>
             </thead>
         </table>

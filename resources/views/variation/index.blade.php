@@ -31,7 +31,7 @@
                     <tr>
                         <th>@lang('product.variations')</th>
                         <th>@lang('lang_v1.values')</th>
-                        <th>@lang('messages.action')</th>
+                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                     </tr>
                 </thead>
             </table>

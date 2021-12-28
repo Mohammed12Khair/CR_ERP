@@ -37,7 +37,7 @@
             				<th>@lang( 'restaurant.table' )</th>
                             <th>@lang( 'purchase.business_location' )</th>
             				<th>@lang( 'restaurant.description' )</th>
-            				<th>@lang( 'messages.action' )</th>
+            				<th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
             			</tr>
             		</thead>
             	</table>

@@ -27,7 +27,7 @@
                     <tr>
                         <th>@lang( 'expense.category_name' )</th>
                         <th>@lang( 'expense.category_code' )</th>
-                        <th>@lang( 'messages.action' )</th>
+                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                     </tr>
                 </thead>
             </table>

@@ -36,9 +36,13 @@ $whitelist = ['127.0.0.1', '::1'];
             background-image: url("{{ asset('img/kg_clean.png') }}");
             background-size: contain;
             background-repeat: no-repeat;
-            background-position: left;
-            background-color: #EDEDF4;
-            border-radius: 10px;
+            <?php
+            if (config('app.locale') == 'ar') {
+                echo  "background-position: left;";
+            } else {
+                echo  "background-position: right;";
+            }
+            ?>border-radius: 10px;
         }
 
         .modal-content {

@@ -81,7 +81,7 @@
             <table class="table table-bordered table-striped" id="contact_table">
                 <thead>
                     <tr>
-                        <th>@lang('messages.action')</th>
+                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         <th>@lang('lang_v1.contact_id')</th>
                         @if($type == 'supplier') 
                             <th>@lang('business.business_name')</th>

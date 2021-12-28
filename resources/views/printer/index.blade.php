@@ -34,7 +34,7 @@
                         <th>@lang('printer.ip_address')</th>
                         <th>@lang('printer.port')</th>
                         <th>@lang('printer.path')</th>
-                        <th>@lang('messages.action')</th>
+                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                     </tr>
                 </thead>
             </table>

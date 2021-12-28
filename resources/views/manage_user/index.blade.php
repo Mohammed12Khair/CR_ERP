@@ -35,7 +35,8 @@
                             <th>@lang( 'user.name' )</th>
                             <th>@lang( 'user.role' )</th>
                             <th>@lang( 'business.email' )</th>
-                            <th>@lang( 'messages.action' )</th>
+                            <!-- <th>@lang( 'messages.action' )</th> -->
+                            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         </tr>
                     </thead>
                 </table>
