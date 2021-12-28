@@ -30,17 +30,63 @@ $whitelist = ['127.0.0.1', '::1'];
 
 
     <style>
-        .box-header,.modal-header {
+        .box-header,
+        .modal-header {
             /* background-image: url("{{ asset('img/logo.gif') }}"); */
-            background-image: url("{{ asset('img/kg.png') }}");
+            background-image: url("{{ asset('img/kg_clean.png') }}");
             background-size: contain;
             background-repeat: no-repeat;
-            background-position: center;
+            background-position: left;
             background-color: #EDEDF4;
             border-radius: 10px;
         }
-        .modal-content{
+
+        .modal-content {
             border-radius: 10px !important;
+        }
+
+        .main-sidebar {
+            background-color: red !important;
+            border: 1px dotted #232C33 !important;
+        }
+
+        .main-header {
+            border-bottom: 1px dotted #232C33 !important;
+        }
+
+        .box-primary,
+        .box-warning,
+        .box-solid {
+            border-top: 0px !important;
+            border-bottom: 3px solid #F9DC5C !important;
+        }
+
+        .TopNavCustom,
+        .navbar {
+            background-color: #449DD1 !important;
+        }
+
+        th {
+            background-color: #F9DC5C !important;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .dropdown-menu {
+            border: 4px solid #F9DC5C;
+            border-radius: 10px !important;
+        }
+
+        th:hover {
+            background-color: #449DD1 !important;
+            color: #EDEDF4;
+            border-radius: 10px;
+            text-align: center;
+            transition: .4s;
+        }
+
+        .btn-info {
+            background-color: #449DD1;
         }
     </style>
 

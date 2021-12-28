@@ -10,7 +10,7 @@ return [
     | The following language lines are used during common CRUD operations.
     |
     */
-
+    "wellcome_msg" => "Kaizen Accounting System",
     'add' => 'Add',
     'edit' => 'Edit',
     'save' => 'Save',

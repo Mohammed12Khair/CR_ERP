@@ -1,4 +1,4 @@
-<table class="table table-bordered table-striped" id="stock_report_table">
+<table class="table table-bordered table-striped" id="stock_report_table" style="width: 100%;">
     <thead>
         <tr>
             <th>SKU</th>

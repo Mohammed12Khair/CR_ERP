@@ -7,7 +7,7 @@
         <tr>
             <th><input type="checkbox" id="select-all-row" data-table-id="product_table"></th>
             <th>&nbsp;</th>
-            <th>@lang('messages.action')</th>
+            <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
             <th>@lang('sale.product')</th>
             <th>@lang('purchase.business_location') @show_tooltip(__('lang_v1.product_business_location_tooltip'))</th>
             @can('view_purchase_price')

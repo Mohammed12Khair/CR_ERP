@@ -12,9 +12,9 @@
 </style>
 
 <!-- Content Header (Page header) -->
-<section class="content-header content-header-custom">
-  <h1>{{ __('home.welcome_message', ['name' => Session::get('user.first_name')]) }}
-  </h1>
+<section class="content-header content-header-custom" style="text-align: center;margin-bottom:14px;">
+  <h1>@lang('messages.wellcome_msg')</h1>
+  
 </section>
 <!-- Main content -->
 
