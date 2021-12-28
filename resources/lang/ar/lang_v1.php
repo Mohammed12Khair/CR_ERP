@@ -1,5 +1,7 @@
 <?php
 return [
+    "cheque_list" => "قائمة الشيكات",
+    "payment_accounts_cheque" => "الشيكات",
     "cheque_date" => "تاريخ استحقاق الشيك",
     "expense_addpayment" => "أضافه دفعات في المنصرفات",
     "expense_showpayments" => "‘عرض المدفوعات",

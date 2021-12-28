@@ -20,7 +20,6 @@ class AdminSidebarMenu
         if ($request->ajax()) {
             return $next($request);
         }
-
         Menu::create('admin-sidebar-menu', function ($menu) {
             $enabled_modules = !empty(session('business.enabled_modules')) ? session('business.enabled_modules') : [];
 
@@ -455,6 +454,42 @@ class AdminSidebarMenu
                             __('account.payment_account_report'),
                             ['icon' => 'fa fas fa-file-alt', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'payment-account-report']
                         );
+                    },
+                    ['icon' => 'fa fas fa-money-check-alt']
+                )->order(50);
+            }
+
+
+             //Accounts dropdown
+             if (auth()->user()->can('account.access') && in_array('account', $enabled_modules)) {
+                $menu->dropdown(
+                    __('lang_v1.payment_accounts_cheque'),
+                    function ($sub) {
+                        $sub->url(
+                            action('bankcheques@index'),
+                            __('lang_v1.cheque_list'),
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
+                        );
+                        // $sub->url(
+                        //     action('AccountReportsController@balanceSheet'),
+                        //     __('account.balance_sheet'),
+                        //     ['icon' => 'fa fas fa-book', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'balance-sheet']
+                        // );
+                        // $sub->url(
+                        //     action('AccountReportsController@trialBalance'),
+                        //     __('account.trial_balance'),
+                        //     ['icon' => 'fa fas fa-balance-scale', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'trial-balance']
+                        // );
+                        // $sub->url(
+                        //     action('AccountController@cashFlow'),
+                        //     __('lang_v1.cash_flow'),
+                        //     ['icon' => 'fa fas fa-exchange-alt', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'cash-flow']
+                        // );
+                        // $sub->url(
+                        //     action('AccountReportsController@paymentAccountReport'),
+                        //     __('account.payment_account_report'),
+                        //     ['icon' => 'fa fas fa-file-alt', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'payment-account-report']
+                        // );
                     },
                     ['icon' => 'fa fas fa-money-check-alt']
                 )->order(50);
