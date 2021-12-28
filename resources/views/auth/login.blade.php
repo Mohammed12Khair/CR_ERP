@@ -8,7 +8,6 @@
         border-radius: 15px;
         border-bottom: 10px solid #F9DC5C !important;
         background-color: white;
-
     }
 </style>
 <div class="login-form col-md-12 col-xs-12 right-col-content box_test" id="box_test" style="border: 1px solid re;">

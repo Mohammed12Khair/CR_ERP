@@ -1,5 +1,6 @@
 <?php
 return [
+    "cheque_date" => "تاريخ استحقاق الشيك",
     "expense_addpayment" => "أضافه دفعات في المنصرفات",
     "expense_showpayments" => "‘عرض المدفوعات",
     "enable_editing_product_from_purchase" => "تمكين تعديل سعر المنتج من شاشة الشراء",
@@ -90,7 +91,7 @@ return [
 "success" => "نجاح",
 "edit_customer_group" => "تعديل مجموعة العملاء",
 "customer_groups_report" => "تقرير مجموعات العملاء",
-"none" => "لا احد",
+"none" => "الرجاء الاختيار",
 "enable_imei_or_sr_no" => "تفعيل IMEI أو الرقم التسلسلي",
 "tooltip_sr_no" => "تمكين أو تعطيل إضافة IMEI للمنتج أو الرقم التسلسلي عند إضافة المنتجات إلى شاشة نقطة البيع",
 "description" => "الوصف",

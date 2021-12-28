@@ -45,11 +45,27 @@
 	</div>
 	<div class="clearfix"></div>
 </div>
+
+<!-- Edit -->
 <div class="payment_details_div @if( $payment_line['method'] !== 'cheque' ) {{ 'hide' }} @endif" data-type="cheque" >
-	<div class="col-md-12">
+	<!-- <div class="col-md-12">
 		<div class="form-group">
 			{!! Form::label("cheque_number_$row_index",__('lang_v1.cheque_no')) !!}
 			{!! Form::text("payment[$row_index][cheque_number]", $payment_line['cheque_number'], ['class' => 'form-control', 'placeholder' => __('lang_v1.cheque_no'), 'id' => "cheque_number_$row_index"]); !!}
+		</div>
+	</div> -->
+
+		<!-- edit Data -->
+		<div class="col-md-12">
+		<div class="form-group">
+			{!! Form::label("cheque_date_$row_index",__('lang_v1.cheque_date')) !!}
+			{!! Form::date("payment[$row_index][cheque_date]", $payment_line[cheque_date], ['class' => 'form-control', 'placeholder' => __('lang_v1.cheque_date'),'required']); !!}
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="form-group">
+			{!! Form::label("cheque_number_$row_index",__('lang_v1.cheque_no')) !!}
+			{!! Form::text("payment[$row_index][cheque_number]", $payment_line[cheque_number], ['class' => 'form-control', 'placeholder' => __('lang_v1.cheque_no'),'required']); !!}
 		</div>
 	</div>
 </div>

@@ -4,7 +4,7 @@
     {!! Form::open(['url' => action('TransactionPaymentController@store'), 'method' => 'post', 'id' => 'transaction_payment_add_form', 'files' => true ]) !!}
     {!! Form::hidden('transaction_id', $transaction->id); !!}
     @if(!empty($transaction->location))
-      {!! Form::hidden('default_payment_accounts', $transaction->location->default_payment_accounts, ['id' => 'default_payment_accounts']); !!}
+    {!! Form::hidden('default_payment_accounts', $transaction->location->default_payment_accounts, ['id' => 'default_payment_accounts']); !!}
     @endif
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -13,15 +13,15 @@
 
     <div class="modal-body">
       <div class="row">
-      @if(!empty($transaction->contact))
+        @if(!empty($transaction->contact))
         <div class="col-md-4">
           <div class="well">
             <strong>
-            @if(in_array($transaction->type, ['purchase', 'purchase_return']))
-              @lang('purchase.supplier') 
-            @elseif(in_array($transaction->type, ['sell', 'sell_return']))
-              @lang('contact.customer') 
-            @endif
+              @if(in_array($transaction->type, ['purchase', 'purchase_return']))
+              @lang('purchase.supplier')
+              @elseif(in_array($transaction->type, ['sell', 'sell_return']))
+              @lang('contact.customer')
+              @endif
             </strong>:{{ $transaction->contact->name }}<br>
             @if($transaction->type == 'purchase')
             <strong>@lang('business.business'): </strong>{{ $transaction->contact->supplier_business_name }}
@@ -31,15 +31,15 @@
         @endif
         <div class="col-md-4">
           <div class="well">
-          @if(in_array($transaction->type, ['sell', 'sell_return']))
+            @if(in_array($transaction->type, ['sell', 'sell_return']))
             <strong>@lang('sale.invoice_no'): </strong>{{ $transaction->invoice_no }}
-          @else
+            @else
             <strong>@lang('purchase.ref_no'): </strong>{{ $transaction->ref_no }}
-          @endif
-          @if(!empty($transaction->location))
+            @endif
+            @if(!empty($transaction->location))
             <br>
             <strong>@lang('purchase.location'): </strong>{{ $transaction->location->name }}
-          @endif
+            @endif
           </div>
         </div>
         <div class="col-md-4">
@@ -49,7 +49,7 @@
             @if(!empty($transaction->additional_notes))
             {{ $transaction->additional_notes }}
             @else
-              --
+            --
             @endif
           </div>
         </div>
@@ -57,9 +57,9 @@
       <div class="row">
         <div class="col-md-12">
           @if(!empty($transaction->contact))
-            <strong>@lang('lang_v1.advance_balance'):</strong> <span class="display_currency" data-currency_symbol="true">{{$transaction->contact->balance}}</span>
+          <strong>@lang('lang_v1.advance_balance'):</strong> <span class="display_currency" data-currency_symbol="true">{{$transaction->contact->balance}}</span>
 
-            {!! Form::hidden('advance_balance', $transaction->contact->balance, ['id' => 'advance_balance', 'data-error-msg' => __('lang_v1.required_advance_balance_not_available')]); !!}
+          {!! Form::hidden('advance_balance', $transaction->contact->balance, ['id' => 'advance_balance', 'data-error-msg' => __('lang_v1.required_advance_balance_not_available')]); !!}
           @endif
         </div>
       </div>
@@ -98,28 +98,28 @@
           </div>
         </div>
         @if(!empty($accounts))
-          <div class="col-md-6">
-            <div class="form-group">
-              {!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <i class="fas fa-money-bill-alt"></i>
-                </span>
-                {!! Form::select("account_id", $accounts, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;']); !!}
-              </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            {!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
+            <div class="input-group">
+              <span class="input-group-addon">
+                <i class="fas fa-money-bill-alt"></i>
+              </span>
+              {!! Form::select("account_id", $accounts, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
             </div>
           </div>
+        </div>
         @endif
         <div class="col-md-4">
           <div class="form-group">
             {!! Form::label('document', __('purchase.attach_document') . ':') !!}
             {!! Form::file('document', ['accept' => implode(',', array_keys(config('constants.document_upload_mimes_types')))]); !!}
             <p class="help-block">
-            @includeIf('components.document_help_text')</p>
+              @includeIf('components.document_help_text')</p>
           </div>
         </div>
         <div class="clearfix"></div>
-          @include('transaction_payment.payment_type_details')
+        @include('transaction_payment.payment_type_details')
         <div class="col-md-12">
           <div class="form-group">
             {!! Form::label("note", __('lang_v1.payment_note') . ':') !!}

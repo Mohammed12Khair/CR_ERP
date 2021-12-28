@@ -1,5 +1,6 @@
 <?php
 return [
+    "cheque_date" => "Cheque Date",
     "enable_editing_product_from_purchase" => 'Enable editing product price from purchase screen',
     'sales_commission_agent' => 'Sales Commission Agent',
     'sales_commission_agents' => 'Sales Commission Agents',
@@ -88,7 +89,7 @@ return [
     'success' => 'Success',
     'edit_customer_group' => 'Edit Customer Group',
     'customer_groups_report' => 'Customer Groups Report',
-    'none' => 'None',
+    'none' => 'Please Select',
     'enable_imei_or_sr_no' => 'Enable Product description, IMEI or Serial Number',
     'tooltip_sr_no' => 'Enable or disable adding product description, IMEI or Serial number while selling products in POS screen',
     'description' => 'Description',

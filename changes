@@ -1,0 +1,75 @@
+php artisan make:model bankcheques -c -m
+cheques
+
+Table contents
+ID
+Serial
+transaction_id
+open_amount
+transaction_type
+user_id
+created_at
+Updated_at
+
+php artisan make:model bankcheques_payment --migration
+
+php artisan make:model bankchequeAccounts --migration
+
+
+php artisan migrate:refresh --path=/database/migrations/2021_11_15_214145_create_bankcheques_table.php
+php artisan migrate:refresh --path=/database/migrations/2021_11_23_223407_create_bankchequespayments_table.php
+php artisan migrate:refresh --path=/database/migrations/2021_12_03_201824_create_bankcheque_accounts_table.php
+
+php artisan migrate:refresh --path=/database/migrations/2021_12_28_215221_create_bankcheques_payments_table.php
+
+{{ action('BankchequesController@addPayment') }}
+
+
+test
+asdasd
+
+Table
+select a.id,a.transaction_id,a.serial,a.open_amount,b.type,a.payment_id,a.created_at from bankcheques a,transactions b where b.id=a.transaction_id
+
+
+$results = DB::select( DB::raw("select a.id,a.transaction_id,a.serial,a.open_amount,b.type,a.payment_id,a.created_at from bankcheques a,transactions b where b.id=a.transaction_id") );
+
+__Nov 24
+1- نحفظ الشيك بقسمه صفر من البوب و عمليه الشراء و البيع
+2-ضافه العملاء و الموردين
+3-تقفيل الشيكات تسميع الدفعه الماليه
+
+__Nov 29
+4-اختيار انواع الحسابات للارتباط بالشيكات 
+مثال نوع حساب بنكي مع الحساسات تحت النوع بنكي bank
+
+5-عند اختيار الشيكات نقوم بفلترت الخزن علي حسب البنكيوه و علي حسب الخزن المصرح بها لليوزر
+
+6-تفصيل الشيكات صادره او وارده علي حسب نوع العمليه لو صادره نشيك رقم الشيك لو بعد عمليه بيع لايحتاج 
+
+7-تاريخ الاستحقات و لوق عند التعديل عليه
+
+__Nov30
+show_payments.blade.php
+to hide controls form any payment cheque or cheque payment related
+
+
+__Dec-05
+delete payment OK and tested
+add payment OK and tested
+editpayment NA
+
+delete main cheque ongoing
+edit main cheque ongoing
+
+
+
+
+___logic
+1-Save cheque in cheque tables.
+2-Save cheque payent amount as zero 
+3-create view based on business_id
+4-cheque payment linked  to other payments by main payment ID and and customer payment_ref_no column value
+!!!4-if normal payment comment is edit to cheque payment_ref_no the payment will consider as paid_amount to cheques.
+
+
