@@ -225,6 +225,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/payments/show-child-payments/{payment_id}', 'TransactionPaymentController@showChildPayments');
     Route::get('/payments/view-payment/{payment_id}', 'TransactionPaymentController@viewPayment');
     Route::get('/payments/add_payment/{transaction_id}', 'TransactionPaymentController@addPayment');
+    Route::get('/payments/add_payment_cheque/{transaction_id}/{payment_ref_data}', 'TransactionPaymentController@addPayment_cheque');
     Route::get('/payments/pay-contact-due/{contact_id}', 'TransactionPaymentController@getPayContactDue');
     Route::post('/payments/pay-contact-due', 'TransactionPaymentController@postPayContactDue');
     Route::resource('payments', 'TransactionPaymentController');
