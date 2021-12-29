@@ -18,6 +18,7 @@ class CreateAccountTypesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('parent_account_type_id')->nullable();
+            $table->tinyInteger('cheque')->default('0');
             $table->integer('business_id');
             $table->timestamps();
         });

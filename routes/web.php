@@ -154,10 +154,13 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/labels/add-product-row', 'LabelsController@addProductRow');
     Route::get('/labels/preview', 'LabelsController@preview');
 
-
-    // banck cheque controller 
+    // banck cheque controller Solved.
     Route::get('/cheques','bankcheques@index');
-
+    Route::get('/cheques/edit/{key}','bankcheques@EditPayment');
+    Route::get('/cheques/edit-cheque/{id}','bankcheques@EditCheque');
+    Route::get('/cheques/account','bankcheques@Accounts');
+    Route::post('/cheques/edit-cheque/save','bankcheques@EditChequeSave');
+   
     //Reports...
     Route::get('/reports/get-stock-by-sell-price', 'ReportController@getStockBySellingPrice');
     Route::get('/reports/purchase-report', 'ReportController@purchaseReport');
@@ -225,7 +228,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/payments/show-child-payments/{payment_id}', 'TransactionPaymentController@showChildPayments');
     Route::get('/payments/view-payment/{payment_id}', 'TransactionPaymentController@viewPayment');
     Route::get('/payments/add_payment/{transaction_id}', 'TransactionPaymentController@addPayment');
-    Route::get('/payments/add_payment_cheque/{transaction_id}/{payment_ref_data}', 'TransactionPaymentController@addPayment_cheque');
+    Route::get('/payments/add_payment_cheque/{transaction_id}/{payment_ref_data}/{open_amount}', 'TransactionPaymentController@addPayment_cheque');
     Route::get('/payments/pay-contact-due/{contact_id}', 'TransactionPaymentController@getPayContactDue');
     Route::post('/payments/pay-contact-due', 'TransactionPaymentController@postPayContactDue');
     Route::resource('payments', 'TransactionPaymentController');

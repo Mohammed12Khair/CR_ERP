@@ -1,6 +1,7 @@
 <?php 
  return [ 
 "units" => "الشيكات",
+"edit_payment" => "تفاصيل",
 "payment_id" => "رقم الدفعية",
 "transaction_id" => "رقم العملية",
 "cheque_number" => "رقم الشيك",

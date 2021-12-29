@@ -418,7 +418,7 @@ class TransactionPaymentController extends Controller
      * @param  int  $transaction_id
      * @return \Illuminate\Http\Response
      */
-    public function addPayment_cheque($transaction_id,$payment_ref_data)
+    public function addPayment_cheque($transaction_id,$payment_ref_data,$open_amount)
     {
         if (!auth()->user()->can('purchase.payments') && !auth()->user()->can('sell.payments') && !auth()->user()->can('all_expense.access') && !auth()->user()->can('view_own_expense')) {
             abort(403, 'Unauthorized action.');
@@ -450,7 +450,7 @@ class TransactionPaymentController extends Controller
                 $accounts = $this->moduleUtil->accountsDropdown($business_id, true, false, true);
 
                 $view = view('transaction_payment.payment_row_cheque')
-                    ->with(compact('transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts','payment_ref_data'))->render();
+                    ->with(compact('transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts','payment_ref_data','open_amount'))->render();
 
                 $output = [
                     'status' => 'due',

@@ -470,6 +470,11 @@ class AdminSidebarMenu
                             __('lang_v1.cheque_list'),
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
                         );
+                        $sub->url(
+                            action('bankcheques@Accounts'),
+                            __('lang_v1.cheque'),
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
+                        );
                         // $sub->url(
                         //     action('AccountReportsController@balanceSheet'),
                         //     __('account.balance_sheet'),

@@ -42,6 +42,7 @@
                     <th>@lang( 'cheque.amount' )</th>
                     <th>@lang( 'cheque.username' )</th>
                     <th>@lang( 'cheque.created_at' )</th>
+                    <th>#</th>
                     <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                 </tr>
             </thead>
@@ -110,6 +111,10 @@
             {
                 data: 'created_at',
                 name: 'created_at'
+            },
+            {
+                data: 'Status',
+                name: 'Status'
             },
             {
                 data: 'action',
