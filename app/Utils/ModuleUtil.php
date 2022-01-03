@@ -398,6 +398,18 @@ class ModuleUtil extends Util
         }
     }
 
+// cheques
+    public function accountsDropdown_cheque($business_id, $prepend_none = false, $closed = false, $show_balance = false)
+    {
+        $dropdown = [];
+
+        if ($this->isModuleEnabled('account')) {
+            $dropdown = Account::forDropdown_cheque($business_id, $prepend_none, $closed, $show_balance);
+        }
+
+        return $dropdown;
+    }
+
     public function accountsDropdown($business_id, $prepend_none = false, $closed = false, $show_balance = false)
     {
         $dropdown = [];

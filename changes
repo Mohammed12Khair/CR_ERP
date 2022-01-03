@@ -17,6 +17,11 @@ php artisan make:model bankchequeAccounts --migration
 
 
 php artisan migrate:refresh --path=/database/migrations/2021_11_15_214145_create_bankcheques_table.php
+
+
+php artisan migrate:refresh --path=/database/migrations/2019_10_18_155633_create_account_types_table.php
+
+
 php artisan migrate:refresh --path=/database/migrations/2021_11_23_223407_create_bankchequespayments_table.php
 php artisan migrate:refresh --path=/database/migrations/2021_12_03_201824_create_bankcheque_accounts_table.php
 

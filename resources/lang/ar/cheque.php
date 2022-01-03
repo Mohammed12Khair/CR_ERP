@@ -21,4 +21,7 @@
 "deleted_success" => "تم حذف الوحدة بنجاح",
 "add_unit" => "إضافة وحدة",
 "edit_unit" => "تعديل وحدة",
+"account_cheque" => "الحساب مرتبط بالشيكات",
+"account_cheque_yes" => "مرتبط",
+"account_cheque_no" => "غير مرتبط",
 ];

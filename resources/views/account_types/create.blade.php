@@ -1,5 +1,5 @@
 <div class="modal-dialog" role="document">
-  	<div class="modal-content">
+  <div class="modal-content">
 
     {!! Form::open(['url' => action('AccountTypeController@store'), 'method' => 'post', 'id' => 'account_type_form' ]) !!}
     <div class="modal-header">
@@ -8,14 +8,28 @@
     </div>
 
     <div class="modal-body">
-      	<div class="form-group">
-        	{!! Form::label('name', __( 'lang_v1.name' ) . ':*') !!}
-          	{!! Form::text('name', null, ['class' => 'form-control', 'required', 'placeholder' => __( 'lang_v1.name' )]); !!}
-      	</div>
+      <div class="form-group">
+        {!! Form::label('name', __( 'lang_v1.name' ) . ':*') !!}
+        {!! Form::text('name', null, ['class' => 'form-control', 'required', 'placeholder' => __( 'lang_v1.name' )]); !!}
+      </div>
 
       <div class="form-group">
-        	{!! Form::label('parent_account_type_id', __( 'lang_v1.parent_account_type' ) . ':') !!}
-          	{!! Form::select('parent_account_type_id', $account_types->pluck('name', 'id'), null, ['class' => 'form-control', 'placeholder' => __( 'messages.please_select' )]); !!}
+        {!! Form::label('parent_account_type_id', __( 'lang_v1.parent_account_type' ) . ':') !!}
+        {!! Form::select('parent_account_type_id', $account_types->pluck('name', 'id'), null, ['class' => 'form-control', 'placeholder' => __( 'messages.please_select' )]); !!}
+      </div>
+
+      <div class="form-group">
+        {!! Form::label('cheque', __( 'cheque.account_cheque' ) . ':*') !!}
+
+        <select class="form-control" name="cheque">
+          <option value="0" <?php if ($account_type->cheque == 0) {
+                              echo 'selected';
+                            } ?>>@lang( 'cheque.account_cheque_no' )</option>
+          <option value="1" <?php if ($account_type->cheque == 1) {
+                              echo 'selected';
+                            } ?>>@lang( 'cheque.account_cheque_yes' )</option>
+        </select>
+
       </div>
     </div>
 
@@ -26,5 +40,5 @@
 
     {!! Form::close() !!}
 
-  	</div><!-- /.modal-content -->
+  </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->

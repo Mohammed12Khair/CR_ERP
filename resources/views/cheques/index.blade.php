@@ -64,64 +64,7 @@
 
 @endsection
 @section('javascript')
-<script>  
-    // Start : CRUD for cheques 
-    //cheques table
-    var cheque_table = $('#cheque_table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '/cheques',
-        columnDefs: [{
-            // targets: 3,
-            orderable: false,
-            searchable: false,
-        }, ],
-        columns: [{
-                data: 'id',
-                name: 'id'
-            },
-            {
-                data: 'payment_id',
-                name: 'payment_id'
-            },
-            {
-                data: 'transaction_id',
-                name: 'transaction_id'
-            },
-            {
-                data: 'cheque_number',
-                name: 'cheque_number'
-            },
-            {
-                data: 'cheque_date',
-                name: 'cheque_date'
-            },
-            {
-                data: 'transaction_type',
-                name: 'transaction_type'
-            },
-            {
-                data: 'amount',
-                name: 'amount'
-            },
-            {
-                data: 'username',
-                name: 'username'
-            },
-            {
-                data: 'created_at',
-                name: 'created_at'
-            },
-            {
-                data: 'Status',
-                name: 'Status'
-            },
-            {
-                data: 'action',
-                name: 'action'
-            },
-        ],
-    });
-</script>
+<script src="{{ asset('js/cheque.js') }}"></script>
 <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
+
 @endsection

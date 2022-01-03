@@ -390,9 +390,7 @@ class TransactionPaymentController extends Controller
                     //Delete advance payment
                     TransactionPayment::deletePayment($payment);
                 }
-
                 DB::commit();
-
                 $output = [
                     'success' => true,
                     'msg' => __('purchase.payment_deleted_success')
@@ -447,7 +445,7 @@ class TransactionPaymentController extends Controller
                 $payment_line->paid_on = \Carbon::now()->toDateTimeString();
 
                 //Accounts
-                $accounts = $this->moduleUtil->accountsDropdown($business_id, true, false, true);
+                $accounts = $this->moduleUtil->accountsDropdown_cheque($business_id, true, false, true);
 
                 $view = view('transaction_payment.payment_row_cheque')
                     ->with(compact('transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts','payment_ref_data','open_amount'))->render();

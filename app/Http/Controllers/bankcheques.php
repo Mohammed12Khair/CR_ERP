@@ -39,14 +39,6 @@ class bankcheques extends Controller
         } catch (Exception $e) {
             error_log($e);
         }
-
-
-        // if (!auth()->user()->can('unit.view') && !auth()->user()->can('unit.create')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
-        // $cheques = DB::select(DB::raw("select a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at 
-        // from bankcheques_payments a,transaction_payments b,users c where CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and a.business_id=:business_id"), ["business_id" => $business_id]);
-
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
             $cheques = DB::select(DB::raw("select a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id
@@ -61,12 +53,11 @@ class bankcheques extends Controller
                     $action = '';
                     if ($total_payment == 0) {
                         $action .= '<button data-href="' . action('TransactionPaymentController@destroy', [$row->payment_id]) . '" class="btn btn-xs btn-danger delete_payment"><i class="glyphicon glyphicon-trash"></i></button>';
+                        // $action .= '<button data-href="' . action('TransactionPaymentController@addPayment_cheque_pass', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="btn btn-xs btn-primary"><i class="fas fa-check">Collect</i></button>';
                     } else {
                         $action .= '<a href="' . action('bankcheques@EditPayment', [str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id]) . '" class="btn btn-info btn-xs"><i class="fas fa-eye" aria-hidden="true"></i>' . __("cheque.edit_payment") . '</a></li>';
                     }
                     $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("purchase.add_payment") . '</a></li>';
-                    // $action .= '<a href="' . action('bankcheques@EditCheque', [$row->id]) . '" class="btn btn-info btn-xs"><i class="fas fa-paper" aria-hidden="true"></i></a></li>';
-
                     return $action;
                 })
                 ->editColumn('Status', function ($row) {
@@ -168,7 +159,7 @@ class bankcheques extends Controller
         return redirect()->back()->with('status', $output);
     }
 
-    public function Accounts(){
-
+    public function Accounts()
+    {
     }
 }

@@ -31,11 +31,11 @@ class AccountTypeController extends Controller
         $business_id = session()->get('user.business_id');
 
         $account_types = AccountType::where('business_id', $business_id)
-                                     ->whereNull('parent_account_type_id')
-                                     ->get();
+            ->whereNull('parent_account_type_id')
+            ->get();
 
         return view('account_types.create')
-                ->with(compact('account_types'));
+            ->with(compact('account_types'));
     }
 
     /**
@@ -49,21 +49,22 @@ class AccountTypeController extends Controller
         if (!auth()->user()->can('account.access')) {
             abort(403, 'Unauthorized action.');
         }
-
         try {
-            $input = $request->only(['name', 'parent_account_type_id']);
+            $input = $request->only(['name', 'parent_account_type_id', 'cheque']);
             $input['business_id'] = $request->session()->get('user.business_id');
 
             AccountType::create($input);
-            $output = ['success' => true,
-                            'msg' => __("lang_v1.added_success")
-                        ];
+            $output = [
+                'success' => true,
+                'msg' => __("lang_v1.added_success")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => false,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return redirect()->back()->with('status', $output);
@@ -95,14 +96,14 @@ class AccountTypeController extends Controller
         $business_id = session()->get('user.business_id');
 
         $account_type = AccountType::where('business_id', $business_id)
-                                     ->findOrFail($id);
+            ->findOrFail($id);
 
         $account_types = AccountType::where('business_id', $business_id)
-                                     ->whereNull('parent_account_type_id')
-                                     ->get();
+            ->whereNull('parent_account_type_id')
+            ->get();
 
         return view('account_types.edit')
-                ->with(compact('account_types', 'account_type'));
+            ->with(compact('account_types', 'account_type'));
     }
 
     /**
@@ -119,30 +120,33 @@ class AccountTypeController extends Controller
         }
 
         try {
-            $input = $request->only(['name', 'parent_account_type_id']);
+            $input = $request->only(['name', 'parent_account_type_id', 'cheque']);
             $business_id = $request->session()->get('user.business_id');
 
             $account_type = AccountType::where('business_id', $business_id)
-                                     ->findOrFail($id);
+                ->findOrFail($id);
 
             //Account type is changed to subtype update all its sub type's parent type
             if (empty($account_type->parent_account_type_id) && !empty($input['parent_account_type_id'])) {
                 AccountType::where('business_id', $business_id)
-                        ->where('parent_account_type_id', $account_type->id)
-                        ->update(['parent_account_type_id' => $input['parent_account_type_id']]);
+                    ->where('parent_account_type_id', $account_type->id)
+                    ->update(['parent_account_type_id' => $input['parent_account_type_id']]);
+                // ->update(['cheque' => $input['cheque']]);
             }
 
             $account_type->update($input);
-                                    
-            $output = ['success' => true,
-                            'msg' => __("lang_v1.updated_success")
-                        ];
+
+            $output = [
+                'success' => true,
+                'msg' => __("lang_v1.updated_success")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => false,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return redirect()->back()->with('status', $output);
@@ -163,17 +167,18 @@ class AccountTypeController extends Controller
         $business_id = session()->get('user.business_id');
 
         AccountType::where('business_id', $business_id)
-                                     ->where('id', $id)
-                                     ->delete();
+            ->where('id', $id)
+            ->delete();
 
         //Upadete parent account if set
         AccountType::where('business_id', $business_id)
-                 ->where('parent_account_type_id', $id)
-                 ->update(['parent_account_type_id' => null]);
+            ->where('parent_account_type_id', $id)
+            ->update(['parent_account_type_id' => null]);
 
-        $output = ['success' => true,
-                            'msg' => __("lang_v1.deleted_success")
-                        ];
+        $output = [
+            'success' => true,
+            'msg' => __("lang_v1.deleted_success")
+        ];
 
         return redirect()->back()->with('status', $output);
     }

@@ -23,7 +23,8 @@ class CreateBankchequesPaymentsTable extends Migration
             $table->string('cheque_date');
             $table->integer('amount');
             $table->string('transaction_type');
-            $table->string('comment');
+            $table->string('status')->default('unset');
+            $table->string('comment')->nullable();
             $table->integer('userid');
             $table->timestamps();
         });
