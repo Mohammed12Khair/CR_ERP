@@ -1,5 +1,7 @@
 <?php
 return [
+    "cheque_accept" => "تمرير الشيك",
+    "accounts_edit" => "اداره حسابات المستخدمين",
     "cheque_list" => "قائمة الشيكات",
     "payment_accounts_cheque" => "الشيكات",
     "cheque_date" => "تاريخ استحقاق الشيك",

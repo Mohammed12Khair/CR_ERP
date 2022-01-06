@@ -98,7 +98,7 @@
           </div>
         </div>
         @if(!empty($accounts))
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
           <div class="form-group">
             {!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
             <div class="input-group">
@@ -108,7 +108,7 @@
               {!! Form::select("account_id", $accounts, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
             </div>
           </div>
-        </div>
+        </div> -->
         @endif
         <div class="col-md-4">
           <div class="form-group">

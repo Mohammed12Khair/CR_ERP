@@ -33,7 +33,7 @@
         <table class="table table-bordered table-striped" id="cheque_table">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>id</th>
                     <th>@lang( 'cheque.payment_id' )</th>
                     <th>@lang( 'cheque.transaction_id' )</th>
                     <th>@lang( 'cheque.cheque_number' )</th>
@@ -42,7 +42,7 @@
                     <th>@lang( 'cheque.amount' )</th>
                     <th>@lang( 'cheque.username' )</th>
                     <th>@lang( 'cheque.created_at' )</th>
-                    <th>#</th>
+                    <th>Status</th>
                     <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                 </tr>
             </thead>
@@ -54,8 +54,7 @@
 
 
     <!-- Model for the payments -->
-    <div class="modal fade payment_modal" tabindex="-1" role="dialog" 
-        aria-labelledby="gridSystemModalLabel">
+    <div class="modal fade payment_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
     </div>
 
 </section>

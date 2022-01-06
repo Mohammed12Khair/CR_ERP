@@ -45,6 +45,7 @@ class bankcheques extends Controller
             from bankcheques_payments a,transaction_payments b,users c where CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and a.business_id=:business_id"), ["business_id" => $business_id]);
             return Datatables::of($cheques)
                 ->addColumn('action', function ($row) {
+                  
                     $key = str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id;
                     $total_payment = TransactionPayment::where([
                         ['note', '=', $key],
@@ -53,11 +54,15 @@ class bankcheques extends Controller
                     $action = '';
                     if ($total_payment == 0) {
                         $action .= '<button data-href="' . action('TransactionPaymentController@destroy', [$row->payment_id]) . '" class="btn btn-xs btn-danger delete_payment"><i class="glyphicon glyphicon-trash"></i></button>';
+                        $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.cheque_accept") . '</a>';
                         // $action .= '<button data-href="' . action('TransactionPaymentController@addPayment_cheque_pass', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="btn btn-xs btn-primary"><i class="fas fa-check">Collect</i></button>';
                     } else {
-                        $action .= '<a href="' . action('bankcheques@EditPayment', [str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id]) . '" class="btn btn-info btn-xs"><i class="fas fa-eye" aria-hidden="true"></i>' . __("cheque.edit_payment") . '</a></li>';
+                        $action .= '<a href="' . action('bankcheques@EditPayment', [str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id]) . '" class="btn btn-info btn-xs"><i class="fas fa-eye" aria-hidden="true"></i>' . __("cheque.edit_payment") . '</a>';
                     }
-                    $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("purchase.add_payment") . '</a></li>';
+                    if ($total_payment != $row->amount) {
+                        $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-warning btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("purchase.add_payment") . '</a>';
+                    }
+
                     return $action;
                 })
                 ->editColumn('Status', function ($row) {
@@ -75,34 +80,34 @@ class bankcheques extends Controller
                     }
                     // return $row->created_at;
                 })
-                ->editColumn('created_at', function ($row) {
+                ->addColumn('created_at', function ($row) {
                     return $row->created_at;
                 })
-                ->editColumn('username', function ($row) {
+                ->addColumn('username', function ($row) {
                     return  $row->username;
                 })
-                ->editColumn('amount', function ($row) {
+                ->addColumn('amount', function ($row) {
                     return  $row->amount;
                 })
-                ->editColumn('transaction_type', function ($row) {
+                ->addColumn('transaction_type', function ($row) {
                     return  $row->transaction_type;
                 })
-                ->editColumn('cheque_date', function ($row) {
+                ->addColumn('cheque_date', function ($row) {
                     return  $row->cheque_date;
                 })
-                ->editColumn('cheque_number', function ($row) {
+                ->addColumn('cheque_number', function ($row) {
                     return  $row->cheque_number;
                 })
-                ->editColumn('transaction_id', function ($row) {
+                ->addColumn('transaction_id', function ($row) {
                     return  $row->transaction_id;
                 })
-                ->editColumn('payment_id', function ($row) {
+                ->addColumn('payment_id', function ($row) {
                     return  $row->payment_id;
                 })
-                ->editColumn('id', function ($row) {
+                ->addColumn('id', function ($row) {
                     return  $row->id;
                 })
-                ->rawColumns(['action'])
+                // ->rawColumns(['action'])
                 ->make(true);
         }
         // 'select a.id,b.id payment_id,a.transaction_id,a.cheque_number,a.cheque_date,a.transaction_type,a.amount,c.username,a.created_at from bankcheques_payments a,transaction_payments b,users c where CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id'

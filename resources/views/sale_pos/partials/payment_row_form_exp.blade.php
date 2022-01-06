@@ -14,12 +14,7 @@
 				<span class="input-group-addon">
 					<i class="fas fa-money-bill-alt"></i>
 				</span>
-				@can('sell.payments')
 				{!! Form::text("payment[$row_index][amount]", @num_format($payment_line['amount']), ['class' => 'form-control payment-amount input_number', 'required', 'id' => "amount_$row_index", 'placeholder' => __('sale.amount'), 'readonly' => $readonly]); !!}
-				@else
-				{!! Form::text("payment[$row_index][amount]", @num_format($payment_line['amount']), ['class' => 'form-control input_number', 'required', 'id' => "amount_$row_index", 'placeholder' => __('sale.amount'), 'readonly' => $readonly]); !!}
-				@endcan
-			
 			</div>
 		</div>
 	</div>
@@ -55,9 +50,22 @@
 		</div>
 	</div>
 
-
+	@if(!empty($accounts))
+	<div class="{{$col_class}}">
+		<div class="form-group @if($readonly) hide @endif">
+			{!! Form::label("account_$row_index" , __('lang_v1.payment_account') . ':') !!}
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="fas fa-money-bill-alt"></i>
+				</span>
+				{!! Form::select("payment[$row_index][account_id]", $accounts, !empty($payment_line['account_id']) ? $payment_line['account_id'] : '' , ['class' => 'form-control select2 account-dropdown', 'id' => !$readonly ? "account_$row_index" : "account_advance_$row_index", 'style' => 'width:100%;', 'disabled' => $readonly,'required']); !!}
+			</div>
+		</div>
+	</div>
+	@endif
+	
 	<div class="clearfix"></div>
-	@include('sale_pos.partials.payment_type_details')
+	@include('sale_pos.partials.payment_type_details_exp')
 	<div class="col-md-12">
 		<div class="form-group">
 			{!! Form::label("note_$row_index", __('sale.payment_note') . ':') !!}

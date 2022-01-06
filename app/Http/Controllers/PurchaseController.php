@@ -266,11 +266,12 @@ class PurchaseController extends Controller
 
         //Accounts
         $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
+        $accounts_cheques = $this->moduleUtil->accountsDropdown_cheque($business_id, true);
 
         $common_settings = !empty(session('business.common_settings')) ? session('business.common_settings') : [];
 
         return view('purchase.create')
-            ->with(compact('taxes', 'orderStatuses', 'business_locations', 'currency_details', 'default_purchase_status', 'customer_groups', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'bl_attributes', 'common_settings'));
+            ->with(compact('taxes', 'orderStatuses', 'business_locations', 'currency_details', 'default_purchase_status', 'customer_groups', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts','accounts_cheques', 'bl_attributes', 'common_settings'));
     }
 
     /**

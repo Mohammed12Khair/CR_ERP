@@ -309,16 +309,17 @@ class ExpenseController extends Controller
         //Accounts
         $accounts = [];
         if ($this->moduleUtil->isModuleEnabled('account')) {
-            $accounts = Account::forDropdown($business_id, true, false, true);
+            // $accounts = Account::accountsDropdown($business_id, true, false, true);
+            $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
+            $accounts_cheques = $this->moduleUtil->accountsDropdown_cheque($business_id, true);
         }
-
         if (request()->ajax()) {
             return view('expense.add_expense_modal')
-                ->with(compact('expense_categories', 'business_locations', 'users', 'taxes', 'payment_line', 'payment_types', 'accounts', 'bl_attributes', 'contacts'));
+                ->with(compact('expense_categories', 'business_locations', 'users', 'taxes', 'payment_line', 'payment_types', 'accounts','accounts_cheques', 'bl_attributes', 'contacts'));
         }
 
         return view('expense.create')
-            ->with(compact('expense_categories', 'business_locations', 'users', 'taxes', 'payment_line', 'payment_types', 'accounts', 'bl_attributes', 'contacts'));
+            ->with(compact('expense_categories', 'business_locations', 'users', 'taxes', 'payment_line', 'payment_types', 'accounts','accounts_cheques', 'bl_attributes', 'contacts'));
     }
 
     /**

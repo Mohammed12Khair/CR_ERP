@@ -694,6 +694,9 @@ class SellController extends Controller
             $accounts = Account::forDropdown($business_id, true, false);
         }
 
+        $accounts_cheques = $this->moduleUtil->accountsDropdown_cheque($business_id, true);
+
+
         $status = request()->get('status', '');
 
         $statuses = Transaction::sell_statuses();
@@ -734,6 +737,7 @@ class SellController extends Controller
                 'default_invoice_schemes',
                 'types_of_service',
                 'accounts',
+                'accounts_cheques',
                 'shipping_statuses',
                 'status',
                 'sale_type',

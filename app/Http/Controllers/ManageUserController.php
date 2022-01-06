@@ -13,9 +13,66 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 use Spatie\Activitylog\Models\Activity;
+use App\Account;
+use App\Activeaccounts;
 
 class ManageUserController extends Controller
 {
+
+
+    public function AccountManageAdd(Request $request)
+    {
+        error_log($request->input('userid'));
+        error_log($request->input('account_id'));
+        $business_id = request()->session()->get('user.business_id');
+        $ActiveAccounts = new Activeaccounts();
+        $ActiveAccounts->userid = $request->input('userid');
+        $ActiveAccounts->account_id = $request->input('account_id');
+        $ActiveAccounts->business_id = $business_id;
+        $ActiveAccounts->save();
+        return redirect()->back();
+    }
+
+    public function AccountManageDelete(Request $request)
+    {
+        Activeaccounts::where('userid', $request->input('userid'))
+            ->where('account_id', $request->input('account_id'))->delete();
+
+        return redirect()->back();
+    }
+
+    public function AccountManage($id)
+    {
+
+        if (!auth()->user()->can('user.view') && !auth()->user()->can('user.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $business_id = request()->session()->get('user.business_id');
+        error_log('Bus' . $business_id);
+        error_log('user' . $id);
+        $All_Accounts = Account::where('business_id', $business_id)->where('is_closed', 0)->get();
+        $ActiveAccounts = Activeaccounts::where('business_id', $business_id)
+            ->where('userid', $id)->get();
+
+        $active_accounts_data = [];
+        foreach ($ActiveAccounts as $ActiveAccount) {
+            error_log($ActiveAccount->account_id);
+            array_push($active_accounts_data, $ActiveAccount->account_id);
+        }
+
+        foreach ($All_Accounts as $All_Account) {
+            error_log($All_Account->id);
+            if (in_array($All_Account->id, $active_accounts_data)) {
+                error_log("In array");
+            } else {
+                error_log("Not In array");
+            }
+        }
+        return view('manage_user.account')
+            ->with('id', $id)
+            ->with('All_Accounts', $All_Accounts)
+            ->with('active_accounts_data', $active_accounts_data);
+    }
     /**
      * Constructor
      *
@@ -43,10 +100,12 @@ class ManageUserController extends Controller
             $user_id = request()->session()->get('user.id');
 
             $users = User::where('business_id', $business_id)
-                        ->user()
-                        ->where('is_cmmsn_agnt', 0)
-                        ->select(['id', 'username',
-                            DB::raw("CONCAT(COALESCE(surname, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) as full_name"), 'email', 'allow_login']);
+                ->user()
+                ->where('is_cmmsn_agnt', 0)
+                ->select([
+                    'id', 'username',
+                    DB::raw("CONCAT(COALESCE(surname, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) as full_name"), 'email', 'allow_login'
+                ]);
 
             return Datatables::of($users)
                 ->editColumn('username', '{{$username}} @if(empty($allow_login)) <span class="label bg-gray">@lang("lang_v1.login_not_allowed")</span>@endif')
@@ -69,7 +128,10 @@ class ManageUserController extends Controller
                     @endcan
                     @can("user.delete")
                         <button data-href="{{action(\'ManageUserController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_user_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
-                    @endcan'
+                    @endcan
+                    @can("accounts.edit")
+                    <a href="{{action(\'ManageUserController@AccountManage\', [$id])}}" class="btn btn-xs btn-dark"><i class="glyphicon glyphicon-safe"></i> @lang("lang_v1.payment_accounts")</a>
+                @endcan'
                 )
                 ->filterColumn('full_name', function ($query, $keyword) {
                     $query->whereRaw("CONCAT(COALESCE(surname, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) like ?", ["%{$keyword}%"]);
@@ -105,14 +167,14 @@ class ManageUserController extends Controller
         $roles  = $this->getRolesArray($business_id);
         $username_ext = $this->moduleUtil->getUsernameExtension();
         $locations = BusinessLocation::where('business_id', $business_id)
-                                    ->Active()
-                                    ->get();
+            ->Active()
+            ->get();
 
         //Get user form part from modules
         $form_partials = $this->moduleUtil->getModuleData('moduleViewPartials', ['view' => 'manage_user.create']);
 
         return view('manage_user.create')
-                ->with(compact('roles', 'username_ext', 'locations', 'form_partials'));
+            ->with(compact('roles', 'username_ext', 'locations', 'form_partials'));
     }
 
     /**
@@ -128,26 +190,28 @@ class ManageUserController extends Controller
         }
 
         try {
-            
+
             if (!empty($request->input('dob'))) {
                 $request['dob'] = $this->moduleUtil->uf_date($request->input('dob'));
             }
-            
+
             $request['cmmsn_percent'] = !empty($request->input('cmmsn_percent')) ? $this->moduleUtil->num_uf($request->input('cmmsn_percent')) : 0;
 
             $request['max_sales_discount_percent'] = !is_null($request->input('max_sales_discount_percent')) ? $this->moduleUtil->num_uf($request->input('max_sales_discount_percent')) : null;
 
             $user = $this->moduleUtil->createUser($request);
 
-            $output = ['success' => 1,
-                        'msg' => __("user.user_added")
-                    ];
+            $output = [
+                'success' => 1,
+                'msg' => __("user.user_added")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                        'msg' => __("messages.something_went_wrong")
-                    ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return redirect('users')->with('status', $output);
@@ -168,8 +232,8 @@ class ManageUserController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         $user = User::where('business_id', $business_id)
-                    ->with(['contactAccess'])
-                    ->find($id);
+            ->with(['contactAccess'])
+            ->find($id);
 
         //Get user view part from modules
         $view_partials = $this->moduleUtil->getModuleData('moduleViewPartials', ['view' => 'manage_user.show', 'user' => $user]);
@@ -177,9 +241,9 @@ class ManageUserController extends Controller
         $users = User::forDropdown($business_id, false);
 
         $activities = Activity::forSubject($user)
-           ->with(['causer', 'subject'])
-           ->latest()
-           ->get();
+            ->with(['causer', 'subject'])
+            ->latest()
+            ->get();
 
         return view('manage_user.show')->with(compact('user', 'view_partials', 'users', 'activities'));
     }
@@ -198,8 +262,8 @@ class ManageUserController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $user = User::where('business_id', $business_id)
-                    ->with(['contactAccess'])
-                    ->findOrFail($id);
+            ->with(['contactAccess'])
+            ->findOrFail($id);
 
         $roles = $this->getRolesArray($business_id);
 
@@ -212,16 +276,16 @@ class ManageUserController extends Controller
         }
 
         $locations = BusinessLocation::where('business_id', $business_id)
-                                    ->get();
+            ->get();
 
         $permitted_locations = $user->permitted_locations();
         $username_ext = $this->moduleUtil->getUsernameExtension();
 
         //Get user form part from modules
         $form_partials = $this->moduleUtil->getModuleData('moduleViewPartials', ['view' => 'manage_user.edit', 'user' => $user]);
-        
+
         return view('manage_user.edit')
-                ->with(compact('roles', 'user', 'contact_access', 'is_checked_checkbox', 'locations', 'permitted_locations', 'form_partials', 'username_ext'));
+            ->with(compact('roles', 'user', 'contact_access', 'is_checked_checkbox', 'locations', 'permitted_locations', 'form_partials', 'username_ext'));
     }
 
     /**
@@ -238,11 +302,13 @@ class ManageUserController extends Controller
         }
 
         try {
-            $user_data = $request->only(['surname', 'first_name', 'last_name', 'email', 'selected_contacts', 'marital_status',
+            $user_data = $request->only([
+                'surname', 'first_name', 'last_name', 'email', 'selected_contacts', 'marital_status',
                 'blood_group', 'contact_number', 'fb_link', 'twitter_link', 'social_media_1',
                 'social_media_2', 'permanent_address', 'current_address',
                 'guardian_name', 'custom_field_1', 'custom_field_2',
-                'custom_field_3', 'custom_field_4', 'id_proof_name', 'id_proof_number', 'cmmsn_percent', 'gender', 'max_sales_discount_percent', 'family_number', 'alt_number']);
+                'custom_field_3', 'custom_field_4', 'id_proof_name', 'id_proof_number', 'cmmsn_percent', 'gender', 'max_sales_discount_percent', 'family_number', 'alt_number'
+            ]);
 
             $user_data['status'] = !empty($request->input('is_active')) ? 'active' : 'inactive';
             $business_id = request()->session()->get('user.business_id');
@@ -292,7 +358,7 @@ class ManageUserController extends Controller
             }
 
             $user = User::where('business_id', $business_id)
-                          ->findOrFail($id);
+                ->findOrFail($id);
 
             $user->update($user_data);
             $role_id = $request->input('role');
@@ -308,7 +374,7 @@ class ManageUserController extends Controller
                 if (!empty($previous_role)) {
                     $user->removeRole($user_role->name);
                 }
-                
+
                 $role = Role::findOrFail($role_id);
                 $user->assignRole($role->name);
             }
@@ -329,21 +395,22 @@ class ManageUserController extends Controller
 
             $this->moduleUtil->activityLog($user, 'edited', null, ['name' => $user->user_full_name]);
 
-            $output = ['success' => 1,
-                        'msg' => __("user.user_update_success")
-                    ];
+            $output = [
+                'success' => 1,
+                'msg' => __("user.user_update_success")
+            ];
 
             DB::commit();
-
         } catch (\Exception $e) {
 
             DB::rollBack();
 
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => $e->getMessage()
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ];
         }
 
         return redirect('users')->with('status', $output);
@@ -372,22 +439,24 @@ class ManageUserController extends Controller
         if (request()->ajax()) {
             try {
                 $business_id = request()->session()->get('user.business_id');
-                
+
                 $user = User::where('business_id', $business_id)
                     ->findOrFail($id);
 
                 $this->moduleUtil->activityLog($user, 'deleted', null, ['name' => $user->user_full_name, 'id' => $user->id]);
 
                 $user->delete();
-                $output = ['success' => true,
-                                'msg' => __("user.user_delete_success")
-                                ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("user.user_delete_success")
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;

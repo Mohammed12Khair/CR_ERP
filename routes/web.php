@@ -140,6 +140,11 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::resource('users', 'ManageUserController');
 
+    // Account Controller AccountManage
+    Route::get('users/accounts/{id}','ManageUserController@AccountManage');
+    Route::post('users/accounts/add','ManageUserController@AccountManageAdd');
+    Route::post('users/accounts/delete','ManageUserController@AccountManageDelete');
+
     Route::resource('group-taxes', 'GroupTaxController');
 
     Route::get('/barcodes/set_default/{id}', 'BarcodeController@setDefault');
@@ -229,6 +234,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/payments/view-payment/{payment_id}', 'TransactionPaymentController@viewPayment');
     Route::get('/payments/add_payment/{transaction_id}', 'TransactionPaymentController@addPayment');
     Route::get('/payments/add_payment_cheque/{transaction_id}/{payment_ref_data}/{open_amount}', 'TransactionPaymentController@addPayment_cheque');
+    Route::get('/payments/add_payment_cheque_accept/{transaction_id}/{payment_ref_data}/{open_amount}', 'TransactionPaymentController@addPayment_cheque_accept');
     Route::get('/payments/pay-contact-due/{contact_id}', 'TransactionPaymentController@getPayContactDue');
     Route::post('/payments/pay-contact-due', 'TransactionPaymentController@postPayContactDue');
     Route::resource('payments', 'TransactionPaymentController');

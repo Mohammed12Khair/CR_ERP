@@ -1522,6 +1522,14 @@
               </label>
             </div>
           </div>
+          <div class="col-md-12">
+            <div class="checkbox">
+              <label>
+                {!! Form::checkbox('permissions[]', 'accounts.edit', in_array('accounts.edit', $role_permissions), 
+                [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.accounts_edit' ) }}
+              </label>
+            </div>
+          </div>
 
           <div class="col-md-12">
             <div class="checkbox">

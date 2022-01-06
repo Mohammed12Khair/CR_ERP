@@ -695,8 +695,6 @@ class TransactionUtil extends Util
                 }
                 //If amount is 0 then skip.
                 if ($payment_amount != 0) {
-
-
                     // Edit Dec-28
                     if ($payment['method'] == 'cheque') {
                         $add_Cheque = new bankcheques_payment();
@@ -764,10 +762,12 @@ class TransactionUtil extends Util
 
                     // Edit Dec-28
                     try {
-                        $add_Cheque->cheque_ref = $payment_ref_no;
-                        $add_Cheque->payment_id = -1;
-                        $add_Cheque->userid = $payment_data['created_by'];
-                        $add_Cheque->save();
+                        if ($payment['method'] == 'cheque') {
+                            $add_Cheque->cheque_ref = $payment_ref_no;
+                            $add_Cheque->payment_id = -1;
+                            $add_Cheque->userid = $payment_data['created_by'];
+                            $add_Cheque->save();
+                        }
                     } catch (Exception $e) {
                         error_log('Error ' . $e);
                     }

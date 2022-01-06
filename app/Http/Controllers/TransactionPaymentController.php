@@ -219,6 +219,10 @@ class TransactionPaymentController extends Controller
             $location_id = !empty($transaction->location_id) ? $transaction->location_id : null;
             $payment_types = $this->transactionUtil->payment_types($location_id, true);
 
+
+            $payment_types = ['cheque_accept' => __('lang_v1.cheque_accept')] + $payment_types;
+
+
             return view('transaction_payment.show_payments')
                 ->with(compact('transaction', 'payments', 'payment_types', 'accounts_enabled'));
         }
@@ -410,13 +414,13 @@ class TransactionPaymentController extends Controller
         }
     }
 
-        /**
+    /**
      * Adds new payment to the given transaction.
      *
      * @param  int  $transaction_id
      * @return \Illuminate\Http\Response
      */
-    public function addPayment_cheque($transaction_id,$payment_ref_data,$open_amount)
+    public function addPayment_cheque($transaction_id, $payment_ref_data, $open_amount)
     {
         if (!auth()->user()->can('purchase.payments') && !auth()->user()->can('sell.payments') && !auth()->user()->can('all_expense.access') && !auth()->user()->can('view_own_expense')) {
             abort(403, 'Unauthorized action.');
@@ -445,10 +449,80 @@ class TransactionPaymentController extends Controller
                 $payment_line->paid_on = \Carbon::now()->toDateTimeString();
 
                 //Accounts
-                $accounts = $this->moduleUtil->accountsDropdown_cheque($business_id, true, false, true);
+                // $accounts = $this->moduleUtil->accountsDropdown_not_cheque($business_id, true, false, true);
+                // $accounts_cheques = $this->moduleUtil->accountsDropdown_cheque($business_id, true, false, true);
+
+
+                $accounts = $this->moduleUtil->accountsDropdown($business_id, true, false, true);
+                $accounts_cheques = $this->moduleUtil->accountsDropdown_cheque($business_id, true, false, true);
+
+
 
                 $view = view('transaction_payment.payment_row_cheque')
-                    ->with(compact('transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts','payment_ref_data','open_amount'))->render();
+                    ->with(compact('transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts', 'accounts_cheques', 'payment_ref_data', 'open_amount'))->render();
+
+                $output = [
+                    'status' => 'due',
+                    'view' => $view
+                ];
+            } else {
+                $output = [
+                    'status' => 'paid',
+                    'view' => '',
+                    'msg' => __('purchase.amount_already_paid')
+                ];
+            }
+
+            return json_encode($output);
+        }
+    }
+    /**
+     * Adds new payment to the given transaction.
+     *
+     * @param  int  $transaction_id
+     * @return \Illuminate\Http\Response
+     */
+    public function addPayment_cheque_accept($transaction_id, $payment_ref_data, $open_amount)
+    {
+        if (!auth()->user()->can('purchase.payments') && !auth()->user()->can('sell.payments') && !auth()->user()->can('all_expense.access') && !auth()->user()->can('view_own_expense')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            $business_id = request()->session()->get('user.business_id');
+            $transaction = Transaction::where('business_id', $business_id)
+                ->with(['contact', 'location'])
+                ->findOrFail($transaction_id);
+            if ($transaction->payment_status != 'paid') {
+                $show_advance = in_array($transaction->type, ['sell', 'purchase']) ? true : false;
+                $payment_types = $this->transactionUtil->payment_types_cheque($transaction->location, $show_advance);
+
+                $paid_amount = $this->transactionUtil->getTotalPaid($transaction_id);
+                $amount = $transaction->final_total - $paid_amount;
+                if ($amount < 0) {
+                    $amount = 0;
+                }
+
+                $amount_formated = $this->transactionUtil->num_f($amount);
+
+                $payment_line = new TransactionPayment();
+                $payment_line->amount = $amount;
+                $payment_line->method = 'cash';
+                $payment_line->paid_on = \Carbon::now()->toDateTimeString();
+
+                //Accounts
+                // $accounts = $this->moduleUtil->accountsDropdown_not_cheque($business_id, true, false, true);
+                // $accounts_cheques = $this->moduleUtil->accountsDropdown_cheque($business_id, true, false, true);
+
+
+                $accounts = $this->moduleUtil->accountsDropdown($business_id, true, false, true);
+                $accounts_cheques = $this->moduleUtil->accountsDropdown_cheque($business_id, true, false, true);
+                $read_only = 'yes';
+
+
+
+                $view = view('transaction_payment.payment_row_cheque')
+                    ->with(compact('read_only', 'transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts', 'accounts_cheques', 'payment_ref_data', 'open_amount'))->render();
 
                 $output = [
                     'status' => 'due',
@@ -504,9 +578,10 @@ class TransactionPaymentController extends Controller
 
                 //Accounts
                 $accounts = $this->moduleUtil->accountsDropdown($business_id, true, false, true);
+                $accounts_cheques = $this->moduleUtil->accountsDropdown_cheque($business_id, true, false, true);
 
                 $view = view('transaction_payment.payment_row')
-                    ->with(compact('transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts'))->render();
+                    ->with(compact('transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts', 'accounts_cheques'))->render();
 
                 $output = [
                     'status' => 'due',
