@@ -209,8 +209,9 @@ class Account extends Model
         foreach ($acount_Types as $acount_Type) {
             array_push($acount_Type_id, $acount_Type->id);
         }
+        // commect
 
-        $query = Account::where('business_id', $business_id)->whereIn('id', $allowed_accounts_data)->whereNotIn('account_type_id', $acount_Type_id);
+        $query = Account::where('business_id', $business_id)->whereIn('id', $allowed_accounts_data);
 
 
         $permitted_locations = auth()->user()->permitted_locations();
