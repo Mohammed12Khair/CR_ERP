@@ -1601,6 +1601,15 @@ GET
           </label>
         </div>
       </div>
+      <!-- New -->
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'users_accounts_admin', false,
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.users_accounts_admin' ) }}
+          </label>
+        </div>
+      </div>
     </div>
   </div>
   <hr>

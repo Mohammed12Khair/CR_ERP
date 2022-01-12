@@ -1,11 +1,6 @@
 @extends('layouts.app')
 @section('title', __( 'cheque.units' ))
-
 @section('content')
-
-
-
-
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>@lang( 'cheque.units' )
@@ -22,19 +17,19 @@
     @component('components.widget', ['class' => 'box-primary', 'title' => __( 'cheque.all_your_units' )])
     @can('cheque.create')
     @slot('tool')
-    <div class="box-tools">
-        <!-- <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{action('UnitController@create')}}" data-container=".unit_modal">
-            <i class="fa fa-plus"></i> @lang( 'messages.add' )</button> -->
-    </div>
+    <!-- <div class="box-tools">
+        <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{action('UnitController@create')}}" data-container=".unit_modal">
+            <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
+    </div> -->
     @endslot
     @endcan
     @can('cheque.view')
     <div class="table-responsive">
-        <table class="table table-bordered table-striped" id="cheque_table">
+        <table class="table table-bordered table-striped" id="cheque_table" style="text-align: center;">
             <thead>
                 <tr>
                     <th>id</th>
-                    <th>@lang( 'cheque.payment_id' )</th>
+                    <th>@lang( 'cheque.client_name' )</th>
                     <th>@lang( 'cheque.transaction_id' )</th>
                     <th>@lang( 'cheque.cheque_number' )</th>
                     <th>@lang( 'cheque.cheque_date' )</th>
@@ -46,7 +41,6 @@
                     <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                 </tr>
             </thead>
-
         </table>
     </div>
     @endcan

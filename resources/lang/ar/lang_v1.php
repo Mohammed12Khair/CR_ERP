@@ -1,5 +1,6 @@
 <?php
 return [
+    "users_accounts_admin" => "اداره صلاحية الحسابات للمستخدمين",
     "cheque_accept" => "تمرير الشيك",
     "accounts_edit" => "اداره حسابات المستخدمين",
     "cheque_list" => "قائمة الشيكات",

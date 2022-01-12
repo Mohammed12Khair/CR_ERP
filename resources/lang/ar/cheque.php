@@ -1,5 +1,6 @@
 <?php 
  return [ 
+"client_name" => "ألاسم",
 "units" => "الشيكات",
 "edit_payment" => "تفاصيل",
 "payment_id" => "رقم الدفعية",

@@ -1,5 +1,4 @@
 <!-- Expensis -->
-
 <div class="payment_details_div @if( $payment_line['method'] !== 'cash' ) {{ 'hide' }} @endif" data-type="cash">
 	@if(!empty($accounts))
 	<div class="{{$col_class}}">

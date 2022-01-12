@@ -44,7 +44,7 @@ class ManageUserController extends Controller
     public function AccountManage($id)
     {
 
-        if (!auth()->user()->can('user.view') && !auth()->user()->can('user.create')) {
+        if (!auth()->user()->can('users_accounts_admin')) {
             abort(403, 'Unauthorized action.');
         }
         $business_id = request()->session()->get('user.business_id');
@@ -129,8 +129,8 @@ class ManageUserController extends Controller
                     @can("user.delete")
                         <button data-href="{{action(\'ManageUserController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_user_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
                     @endcan
-                    @can("accounts.edit")
-                    <a href="{{action(\'ManageUserController@AccountManage\', [$id])}}" class="btn btn-xs btn-dark"><i class="glyphicon glyphicon-safe"></i> @lang("lang_v1.payment_accounts")</a>
+                    @can("users_accounts_admin")
+                    <a href="{{action(\'ManageUserController@AccountManage\', [$id])}}" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-usd"></i> @lang("lang_v1.payment_accounts")</a>
                 @endcan'
                 )
                 ->filterColumn('full_name', function ($query, $keyword) {
