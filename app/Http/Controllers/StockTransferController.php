@@ -227,7 +227,6 @@ class StockTransferController extends Controller
         $expense = $request->input('expense');
         $combine_epensis = array_combine($expense, $expense_values);
 
-
         try {
             $business_id = $request->session()->get('user.business_id');
             //Check if subscribed or not
@@ -354,15 +353,17 @@ class StockTransferController extends Controller
             $this->transactionUtil->activityLog($sell_transfer, 'added');
 
 
-            // foreach ($combine_epensis as  $expense => $expense_values) {
-            //     if ($expense_values == 0) {
-            //         continue;
-            //     }
-            //     $Data_['final_total'] = $expense_values;
-            //     $Data_['expense_category_id'] = $expense;
-            //     $Data_['additional_notes'] = $business_id . '_' .  $input_data['ref_no'];
-            //     $this->transactionUtil->createExpense_transfer($Data_, $business_id, $user_id);
-            // }
+            // Khair
+            // Expensis Creator 
+            foreach ($combine_epensis as  $expense => $expense_values) {
+                if ($expense_values == 0) {
+                    continue;
+                }
+                $Data_['final_total'] = $expense_values;
+                $Data_['expense_category_id'] = $expense;
+                $Data_['additional_notes'] = $business_id . '_' .  $input_data['ref_no'];
+                $this->transactionUtil->createExpense_transfer($Data_, $business_id, $user_id);
+            }
 
             $output = [
                 'success' => 1,

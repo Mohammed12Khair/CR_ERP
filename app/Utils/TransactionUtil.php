@@ -5440,25 +5440,18 @@ class TransactionUtil extends Util
         // expense_transaction_date
         // additional_notes =Shippinf
 
-        $transaction_data = $request->only([
-            'ref_no', 'transaction_date',
-            'location_id', 'final_total', 'expense_for', 'additional_notes',
-            'expense_category_id', 'tax_id', 'contact_id'
-        ]);
+        $transaction_data = $request;
 
         $transaction_data['business_id'] = $business_id;
         $transaction_data['created_by'] = $user_id;
-        $transaction_data['type'] = !empty($request->input('is_refund')) && $request->input('is_refund') == 1 ? 'expense_refund' : 'expense';
+        $transaction_data['type'] = 'expense';
         $transaction_data['status'] = 'final';
         $transaction_data['payment_status'] = 'due';
         $transaction_data['final_total'] = $format_data ? $this->num_uf(
             $transaction_data['final_total']
         ) : $transaction_data['final_total'];
-        if ($request->has('transaction_date')) {
-            $transaction_data['transaction_date'] = $format_data ? $this->uf_date($transaction_data['transaction_date'], true) : $transaction_data['transaction_date'];
-        } else {
-            $transaction_data['transaction_date'] = \Carbon::now();
-        }
+        $transaction_data['transaction_date'] = \Carbon::now();
+
 
         $transaction_data['total_before_tax'] = $transaction_data['final_total'];
         if (!empty($transaction_data['tax_id'])) {
@@ -5467,25 +5460,11 @@ class TransactionUtil extends Util
             $transaction_data['tax_amount'] = $transaction_data['final_total'] - $transaction_data['total_before_tax'];
         }
 
-        if ($request->has('is_recurring')) {
-            $transaction_data['is_recurring'] = 1;
-            $transaction_data['recur_interval'] = !empty($request->input('recur_interval')) ? $request->input('recur_interval') : 1;
-            $transaction_data['recur_interval_type'] = $request->input('recur_interval_type');
-            $transaction_data['recur_repetitions'] = $request->input('recur_repetitions');
-            $transaction_data['subscription_repeat_on'] = $request->input('recur_interval_type') == 'months' && !empty($request->input('subscription_repeat_on')) ? $request->input('subscription_repeat_on') : null;
-        }
-
         //Update reference count
         $ref_count = $this->setAndGetReferenceCount('expense', $business_id);
         //Generate reference number
         if (empty($transaction_data['ref_no'])) {
             $transaction_data['ref_no'] = $this->generateReferenceNumber('expense', $ref_count, $business_id);
-        }
-
-        //upload document
-        $document_name = $this->uploadFile($request, 'document', 'documents');
-        if (!empty($document_name)) {
-            $transaction_data['document'] = $document_name;
         }
 
         $transaction = Transaction::create($transaction_data);
