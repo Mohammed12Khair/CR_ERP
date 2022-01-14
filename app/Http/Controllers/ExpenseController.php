@@ -22,17 +22,19 @@ use App\Utils\CashRegisterUtil;
 class ExpenseController extends Controller
 {
     /**
-    * Constructor
-    *
-    * @param TransactionUtil $transactionUtil
-    * @return void
-    */
+     * Constructor
+     *
+     * @param TransactionUtil $transactionUtil
+     * @return void
+     */
     public function __construct(TransactionUtil $transactionUtil, ModuleUtil $moduleUtil, CashRegisterUtil $cashRegisterUtil)
     {
         $this->transactionUtil = $transactionUtil;
         $this->moduleUtil = $moduleUtil;
-        $this->dummyPaymentLine = ['method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
-        'is_return' => 0, 'transaction_no' => ''];
+        $this->dummyPaymentLine = [
+            'method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
+            'is_return' => 0, 'transaction_no' => ''
+        ];
         $this->cashRegisterUtil = $cashRegisterUtil;
     }
 
@@ -51,49 +53,49 @@ class ExpenseController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $expenses = Transaction::leftJoin('expense_categories AS ec', 'transactions.expense_category_id', '=', 'ec.id')
-                        ->join(
-                            'business_locations AS bl',
-                            'transactions.location_id',
-                            '=',
-                            'bl.id'
-                        )
-                        ->leftJoin('tax_rates as tr', 'transactions.tax_id', '=', 'tr.id')
-                        ->leftJoin('users AS U', 'transactions.expense_for', '=', 'U.id')
-                        ->leftJoin('users AS usr', 'transactions.created_by', '=', 'usr.id')
-                        ->leftJoin('contacts AS c', 'transactions.contact_id', '=', 'c.id')
-                        ->leftJoin(
-                            'transaction_payments AS TP',
-                            'transactions.id',
-                            '=',
-                            'TP.transaction_id'
-                        )
-                        ->where('transactions.business_id', $business_id)
-                        ->whereIn('transactions.type', ['expense', 'expense_refund'])
-                        ->select(
-                            'transactions.id',
-                            'transactions.document',
-                            'transaction_date',
-                            'ref_no',
-                            'ec.name as category',
-                            'payment_status',
-                            'additional_notes',
-                            'final_total',
-                            'transactions.is_recurring',
-                            'transactions.recur_interval',
-                            'transactions.recur_interval_type',
-                            'transactions.recur_repetitions',
-                            'transactions.subscription_repeat_on',
-                            'bl.name as location_name',
-                            DB::raw("CONCAT(COALESCE(U.surname, ''),' ',COALESCE(U.first_name, ''),' ',COALESCE(U.last_name,'')) as expense_for"),
-                            DB::raw("CONCAT(tr.name ,' (', tr.amount ,' )') as tax"),
-                            DB::raw('SUM(TP.amount) as amount_paid'),
-                            DB::raw("CONCAT(COALESCE(usr.surname, ''),' ',COALESCE(usr.first_name, ''),' ',COALESCE(usr.last_name,'')) as added_by"),
-                            'transactions.recur_parent_id',
-                            'c.name as contact_name',
-                            'transactions.type'
-                        )
-                        ->with(['recurring_parent'])
-                        ->groupBy('transactions.id');
+                ->join(
+                    'business_locations AS bl',
+                    'transactions.location_id',
+                    '=',
+                    'bl.id'
+                )
+                ->leftJoin('tax_rates as tr', 'transactions.tax_id', '=', 'tr.id')
+                ->leftJoin('users AS U', 'transactions.expense_for', '=', 'U.id')
+                ->leftJoin('users AS usr', 'transactions.created_by', '=', 'usr.id')
+                ->leftJoin('contacts AS c', 'transactions.contact_id', '=', 'c.id')
+                ->leftJoin(
+                    'transaction_payments AS TP',
+                    'transactions.id',
+                    '=',
+                    'TP.transaction_id'
+                )
+                ->where('transactions.business_id', $business_id)
+                ->whereIn('transactions.type', ['expense', 'expense_refund'])
+                ->select(
+                    'transactions.id',
+                    'transactions.document',
+                    'transaction_date',
+                    'ref_no',
+                    'ec.name as category',
+                    'payment_status',
+                    'additional_notes',
+                    'final_total',
+                    'transactions.is_recurring',
+                    'transactions.recur_interval',
+                    'transactions.recur_interval_type',
+                    'transactions.recur_repetitions',
+                    'transactions.subscription_repeat_on',
+                    'bl.name as location_name',
+                    DB::raw("CONCAT(COALESCE(U.surname, ''),' ',COALESCE(U.first_name, ''),' ',COALESCE(U.last_name,'')) as expense_for"),
+                    DB::raw("CONCAT(tr.name ,' (', tr.amount ,' )') as tax"),
+                    DB::raw('SUM(TP.amount) as amount_paid'),
+                    DB::raw("CONCAT(COALESCE(usr.surname, ''),' ',COALESCE(usr.first_name, ''),' ',COALESCE(usr.last_name,'')) as added_by"),
+                    'transactions.recur_parent_id',
+                    'c.name as contact_name',
+                    'transactions.type'
+                )
+                ->with(['recurring_parent'])
+                ->groupBy('transactions.id');
 
             //Add condition for expense for,used in sales representative expense report & list of expense
             if (request()->has('expense_for')) {
@@ -131,7 +133,7 @@ class ExpenseController extends Controller
                 $start = request()->start_date;
                 $end =  request()->end_date;
                 $expenses->whereDate('transaction_date', '>=', $start)
-                        ->whereDate('transaction_date', '<=', $end);
+                    ->whereDate('transaction_date', '<=', $end);
             }
 
             //Add condition for expense category, used in list of expense,
@@ -159,9 +161,9 @@ class ExpenseController extends Controller
             if (!$is_admin && !auth()->user()->can('all_expense.access')) {
                 $user_id = auth()->user()->id;
                 $expenses->where(function ($query) use ($user_id) {
-                        $query->where('transactions.created_by', $user_id)
+                    $query->where('transactions.created_by', $user_id)
                         ->orWhere('transactions.expense_for', $user_id);
-                    });
+                });
             }
             return Datatables::of($expenses)
                 ->addColumn(
@@ -216,19 +218,19 @@ class ExpenseController extends Controller
                     }
                     return '<span class="display_currency payment_due" data-currency_symbol="true" data-orig-value="' . $due . '">' . $this->transactionUtil->num_f($due, true) . '</span>';
                 })
-                ->addColumn('recur_details', function($row){
+                ->addColumn('recur_details', function ($row) {
                     $details = '<small>';
                     if ($row->is_recurring == 1) {
                         $type = $row->recur_interval == 1 ? Str::singular(__('lang_v1.' . $row->recur_interval_type)) : __('lang_v1.' . $row->recur_interval_type);
                         $recur_interval = $row->recur_interval . $type;
-                        
-                        $details .= __('lang_v1.recur_interval') . ': ' . $recur_interval; 
+
+                        $details .= __('lang_v1.recur_interval') . ': ' . $recur_interval;
                         if (!empty($row->recur_repetitions)) {
-                            $details .= ', ' .__('lang_v1.no_of_repetitions') . ': ' . $row->recur_repetitions; 
+                            $details .= ', ' . __('lang_v1.no_of_repetitions') . ': ' . $row->recur_repetitions;
                         }
                         if ($row->recur_interval_type == 'months' && !empty($row->subscription_repeat_on)) {
-                            $details .= '<br><small class="text-muted">' . 
-                            __('lang_v1.repeat_on') . ': ' . str_ordinal($row->subscription_repeat_on) ;
+                            $details .= '<br><small class="text-muted">' .
+                                __('lang_v1.repeat_on') . ': ' . str_ordinal($row->subscription_repeat_on);
                         }
                     } elseif (!empty($row->recur_parent_id)) {
                         $details .= __('lang_v1.recurred_from') . ': ' . $row->recurring_parent->ref_no;
@@ -236,14 +238,14 @@ class ExpenseController extends Controller
                     $details .= '</small>';
                     return $details;
                 })
-                ->editColumn('ref_no', function($row){
+                ->editColumn('ref_no', function ($row) {
                     $ref_no = $row->ref_no;
                     if (!empty($row->is_recurring)) {
-                        $ref_no .= ' &nbsp;<small class="label bg-red label-round no-print" title="' . __('lang_v1.recurring_expense') .'"><i class="fas fa-recycle"></i></small>';
+                        $ref_no .= ' &nbsp;<small class="label bg-red label-round no-print" title="' . __('lang_v1.recurring_expense') . '"><i class="fas fa-recycle"></i></small>';
                     }
 
                     if (!empty($row->recur_parent_id)) {
-                        $ref_no .= ' &nbsp;<small class="label bg-info label-round no-print" title="' . __('lang_v1.generated_recurring_expense') .'"><i class="fas fa-recycle"></i></small>';
+                        $ref_no .= ' &nbsp;<small class="label bg-info label-round no-print" title="' . __('lang_v1.generated_recurring_expense') . '"><i class="fas fa-recycle"></i></small>';
                     }
 
                     if ($row->type == 'expense_refund') {
@@ -259,7 +261,7 @@ class ExpenseController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         $categories = ExpenseCategory::where('business_id', $business_id)
-                            ->pluck('name', 'id');
+            ->pluck('name', 'id');
 
         $users = User::forDropdown($business_id, false, true, true);
 
@@ -283,7 +285,7 @@ class ExpenseController extends Controller
         }
 
         $business_id = request()->session()->get('user.business_id');
-        
+
         //Check if subscribed or not
         if (!$this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse(action('ExpenseController@index'));
@@ -293,13 +295,16 @@ class ExpenseController extends Controller
 
         $bl_attributes = $business_locations['attributes'];
         $business_locations = $business_locations['locations'];
-
+        // Edit
+        // $expense_categories = ExpenseCategory::where('business_id', $business_id)
+        //                         ->pluck('name', 'id');
         $expense_categories = ExpenseCategory::where('business_id', $business_id)
-                                ->pluck('name', 'id');
+            ->where('transfer', 0)
+            ->pluck('name', 'id');
         $users = User::forDropdown($business_id, true, true);
 
         $taxes = TaxRate::forBusinessDropdown($business_id, true, true);
-        
+
         $payment_line = $this->dummyPaymentLine;
 
         $payment_types = $this->transactionUtil->payment_types(null, false, $business_id);
@@ -315,11 +320,11 @@ class ExpenseController extends Controller
         }
         if (request()->ajax()) {
             return view('expense.add_expense_modal')
-                ->with(compact('expense_categories', 'business_locations', 'users', 'taxes', 'payment_line', 'payment_types', 'accounts','accounts_cheques', 'bl_attributes', 'contacts'));
+                ->with(compact('expense_categories', 'business_locations', 'users', 'taxes', 'payment_line', 'payment_types', 'accounts', 'accounts_cheques', 'bl_attributes', 'contacts'));
         }
 
         return view('expense.create')
-            ->with(compact('expense_categories', 'business_locations', 'users', 'taxes', 'payment_line', 'payment_types', 'accounts','accounts_cheques', 'bl_attributes', 'contacts'));
+            ->with(compact('expense_categories', 'business_locations', 'users', 'taxes', 'payment_line', 'payment_types', 'accounts', 'accounts_cheques', 'bl_attributes', 'contacts'));
     }
 
     /**
@@ -344,13 +349,13 @@ class ExpenseController extends Controller
 
             //Validate document size
             $request->validate([
-                'document' => 'file|max:'. (config('constants.document_size_limit') / 1000)
+                'document' => 'file|max:' . (config('constants.document_size_limit') / 1000)
             ]);
 
             $user_id = $request->session()->get('user.id');
 
             DB::beginTransaction();
-            
+
             $expense = $this->transactionUtil->createExpense($request, $business_id, $user_id);
 
             if (request()->ajax()) {
@@ -362,17 +367,19 @@ class ExpenseController extends Controller
 
             DB::commit();
 
-            $output = ['success' => 1,
-                            'msg' => __('expense.expense_add_success')
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('expense.expense_add_success')
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __('messages.something_went_wrong')
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __('messages.something_went_wrong')
+            ];
         }
 
         if (request()->ajax()) {
@@ -415,10 +422,10 @@ class ExpenseController extends Controller
         $business_locations = BusinessLocation::forDropdown($business_id);
 
         $expense_categories = ExpenseCategory::where('business_id', $business_id)
-                                ->pluck('name', 'id');
+            ->pluck('name', 'id');
         $expense = Transaction::where('business_id', $business_id)
-                                ->where('id', $id)
-                                ->first();
+            ->where('id', $id)
+            ->first();
 
         $users = User::forDropdown($business_id, true, true);
 
@@ -446,11 +453,11 @@ class ExpenseController extends Controller
         try {
             //Validate document size
             $request->validate([
-                'document' => 'file|max:'. (config('constants.document_size_limit') / 1000)
+                'document' => 'file|max:' . (config('constants.document_size_limit') / 1000)
             ]);
-            
+
             $business_id = $request->session()->get('user.business_id');
-            
+
             //Check if subscribed or not
             if (!$this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('ExpenseController@index'));
@@ -460,15 +467,17 @@ class ExpenseController extends Controller
 
             $this->transactionUtil->activityLog($expense, 'edited');
 
-            $output = ['success' => 1,
-                            'msg' => __('expense.expense_update_success')
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('expense.expense_update_success')
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __('messages.something_went_wrong')
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __('messages.something_went_wrong')
+            ];
         }
 
         return redirect('expenses')->with('status', $output);
@@ -491,26 +500,28 @@ class ExpenseController extends Controller
                 $business_id = request()->session()->get('user.business_id');
 
                 $expense = Transaction::where('business_id', $business_id)
-                                        ->where(function($q) {
-                                            $q->where('type', 'expense')
-                                                ->orWhere('type', 'expense_refund');
-                                        })
-                                        ->where('id', $id)
-                                        ->first();
+                    ->where(function ($q) {
+                        $q->where('type', 'expense')
+                            ->orWhere('type', 'expense_refund');
+                    })
+                    ->where('id', $id)
+                    ->first();
                 $expense->delete();
 
                 //Delete account transactions
                 AccountTransaction::where('transaction_id', $expense->id)->delete();
 
-                $output = ['success' => true,
-                            'msg' => __("expense.expense_delete_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("expense.expense_delete_success")
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;

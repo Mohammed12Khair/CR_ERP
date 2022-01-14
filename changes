@@ -26,6 +26,7 @@ php artisan migrate:refresh --path=/database/migrations/2021_11_23_223407_create
 php artisan migrate:refresh --path=/database/migrations/2021_12_03_201824_create_bankcheque_accounts_table.php
 
 php artisan migrate:refresh --path=/database/migrations/2021_12_28_215221_create_bankcheques_payments_table.php
+php artisan migrate:refresh --path=/database/migrations/2018_01_08_104124_create_expense_categories_table.php
 
 {{ action('BankchequesController@addPayment') }}
 

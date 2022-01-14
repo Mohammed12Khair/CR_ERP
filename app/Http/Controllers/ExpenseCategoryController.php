@@ -23,15 +23,26 @@ class ExpenseCategoryController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $expense_category = ExpenseCategory::where('business_id', $business_id)
-                        ->select(['name', 'code', 'id']);
+                ->select(['name', 'code', 'id']);
 
             return Datatables::of($expense_category)
                 ->addColumn(
                     'action',
-                    '<button data-href="{{action(\'ExpenseCategoryController@edit\', [$id])}}" class="btn btn-xs btn-primary btn-modal" data-container=".expense_category_modal"><i class="glyphicon glyphicon-edit"></i>  @lang("messages.edit")</button>
-                        &nbsp;
-                        <button data-href="{{action(\'ExpenseCategoryController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_expense_category"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>'
+                    function ($row) {
+                        return '<button data-href="' . action('ExpenseCategoryController@edit', [$row->id]) . '" class="btn btn-xs btn-primary btn-modal" data-container=".expense_category_modal"><i class="glyphicon glyphicon-edit"></i>' .  __("messages.edit") . '</button>
+                    &nbsp;
+                    <button data-href="' . action('ExpenseCategoryController@destroy', [$row->id]) . '" class="btn btn-xs btn-danger delete_expense_category"><i class="glyphicon glyphicon-trash"></i>' . __("messages.delete") . '</button>';
+                    }
+                    // '<button data-href="{{action(\'ExpenseCategoryController@edit\', [$id])}}" class="btn btn-xs btn-primary btn-modal" data-container=".expense_category_modal"><i class="glyphicon glyphicon-edit"></i>  @lang("messages.edit")</button>
+                    //     &nbsp;
+                    //     <button data-href="{{action(\'ExpenseCategoryController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_expense_category"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>'
                 )
+                // ->addColumn(
+                //     'action',
+                //     '<button data-href="{{action(\'ExpenseCategoryController@edit\', [$id])}}" class="btn btn-xs btn-primary btn-modal" data-container=".expense_category_modal"><i class="glyphicon glyphicon-edit"></i>  @lang("messages.edit")</button>
+                //         &nbsp;
+                //         <button data-href="{{action(\'ExpenseCategoryController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_expense_category"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>'
+                // )
                 ->removeColumn('id')
                 ->rawColumns([2])
                 ->make(false);
@@ -67,19 +78,21 @@ class ExpenseCategoryController extends Controller
         }
 
         try {
-            $input = $request->only(['name', 'code']);
+            $input = $request->only(['name', 'code', 'transfer']);
             $input['business_id'] = $request->session()->get('user.business_id');
 
             ExpenseCategory::create($input);
-            $output = ['success' => true,
-                            'msg' => __("expense.added_success")
-                        ];
+            $output = [
+                'success' => true,
+                'msg' => __("expense.added_success")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => false,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return $output;
@@ -113,7 +126,7 @@ class ExpenseCategoryController extends Controller
             $expense_category = ExpenseCategory::where('business_id', $business_id)->find($id);
 
             return view('expense_category.edit')
-                    ->with(compact('expense_category'));
+                ->with(compact('expense_category'));
         }
     }
 
@@ -132,23 +145,26 @@ class ExpenseCategoryController extends Controller
 
         if (request()->ajax()) {
             try {
-                $input = $request->only(['name', 'code']);
+                $input = $request->only(['name', 'code', 'transfer']);
                 $business_id = $request->session()->get('user.business_id');
 
                 $expense_category = ExpenseCategory::where('business_id', $business_id)->findOrFail($id);
                 $expense_category->name = $input['name'];
                 $expense_category->code = $input['code'];
+                $expense_category->transfer = $input['transfer'];
                 $expense_category->save();
 
-                $output = ['success' => true,
-                            'msg' => __("expense.updated_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("expense.updated_success")
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;
@@ -174,15 +190,17 @@ class ExpenseCategoryController extends Controller
                 $expense_category = ExpenseCategory::where('business_id', $business_id)->findOrFail($id);
                 $expense_category->delete();
 
-                $output = ['success' => true,
-                            'msg' => __("expense.deleted_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("expense.deleted_success")
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;

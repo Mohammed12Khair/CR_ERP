@@ -92,17 +92,16 @@
 		</div>
 	</div>
 	@endif
-
 	<div class="col-md-12">
 		<div class="form-group">
 			{!! Form::label("cheque_date_$row_index",__('lang_v1.cheque_date')) !!}
-			{!! Form::date("payment[$row_index][cheque_date]", $payment_line[cheque_date], ['class' => 'form-control', 'placeholder' => __('lang_v1.cheque_date'),'required']); !!}
+			{!! Form::date("payment[$row_index][cheque_date]", $payment_line['cheque_date'], ['class' => 'form-control', 'placeholder' => __('lang_v1.cheque_date'),'required']); !!}
 		</div>
 	</div>
 	<div class="col-md-12">
 		<div class="form-group">
 			{!! Form::label("cheque_number_$row_index",__('lang_v1.cheque_no')) !!}
-			{!! Form::text("payment[$row_index][cheque_number]", $payment_line[cheque_number], ['class' => 'form-control', 'placeholder' => __('lang_v1.cheque_no'),'required']); !!}
+			{!! Form::text("payment[$row_index][cheque_number]", $payment_line['cheque_number'], ['class' => 'form-control', 'placeholder' => __('lang_v1.cheque_no'),'required']); !!}
 		</div>
 	</div>
 </div>

@@ -1,5 +1,8 @@
 <?php 
  return [ 
+"expense_shipt_yes" => "مرتبط",
+"expense_shipt_no" => "غير مرتبط ",
+"expense_shipt" => "المصروف مرتبط بتحويل المخزون",
 "expenses" => "المصاريف",
 "expense_categories" => "فئات المصاريف",
 "manage_your_expense_categories" => "ادارة فئات المصاريف الخاصة بك",

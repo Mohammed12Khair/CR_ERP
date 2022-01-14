@@ -9,21 +9,34 @@
     </div>
 
     <div class="modal-body">
-     <div class="form-group">
+      <div class="form-group">
         {!! Form::label('name', __( 'expense.category_name' ) . ':*') !!}
-          {!! Form::text('name', $expense_category->name, ['class' => 'form-control', 'required', 'placeholder' => __( 'expense.category_name' )]); !!}
+        {!! Form::text('name', $expense_category->name, ['class' => 'form-control', 'required', 'placeholder' => __( 'expense.category_name' )]); !!}
       </div>
 
       <div class="form-group">
         {!! Form::label('code', __( 'expense.category_code' ) . ':') !!}
-          {!! Form::text('code', $expense_category->code, ['class' => 'form-control', 'placeholder' => __( 'expense.category_code' )]); !!}
+        {!! Form::text('code', $expense_category->code, ['class' => 'form-control', 'placeholder' => __( 'expense.category_code' )]); !!}
       </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">@lang( 'messages.update' )</button>
-      <button type="button" class="btn btn-default" data-dismiss="modal">@lang( 'messages.close' )</button>
-    </div>
+      <div class="form-group">
+        {!! Form::label('expense', __( 'expense.expense_shipt' ) . ':*') !!}
 
-    {!! Form::close() !!}
+        <select class="form-control" name="transfer">
+          <option value="0" <?php if ($expense_category->transfer == 0) {
+                              echo 'selected';
+                            } ?>>@lang( 'expense.expense_shipt_no' )</option>
+          <option value="1" <?php if ($expense_category->transfer == 1) {
+                              echo 'selected';
+                            } ?>>@lang( 'expense.expense_shipt_yes' )</option>
+        </select>
 
-  </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">@lang( 'messages.update' )</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">@lang( 'messages.close' )</button>
+      </div>
+
+      {!! Form::close() !!}
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->

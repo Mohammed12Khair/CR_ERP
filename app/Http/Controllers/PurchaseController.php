@@ -50,7 +50,7 @@ class PurchaseController extends Controller
 
         $this->dummyPaymentLine = [
             'method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
-            'is_return' => 0, 'transaction_no' => ''
+            'is_return' => 0, 'transaction_no' => '','cheque_date'=>''
         ];
     }
 
@@ -274,6 +274,10 @@ class PurchaseController extends Controller
 
         $payment_line = $this->dummyPaymentLine;
         $payment_types = $this->productUtil->payment_types(null, true, $business_id);
+
+        // $payment_line['cheque_date']='';
+
+
 
         //Accounts
         $accounts = $this->moduleUtil->accountsDropdown($business_id, true);

@@ -19,6 +19,7 @@ class CreateExpenseCategoriesTable extends Migration
             $table->integer('business_id')->unsigned();
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->string('code')->nullable();
+            $table->string('transfer')->nullable()->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

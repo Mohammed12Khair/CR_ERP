@@ -10,12 +10,27 @@
     <div class="modal-body">
       <div class="form-group">
         {!! Form::label('name', __( 'expense.category_name' ) . ':*') !!}
-          {!! Form::text('name', null, ['class' => 'form-control', 'required', 'placeholder' => __( 'expense.category_name' )]); !!}
+        {!! Form::text('name', null, ['class' => 'form-control', 'required', 'placeholder' => __( 'expense.category_name' )]); !!}
       </div>
 
       <div class="form-group">
         {!! Form::label('code', __( 'expense.category_code' ) . ':') !!}
-          {!! Form::text('code', null, ['class' => 'form-control', 'placeholder' => __( 'expense.category_code' )]); !!}
+        {!! Form::text('code', null, ['class' => 'form-control', 'placeholder' => __( 'expense.category_code' )]); !!}
+      </div>
+
+
+      <div class="form-group">
+        {!! Form::label('expense', __( 'expense.expense_shipt' ) . ':*') !!}
+
+        <select class="form-control" name="transfer">
+          <option value="0" <?php if ($account_type->cheque == 0) {
+                              echo 'selected';
+                            } ?>>@lang( 'expense.expense_shipt_no' )</option>
+          <option value="1" <?php if ($account_type->cheque == 1) {
+                              echo 'selected';
+                            } ?>>@lang( 'expense.expense_shipt_yes' )</option>
+        </select>
+
       </div>
     </div>
 
