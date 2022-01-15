@@ -498,7 +498,6 @@ class ExpenseController extends Controller
         if (request()->ajax()) {
             try {
                 $business_id = request()->session()->get('user.business_id');
-
                 $expense = Transaction::where('business_id', $business_id)
                     ->where(function ($q) {
                         $q->where('type', 'expense')

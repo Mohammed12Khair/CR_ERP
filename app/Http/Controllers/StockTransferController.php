@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
 
 use App\ExpenseCategory;
+use App\AccountTransaction;
 
 class StockTransferController extends Controller
 {
@@ -221,10 +222,11 @@ class StockTransferController extends Controller
         $business_id = $request->session()->get('user.business_id');
         $user_id = $request->session()->get('user.id');
 
-        // $Data_['location_id'] = $request->get('transfer_location_id');
-
+        $Data_['location_id'] = $request->get('transfer_location_id');
         $expense_values = $request->input('expense_value');
         $expense = $request->input('expense');
+
+        $shippingChargeFromExp = array_sum($expense_values);
         $combine_epensis = array_combine($expense, $expense_values);
 
         try {
@@ -239,6 +241,8 @@ class StockTransferController extends Controller
             $input_data = $request->only(['location_id', 'ref_no', 'transaction_date', 'additional_notes', 'shipping_charges', 'final_total']);
             $status = $request->input('status');
             $user_id = $request->session()->get('user.id');
+            // Set the shipping to the expensis 1
+            $input_data['shipping_charges'] = $shippingChargeFromExp;
 
             $input_data['final_total'] = $this->productUtil->num_uf($input_data['final_total']);
             $input_data['total_before_tax'] = $input_data['final_total'];
@@ -247,7 +251,8 @@ class StockTransferController extends Controller
             $input_data['business_id'] = $business_id;
             $input_data['created_by'] = $user_id;
             $input_data['transaction_date'] = $this->productUtil->uf_date($input_data['transaction_date'], true);
-            $input_data['shipping_charges'] = $this->productUtil->num_uf($input_data['shipping_charges']);
+            // Set the shipping to the expensis 2  after comment below line
+            // $input_data['shipping_charges'] = $this->productUtil->num_uf($input_data['shipping_charges']);
             $input_data['payment_status'] = 'paid';
             $input_data['status'] = $status == 'completed' ? 'final' : $status;
             //Update reference count
@@ -257,7 +262,7 @@ class StockTransferController extends Controller
                 $input_data['ref_no'] = $this->productUtil->generateReferenceNumber('stock_transfer', $ref_count);
             }
 
-            $input_data['additional_notes'] =  $business_id . '_' .  $input_data['ref_no'];
+            $input_data['additional_notes'] =  $business_id . '_' .  str_replace("/", "_", $input_data['ref_no']);
 
             $products = $request->input('products');
             $sell_lines = [];
@@ -361,7 +366,7 @@ class StockTransferController extends Controller
                 }
                 $Data_['final_total'] = $expense_values;
                 $Data_['expense_category_id'] = $expense;
-                $Data_['additional_notes'] = $business_id . '_' .  $input_data['ref_no'];
+                $Data_['additional_notes'] = $business_id . '_' .   str_replace("/", "_", $input_data['ref_no']);
                 $this->transactionUtil->createExpense_transfer($Data_, $business_id, $user_id);
             }
 
@@ -447,6 +452,9 @@ class StockTransferController extends Controller
 
     public function destroy($id)
     {
+
+
+
         if (!auth()->user()->can('purchase.delete')) {
             abort(403, 'Unauthorized action.');
         }
@@ -482,6 +490,20 @@ class StockTransferController extends Controller
                         ];
                     }
                 }
+
+                // Khair Delete expensis Start
+                // Get app expensis related to this transfer
+                $transfer_code = Transaction::where('id', $id)->first();
+                $additional_notes_ = $transfer_code->additional_notes;
+                $expensis_datas = Transaction::where('additional_notes', $additional_notes_)
+                    ->where('type', 'expense')->get();
+                foreach ($expensis_datas as $expensis_data) {
+                    $expense = Transaction::where('id', $expensis_data->id)->where('type', 'expense')->first();
+                    $expense->delete();
+                    //Delete account transactions
+                    AccountTransaction::where('transaction_id', $expense->id)->delete();
+                }
+                // Khair Delete expensis End
 
                 DB::beginTransaction();
                 //Get purchase lines from transaction_sell_lines_purchase_lines and decrease quantity_sold
