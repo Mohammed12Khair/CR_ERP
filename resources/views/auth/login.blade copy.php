@@ -82,8 +82,9 @@
     <hr>
     <div class="col-4" style="text-align: center;">
         @foreach(config('constants.langs') as $key => $val)
-        <a href='?lang={{$key}}' class="btn btn-sm  btn-success">{{$val['full_name']}}</a>
-        @endforeach
+        <a href='?lang={{$key}}' class="btn btn-sm btn-success">{{$val['full_name']}}</strong><br>
+            @endforeach
+
     </div>
 </div>
 @if(config('app.env') == 'demo')
