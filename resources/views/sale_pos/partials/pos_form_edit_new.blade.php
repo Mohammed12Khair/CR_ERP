@@ -30,15 +30,11 @@
 					<button type="button" class="btn btn-default bg-white btn-flat" data-toggle="modal" data-target="#configure_search_modal" title="{{__('lang_v1.configure_product_search')}}"><i class="fas fa-search-plus"></i></button>
 				</div>
 
-				@can('EditPause')
+			 
 				{!! Form::text('search_product', null, ['class' => 'form-control mousetrap', 'id' => 'search_product', 'placeholder' => __('lang_v1.search_product_placeholder'),
 				'autofocus' => true,
 				]); !!}
-				@else
-				{!! Form::text('search_product', null, ['class' => 'form-control mousetrap', 'id' => 'search_product', 'placeholder' => __('lang_v1.search_product_placeholder'),
-				'autofocus' => true,'readonly'
-				]); !!}
-				@endcan
+		 
 				<span class="input-group-btn">
 
 					<!-- Show button for weighing scale modal -->
@@ -206,7 +202,7 @@
 			<tbody>
 				@foreach($sell_details as $sell_line)
 
-				@include('sale_pos.product_row', 
+				@include('sale_pos.product_row_new', 
 					['product' => $sell_line, 
 					'row_count' => $loop->index, 
 					'tax_dropdown' => $taxes, 

@@ -534,6 +534,26 @@
       </div>
     </div>
     <div class="col-md-9">
+
+      <!-- edit new permission for pause request from the pos Start -->
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::radio('radio_option[pause_order_view]', 'pause_order.view', in_array('pause_order.view', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.view_all_pause_order_n_stock_adjustment' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::radio('radio_option[pause_order_view]', 'view_own_pause_order', in_array('view_own_pause_order', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.view_own_pause_order_n_stock_adjustment' ) }}
+          </label>
+        </div>
+      </div>
+      <!-- edit new permission for pause request from the pos End -->
+
       <div class="col-md-12">
         <div class="checkbox">
           <label>
@@ -542,6 +562,7 @@
           </label>
         </div>
       </div>
+      
       @if(in_array('pos_sale', $enabled_modules))
       <div class="col-md-12">
         <div class="checkbox">
@@ -648,6 +669,15 @@
           <label>
             {!! Form::checkbox('permissions[]', 'credit_sale', in_array('credit_sale', $role_permissions), ['class' => 'input-icheck']); !!}
             {{ __('lang_v1.credit_sale') }}
+          </label>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'EditPause', in_array('EditPause', $role_permissions), ['class' => 'input-icheck']); !!}
+            {{ __('role.EditPause') }}
           </label>
         </div>
       </div>

@@ -15,6 +15,8 @@ use Yajra\DataTables\Facades\DataTables;
 use Spatie\Activitylog\Models\Activity;
 use App\Account;
 use App\Activeaccounts;
+use App\Category;
+use App\category_view;
 
 class ManageUserController extends Controller
 {
@@ -72,6 +74,51 @@ class ManageUserController extends Controller
             ->with('id', $id)
             ->with('All_Accounts', $All_Accounts)
             ->with('active_accounts_data', $active_accounts_data);
+    }
+
+
+
+    public function CategoryManagerAdd(Request $request)
+    {
+        $business_id = request()->session()->get('user.business_id');
+        $Category_data = new category_view();
+        $Category_data->user_id = $request->input('user_id');
+        $Category_data->category_id = $request->input('category_id');
+        $Category_data->business_id = $business_id;
+        $Category_data->save();
+        return redirect()->back();
+    }
+
+
+    public function CategoryManagerDelete(Request $request)
+    {
+        category_view::where('user_id', $request->input('user_id'))
+            ->where('category_id', $request->input('category_id'))->delete();
+
+        return redirect()->back();
+    }
+
+    public function CategoryManager($id)
+    {
+
+        if (!auth()->user()->can('users_accounts_admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $business_id = request()->session()->get('user.business_id');
+        $categories = Category::where('business_id', $business_id)->where('deleted_at', '=', null)->get();
+
+        $Active_categories = category_view::where('business_id', $business_id)
+            ->where('user_id', $id)->get();
+
+        $user_active_categories = [];
+        foreach ($Active_categories as $Active_categorie) {
+            array_push($user_active_categories, $Active_categorie->category_id);
+        }
+
+        return view('manage_user.category')
+            ->with('id', $id)
+            ->with('categories', $categories)
+            ->with('user_active_categories', $user_active_categories);
     }
     /**
      * Constructor
@@ -131,6 +178,9 @@ class ManageUserController extends Controller
                     @endcan
                     @can("users_accounts_admin")
                     <a href="{{action(\'ManageUserController@AccountManage\', [$id])}}" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-usd"></i> @lang("lang_v1.payment_accounts")</a>
+                @endcan
+                    @can("users_accounts_admin")
+                    <a href="{{action(\'ManageUserController@CategoryManager\', [$id])}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-check"></i> @lang("lang_v1.category")</a>
                 @endcan'
                 )
                 ->filterColumn('full_name', function ($query, $keyword) {

@@ -1,5 +1,8 @@
 <?php
 return [
+    "category" => "ألاصناف",
+    "view_own_pause_order_n_stock_adjustment" => "اظهار طلبات المستخدم المعلقة فقط",
+    "view_all_pause_order_n_stock_adjustment" => "اظهار جميع الطلبات المعلقة",
     "users_accounts_admin" => "اداره صلاحية الحسابات للمستخدمين",
     "cheque_accept" => "تمرير الشيك",
     "accounts_edit" => "اداره حسابات المستخدمين",

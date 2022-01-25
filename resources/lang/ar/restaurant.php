@@ -33,6 +33,7 @@ return [
 "manage_your_kitchen" => "إدارة مطبخك",
 "all_orders" => "جميع الطلبات",
 "order_no" => "رقم الطلب",
+"order_statuses_new" =>'جديد',
 "order_statuses" => [
         'received' => 'تم الاستلام',
         'cooked' => 'مطبوخ',

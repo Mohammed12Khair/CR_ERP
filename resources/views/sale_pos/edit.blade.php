@@ -27,7 +27,9 @@
 							<!-- sub_type -->
 							{!! Form::hidden('sub_type', isset($sub_type) ? $sub_type : null) !!}
 							<input type="hidden" id="item_addition_method" value="{{$business_details->item_addition_method}}">
-								@include('sale_pos.partials.pos_form_edit')
+								<!--Edit  -->
+
+							@include('sale_pos.partials.pos_form_edit_new')
 
 								@include('sale_pos.partials.pos_form_totals', ['edit' => true])
 

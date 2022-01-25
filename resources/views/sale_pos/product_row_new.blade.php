@@ -201,26 +201,40 @@ $common_settings = session()->get('business.common_settings');
 		@endforeach
 		<div class="input-group input-number">
 			<span class="input-group-btn">
-
+				@can('EditPause')
 				<button type="button" class="btn btn-default btn-flat quantity-down">
 					<i class="fa fa-minus text-danger"></i>
 				</button>
-
+				@else
+				<button type="button" class="btn btn-default btn-flat">
+					<i class="fa fa-lock text-danger"></i>
+				</button>
+				@endcan
 			</span>
 
-
+			@can('EditPause')
 			<input type="text" data-min="1" class="form-control pos_quantity input_number mousetrap input_quantity" value="{{@format_quantity($product->quantity_ordered)}}" name="products[{{$row_count}}][quantity]" data-allow-overselling="@if(empty($pos_settings['allow_overselling'])){{'false'}}@else{{'true'}}@endif" @if($allow_decimal) data-decimal=1 @else data-decimal=0 data-rule-abs_digit="true" data-msg-abs_digit="@lang('lang_v1.decimal_value_not_allowed')" @endif data-rule-required="true" data-msg-required="@lang('validation.custom-messages.this_field_is_required')" @if($product->enable_stock && empty($pos_settings['allow_overselling']) && empty($is_sales_order) )
 			data-rule-max-value="{{$max_qty_rule}}" data-qty_available="{{$product->qty_available}}" data-msg-max-value="{{$max_qty_msg}}"
 			data-msg_max_default="@lang('validation.custom-messages.quantity_not_available', ['qty'=> $product->formatted_qty_available, 'unit' => $product->unit ])"
 			@endif
 			>
-
+			@else
+			<input type="text" data-min="1" class="form-control pos_quantity input_number mousetrap input_quantity" readonly value="{{@format_quantity($product->quantity_ordered)}}" name="products[{{$row_count}}][quantity]" data-allow-overselling="@if(empty($pos_settings['allow_overselling'])){{'false'}}@else{{'true'}}@endif" @if($allow_decimal) data-decimal=1 @else data-decimal=0 data-rule-abs_digit="true" data-msg-abs_digit="@lang('lang_v1.decimal_value_not_allowed')" @endif data-rule-required="true" data-msg-required="@lang('validation.custom-messages.this_field_is_required')" @if($product->enable_stock && empty($pos_settings['allow_overselling']) && empty($is_sales_order) )
+			data-rule-max-value="{{$max_qty_rule}}" data-qty_available="{{$product->qty_available}}" data-msg-max-value="{{$max_qty_msg}}"
+			data-msg_max_default="@lang('validation.custom-messages.quantity_not_available', ['qty'=> $product->formatted_qty_available, 'unit' => $product->unit ])"
+			@endif
+			>
+			@endcan
 			<span class="input-group-btn">
-
+				@can('EditPause')
 				<button type="button" class="btn btn-default btn-flat quantity-up">
 					<i class="fa fa-plus text-success"></i>
 				</button>
-
+				@else
+				<button type="button" class="btn btn-default btn-flat">
+					<i class="fa fa-lock text-success"></i>
+				</button>
+				@endcan
 			</span>
 		</div>
 
@@ -331,11 +345,16 @@ $common_settings = session()->get('business.common_settings');
 	<td class="text-center">
 		@php
 		$subtotal_type = !empty($pos_settings['is_pos_subtotal_editable']) ? 'text' : 'hidden';
+
 		@endphp
 		<input type="{{$subtotal_type}}" class="form-control pos_line_total @if(!empty($pos_settings['is_pos_subtotal_editable'])) input_number @endif" value="{{@num_format($product->quantity_ordered*$unit_price_inc_tax )}}">
 		<span class="display_currency pos_line_total_text @if(!empty($pos_settings['is_pos_subtotal_editable'])) hide @endif" data-currency_symbol="true">{{$product->quantity_ordered*$unit_price_inc_tax}}</span>
 	</td>
 	<td class="text-center v-center">
+		@can('EditPause')
 		<i class="fa fa-times text-danger pos_remove_row cursor-pointer" aria-hidden="true"></i>
+		@else
+		<i class="fa fa-lock text-danger" aria-hidden="true"></i>
+		@endcan
 	</td>
 </tr>

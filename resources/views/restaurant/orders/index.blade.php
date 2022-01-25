@@ -11,7 +11,7 @@
             <h3>@lang( 'restaurant.all_orders' ) @show_tooltip(__('lang_v1.tooltip_serviceorder'))</h3>
         </div>
         <div class="col-sm-12">
-            <button type="button" class="btn btn-sm btn-primary pull-right" id="refresh_orders"><i class="fas fa-sync"></i> @lang( 'restaurant.refresh' )</button>
+            <button type="button" class="btn btn-sm btn-primary pull-right" id="refresh_orders_2"><i class="fas fa-sync"></i> @lang( 'restaurant.refresh' )</button>
         </div>
     </div>
     <br>
@@ -45,7 +45,8 @@
     @component('components.widget', ['title' => __( 'restaurant.all_your_orders' )])
         <input type="hidden" id="orders_for" value="waiter">
         <div class="row" id="orders_div">
-         @include('restaurant.partials.show_orders', array('orders_for' => 'waiter'))   
+        
+         @include('restaurant.partials.show_orders_2', array('orders_for' => 'waiter'))   
         </div>
         <div class="overlay hide">
           <i class="fas fa-sync fa-spin"></i>
@@ -79,7 +80,7 @@
                             dataType: "json",
                             success: function(result){
                                 if(result.success == true){
-                                    refresh_orders();
+                                    refresh_orders_2();
                                     toastr.success(result.msg);
                                 } else {
                                     toastr.error(result.msg);

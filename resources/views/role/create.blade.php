@@ -536,7 +536,31 @@
         </label>
       </div>
     </div>
+
+
+
+
+
+
     <div class="col-md-9">
+
+      <!-- Edit New Permission to show the pause order based on the cutomer -->
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::radio('radio_option[pause_order_view]', 'pause_order.view', false,
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.view_all_pause_order_n_stock_adjustment' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::radio('radio_option[pause_order_view]', 'view_own_pause_order', false,['class' => 'input-icheck']); !!}
+            {{ __('lang_v1.view_own_pause_order_n_stock_adjustment') }}
+          </label>
+        </div>
+      </div>
       @if(in_array('pos_sale', $enabled_modules))
       <div class="col-md-12">
         <div class="checkbox">
@@ -597,8 +621,7 @@
       </div>
 
 
-       <!-- Data -->
-GET
+      <!-- Data -->
       <div class="col-md-12">
         <div class="checkbox">
           <label>
@@ -655,6 +678,18 @@ GET
           </label>
         </div>
       </div>
+
+
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'EditPause', false,
+            [ 'class' => 'input-icheck']); !!} {{ __( 'role.EditPause' ) }}
+          </label>
+        </div>
+      </div>
+
+
       <!-- <div class="col-md-12">
         <div class="checkbox">
           <label>
@@ -1412,7 +1447,7 @@ GET
         </div>
       </div>
 
-     
+
 
     </div>
   </div>
@@ -1537,7 +1572,7 @@ GET
           </label>
         </div>
       </div>
-      
+
       <!-- End -->
 
 

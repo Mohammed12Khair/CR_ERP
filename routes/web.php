@@ -45,7 +45,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/home/sales-payment-dues', 'HomeController@getSalesPaymentDues');
     Route::post('/attach-medias-to-model', 'HomeController@attachMediasToGivenModel')->name('attach.medias.to.model');
     Route::get('/calendar', 'HomeController@getCalendar')->name('calendar');
-    
+
     Route::post('/test-email', 'BusinessController@testEmailConfiguration');
     Route::post('/test-sms', 'BusinessController@testSmsConfiguration');
     Route::get('/business/settings', 'BusinessController@getBusinessSettings')->name('business.getBusinessSettings');
@@ -90,7 +90,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/products/bulk-update', 'ProductController@bulkUpdate');
     Route::post('/products/bulk-update-location', 'ProductController@updateProductLocation');
     Route::get('/products/get-product-to-edit/{product_id}', 'ProductController@getProductToEdit');
-    
+
     Route::post('/products/get_sub_categories', 'ProductController@getSubCategories');
     Route::get('/products/get_sub_units', 'ProductController@getSubUnits');
     Route::post('/products/product_form_part', 'ProductController@getProductVariationFormPart');
@@ -102,7 +102,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/products/save_quick_product', 'ProductController@saveQuickProduct');
     Route::get('/products/get-combo-product-entry-row', 'ProductController@getComboProductEntryRow');
     Route::post('/products/toggle-woocommerce-sync', 'ProductController@toggleWooCommerceSync');
-    
+
     Route::resource('products', 'ProductController');
 
     Route::post('/purchases/update-status', 'PurchaseController@updateStatus');
@@ -141,9 +141,13 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('users', 'ManageUserController');
 
     // Account Controller AccountManage
-    Route::get('users/accounts/{id}','ManageUserController@AccountManage');
-    Route::post('users/accounts/add','ManageUserController@AccountManageAdd');
-    Route::post('users/accounts/delete','ManageUserController@AccountManageDelete');
+    Route::get('users/accounts/{id}', 'ManageUserController@AccountManage');
+    Route::post('users/accounts/add', 'ManageUserController@AccountManageAdd');
+    Route::post('users/accounts/delete', 'ManageUserController@AccountManageDelete');
+
+    Route::get('users/category/{id}', 'ManageUserController@CategoryManager');
+    Route::post('users/category/add', 'ManageUserController@CategoryManagerAdd');
+    Route::post('users/category/delete', 'ManageUserController@CategoryManagerDelete');
 
     Route::resource('group-taxes', 'GroupTaxController');
 
@@ -160,13 +164,13 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/labels/preview', 'LabelsController@preview');
 
     // banck cheque controller Solved.
-    Route::get('/cheques','bankcheques@index');
-    Route::get('/cheques/{chequeNumber}/{client}/{due_date}','bankcheques@indexSearch');
-    Route::get('/cheques/edit/{key}','bankcheques@EditPayment');
-    Route::get('/cheques/edit-cheque/{id}','bankcheques@EditCheque');
-    Route::get('/cheques/account','bankcheques@Accounts');
-    Route::post('/cheques/edit-cheque/save','bankcheques@EditChequeSave');
-   
+    Route::get('/cheques', 'bankcheques@index');
+    Route::get('/cheques/{chequeNumber}/{client}/{due_date}', 'bankcheques@indexSearch');
+    Route::get('/cheques/edit/{key}', 'bankcheques@EditPayment');
+    Route::get('/cheques/edit-cheque/{id}', 'bankcheques@EditCheque');
+    Route::get('/cheques/account', 'bankcheques@Accounts');
+    Route::post('/cheques/edit-cheque/save', 'bankcheques@EditChequeSave');
+
     //Reports...
     Route::get('/reports/get-stock-by-sell-price', 'ReportController@getStockBySellingPrice');
     Route::get('/reports/purchase-report', 'ReportController@purchaseReport');
@@ -207,7 +211,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/reports/get-profit/{by?}', 'ReportController@getProfit');
     Route::get('/reports/items-report', 'ReportController@itemsReport');
     Route::get('/reports/get-stock-value', 'ReportController@getStockValue');
-    
+
     Route::get('business-location/activate-deactivate/{location_id}', 'BusinessLocationController@activateDeactivateLocation');
 
     //Business Location Settings...
@@ -263,7 +267,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('stock-transfers/print/{id}', 'StockTransferController@printInvoice');
     Route::post('stock-transfers/update-status/{id}', 'StockTransferController@updateStatus');
     Route::resource('stock-transfers', 'StockTransferController');
-    
+
     Route::get('/opening-stock/add/{product_id}', 'OpeningStockController@add');
     Route::post('/opening-stock/save', 'OpeningStockController@save');
 
@@ -279,7 +283,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('sell-return/get-product-row', 'SellReturnController@getProductRow');
     Route::get('/sell-return/print/{id}', 'SellReturnController@printInvoice');
     Route::get('/sell-return/add/{id}', 'SellReturnController@add');
-    
+
     //Backup
     Route::get('backup/download/{file_name}', 'BackUpController@download');
     Route::get('backup/delete/{file_name}', 'BackUpController@delete');
@@ -328,7 +332,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
         Route::post('/link-account', 'AccountReportsController@postLinkAccount');
         Route::get('/cash-flow', 'AccountController@cashFlow');
     });
-    
+
     Route::resource('account-types', 'AccountTypeController');
 
     //Restaurant module
@@ -345,7 +349,11 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
         Route::get('/kitchen', 'Restaurant\KitchenController@index');
         Route::get('/kitchen/mark-as-cooked/{id}', 'Restaurant\KitchenController@markAsCooked');
+        // Mohammed Khair
+        Route::get('/kitchen/mark-as-cooked_item/{id}', 'Restaurant\KitchenController@markAsCookedOne');
+
         Route::post('/refresh-orders-list', 'Restaurant\KitchenController@refreshOrdersList');
+        Route::post('/refresh-orders-list2', 'Restaurant\KitchenController@refreshOrdersList_2');
         Route::post('/refresh-line-orders-list', 'Restaurant\KitchenController@refreshLineOrdersList');
 
         Route::get('/orders', 'Restaurant\OrderController@index');
@@ -357,7 +365,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::get('bookings/get-todays-bookings', 'Restaurant\BookingController@getTodaysBookings');
     Route::resource('bookings', 'Restaurant\BookingController');
-    
+
     Route::resource('types-of-service', 'TypesOfServiceController');
     Route::get('sells/edit-shipping/{id}', 'SellController@editShipping');
     Route::put('sells/update-shipping/{id}', 'SellController@updateShipping');
@@ -369,7 +377,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('warranties', 'WarrantyController');
 
     Route::resource('dashboard-configurator', 'DashboardConfiguratorController')
-    ->only(['edit', 'update']);
+        ->only(['edit', 'update']);
 
     Route::get('view-media/{model_id}', 'SellController@viewMedia');
 

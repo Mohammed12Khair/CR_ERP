@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\Product;
 use App\Media;
+use Illuminate\Auth\EloquentUserProvider;
 use Spatie\Activitylog\Models\Activity;
 
 class SellController extends Controller
@@ -312,12 +313,24 @@ class SellController extends Controller
                 if ($is_service_staff_enabled) {
                     $with[] = 'service_staff';
                 }
-
-                $sales = $sells->where('transactions.is_suspend', 1)
-                    ->with($with)
-                    ->addSelect('transactions.is_suspend', 'transactions.res_table_id', 'transactions.res_waiter_id', 'transactions.additional_notes')
-                    ->get();
-
+                // Mohammed Khair 
+                // show pause based on user created the request 
+                if (auth()->user()->can('view_own_pause_order')) {
+                    error_log('view_own_pause_order Activated');
+                    $userID = request()->session()->get('user.id');
+                    $sales = $sells->where('transactions.is_suspend', 1)
+                        ->where('transactions.created_by', $userID)
+                        ->with($with)
+                        ->addSelect('transactions.created_by', 'transactions.is_suspend', 'transactions.res_table_id', 'transactions.res_waiter_id', 'transactions.additional_notes')
+                        ->get();
+                }
+                if (auth()->user()->can('pause_order.view')) {
+                    error_log('pause_order.view Activated');
+                    $sales = $sells->where('transactions.is_suspend', 1)
+                        ->with($with)
+                        ->addSelect('transactions.created_by', 'transactions.is_suspend', 'transactions.res_table_id', 'transactions.res_waiter_id', 'transactions.additional_notes')
+                        ->get();
+                }
                 return view('sale_pos.partials.suspended_sales_modal')->with(compact('sales', 'is_tables_enabled', 'is_service_staff_enabled', 'transaction_sub_type'));
             }
 
@@ -900,11 +913,11 @@ class SellController extends Controller
         $location_printer_type = BusinessLocation::find($location_id)->receipt_printer_type;
 
         $sell_details = TransactionSellLine::join(
-                'products AS p',
-                'transaction_sell_lines.product_id',
-                '=',
-                'p.id'
-            )
+            'products AS p',
+            'transaction_sell_lines.product_id',
+            '=',
+            'p.id'
+        )
             ->join(
                 'variations AS variations',
                 'transaction_sell_lines.variation_id',
