@@ -1,10 +1,10 @@
 <?php 
  return [ 
-"stock_adjustment" => "المخزون الهالك",
-"stock_adjustments" => "المخزون الهالك",
-"list" => "قائمة المخزون الهالك",
+"stock_adjustment" => "المخزون التالف",
+"stock_adjustments" => "المخزون التالف",
+"list" => "قائمة المخزون التالف",
 "add" => "أضف تالف",
-"all_stock_adjustments" => "جميع المخزون الهالك",
+"all_stock_adjustments" => "جميع المخزون التالف",
 "search_product" => "البحث عن المنتجات",
 "adjustment_type" => "نوع الاتلاف",
 "normal" => "عادي",
@@ -14,6 +14,6 @@
 "reason_for_stock_adjustment" => "السبب",
 "stock_adjustment_added_successfully" => "تمت اضافة مخزون تالف بنجاح",
 "search_products" => "البحث عن المنتجات",
-"delete_success" => "تم حذف المخزون الهالك بنجاح",
-"view_details" => "عرض تفاصيل المخزون الهالك",
+"delete_success" => "تم حذف المخزون التالف بنجاح",
+"view_details" => "عرض تفاصيل المخزون التالف",
 ];

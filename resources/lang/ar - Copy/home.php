@@ -4,7 +4,7 @@
 "welcome_message" => ",:name مرحبا",
 "total_sell" => "اجمالي المبيعات",
 "total_purchase" => "إجمالي المشتريات",
-"invoice_due" => "المبيعات الغير المدفوعة",
+"invoice_due" => "الفواتير الغير مدفوعة",
 "purchase_due" => "المشتريات الغير مدفوعة",
 "today" => "اليوم",
 "this_week" => "هذا الأسبوع",

@@ -18,6 +18,11 @@
 if ($user->parent_sell_line_id > 0 or $user->res_line_order_status == 'cooked') {
 continue;
 }
+
+if($order->shipping_status == 'ordered')
+{
+continue;
+}
 @endphp
 <?php
 $product = \App\Product::where('id', $user->product_id)->first();
@@ -96,8 +101,6 @@ try {
 
 					?>
 				</table>
-
-
 			</div>
 			@if($orders_for == 'kitchen')
 			<!-- <a href="#" class="btn btn-flat small-box-footer bg-yellow mark_as_cooked_btn" data-href="{{action('Restaurant\KitchenController@markAsCooked', [$order->id])}}"><i class="fa fa-check-square-o"></i> @lang('restaurant.mark_as_cooked')</a> -->

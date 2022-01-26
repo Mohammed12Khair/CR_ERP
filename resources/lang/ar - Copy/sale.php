@@ -42,7 +42,7 @@
 "drafts" => "المسودات",
 "all_drafts" => "جميع المسودات",
 "sell_details" => "تفاصيل المبيعات",
-"payments" => "الحركة المالية",
+"payments" => "المدفوعات",
 "amount" => "المبلغ",
 "payment_mode" => "طريقة الدفع",
 "payment_note" => "ملاحظة الدفع",

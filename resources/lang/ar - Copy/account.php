@@ -43,7 +43,7 @@ return [
 "capital_accounts" => "حسابات رأس المال",
 "deposit_from" => "الإيداع من",
 "no_capital_account_created" => "لا يوجد حساب رأس مال نشط.",
-"payment_account_report" => "الفواتير المدفوعة",
+"payment_account_report" => "الفواتير المحصلة",
 "invoice_ref_no" => "الفاتورة No./Ref. رقم",
 "payment_ref_no" => "رقم المرجع المدفوع",
 "payment_for" => "الدفع مقابل",

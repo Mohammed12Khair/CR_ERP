@@ -1,6 +1,6 @@
 <?php 
  return [ 
-"contacts" => "العملاء والموردين",
+"contacts" => "جهات الاتصال",
 "name" => "الإسم",
 "contact" => "جهة اتصال",
 "manage_your_contact" => "إدارة contacts: الخاص بك",
@@ -27,6 +27,6 @@
 "total_paid" => "مجموع المبالغ المدفوعة", 
 "total_purchase_paid" => "مجموع مدفوعات الشراء", 
 "total_sale_paid" => "اجمالي مدفوعات المبيعات", 
-"total_sale_due" => "ديون المبيعات", 
+"total_sale_due" => "مجموع المبيعات غير المدفوعة", 
 "customer" => "عميل", 
 ];
