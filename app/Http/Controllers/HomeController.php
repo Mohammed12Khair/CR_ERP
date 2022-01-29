@@ -199,7 +199,7 @@ class HomeController extends Controller
         }
         // Custom Data
         $sells_chart_3 = new CommonChart;
-        $Transaction_Details = DB::select(DB::raw("select type type,sum(final_total) total from transactions where business_id=:business_id GROUP by type"), array(
+        $Transaction_Details = DB::select(DB::raw("select type type,sum(final_total) total from transactions where type not in ('sell_transfer','purchase_transfer') and  business_id=:business_id GROUP by type"), array(
             'business_id' => $business_id,
         ));
 

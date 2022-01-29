@@ -1,7 +1,13 @@
 @forelse($orders as $order)
 
-<div class="col-md-3 col-xs-6 order_div">
-	<div class="small-box bg-gray">
+<div class="col-md-3 col-xs-6 order_div rounded">
+@if($order->shipping_status == 'packed' || $order->shipping_status == 'shipped' || $order->shipping_status == 'delivered' || $order->shipping_status == 'cancelled' )
+<div class="small-box bg-info  rounded">
+<div style="text-align:center;" ><i class="fa fa-truck"></i></div>
+@else
+	<div class="small-box bg-gray  rounded">
+
+	@endif
 		<div class="inner">
 			<h4 class="text-center">#{{$order->invoice_no}}</h4>
 			<table class="table no-margin no-border table-slim">
@@ -37,7 +43,7 @@
 			</table>
 		</div>
 
-		<h1>{{ $order_status}}</h1>
+		<!-- <h1>{{ $order_status}}</h1> -->
 
 		@if($orders_for == 'kitchen')
 		<a href="#" class="btn btn-flat small-box-footer bg-yellow mark_as_cooked_btn" data-href="{{action('Restaurant\KitchenController@markAsCooked', [$order->id])}}"><i class="fa fa-check-square-o"></i> @lang('restaurant.mark_as_cooked')</a>

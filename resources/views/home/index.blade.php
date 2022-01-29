@@ -190,7 +190,7 @@
       @slot('title')
       {{ __('lang_v1.sales_payment_dues') }} @show_tooltip(__('lang_v1.tooltip_sales_payment_dues'))
       @endslot
-      <table class="table table-bordered table-striped" id="sales_payment_dues_table">
+      <table class="table table-bordered table-striped" id="sales_payment_dues_table" style="width: 100%;">
         <thead>
           <tr>
             <th>@lang( 'contact.customer' )</th>
@@ -212,7 +212,7 @@
       @slot('title')
       {{ __('lang_v1.purchase_payment_dues') }} @show_tooltip(__('tooltip.payment_dues'))
       @endslot
-      <table class="table table-bordered table-striped" id="purchase_payment_dues_table">
+      <table class="table table-bordered table-striped" id="purchase_payment_dues_table" style="width: 100%;">
         <thead>
           <tr>
             <th>@lang( 'purchase.supplier' )</th>
@@ -257,7 +257,7 @@
       {{ __('home.stock_expiry_alert') }} @show_tooltip( __('tooltip.stock_expiry_alert', [ 'days' =>session('business.stock_expiry_alert_days', 30) ]) )
       @endslot
       <input type="hidden" id="stock_expiry_alert_days" value="{{ \Carbon::now()->addDays(session('business.stock_expiry_alert_days', 30))->format('Y-m-d') }}">
-      <table class="table table-bordered table-striped" id="stock_expiry_alert_table">
+      <table class="table table-bordered table-striped" id="stock_expiry_alert_table" style="width: 100%;">
         <thead>
           <tr>
             <th>@lang('business.product')</th>
@@ -283,7 +283,7 @@
       {{__('lang_v1.sales_order')}}
       @endslot
       <div class="table-responsive">
-        <table class="table table-bordered table-striped ajax_view" id="sales_order_table">
+        <table class="table table-bordered table-striped ajax_view" id="sales_order_table" style="width: 100%;">
           <thead>
             <tr>
               <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
@@ -344,7 +344,7 @@
   @lang('lang_v1.pending_shipments')
   @endslot
   <div class="table-responsive">
-    <table class="table table-bordered table-striped ajax_view" id="shipments_table">
+    <table class="table table-bordered table-striped ajax_view" id="shipments_table" style="width: 100%;">
       <thead>
         <tr>
           <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>

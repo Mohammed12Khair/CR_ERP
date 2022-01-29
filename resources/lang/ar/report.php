@@ -1,5 +1,6 @@
 <?php 
  return [ 
+"trasfer_stock_cost" => "تقاير تحويلات المخزون",
 "reports" => "التقارير",
 "purchase_sell_report" => "مشتريات ومبيعات",
 "purchase_sell" => "تققريير المشتريات والمبيعات",

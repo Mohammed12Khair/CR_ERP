@@ -51,83 +51,88 @@ try {
 ?>
 <a href="#" class=" mark_as_cooked_btn" data-href="{{action('Restaurant\KitchenController@markAsCookedOne', [$user->id])}}">
 	<div class="col-md-3 col-xs-6 order_div Type{{$product->category_id}}" style="height: 100%;">
-		<div class="small-box bg-gray rounded" style="border-radius: 14px!important;">
-			<div class="inner">
-				<h4 class="text-center">#{{$order->invoice_no}}</h4>
-				<table class="table no-margin no-border table-slim text-center" style="color:black!important;text-align:center;">
-					<tr>
-						<!-- <th>@lang('restaurant.order_status')</th> -->
-						<td><span class="label bg-light-blue">@lang('restaurant.order_statuses_new') </span></td>
-					</tr>
-
-
-					<div class="container">
+		@if($order->shipping_status == 'packed' || $order->shipping_status == 'shipped' || $order->shipping_status == 'delivered' || $order->shipping_status == 'cancelled' )
+		<div class="small-box bg-info rounded" style="border-radius: 14px!important;">
+		<div style="text-align:center;" ><i class="fa fa-truck"></i></div>
+			@else
+			<div class="small-box bg-gray rounded" style="border-radius: 14px!important;">
+				@endif
+				<div class="inner">
+					<h4 class="text-center">#{{$order->invoice_no}}</h4>
+					<table class="table no-margin no-border table-slim text-center" style="color:black!important;text-align:center;">
 						<tr>
-							<!-- <th>@lang('restaurant.placed_at')</th> -->
-							<td>{{@format_date($order->created_at)}} {{ @format_time($order->created_at)}}</td>
+							<!-- <th>@lang('restaurant.order_status')</th> -->
+							<td><span class="label bg-light-blue">@lang('restaurant.order_statuses_new') </span></td>
 						</tr>
+
+
+						<div class="container">
+							<tr>
+								<!-- <th>@lang('restaurant.placed_at')</th> -->
+								<td>{{@format_date($order->created_at)}} {{ @format_time($order->created_at)}}</td>
+							</tr>
+							<?php
+							echo "<tr>";
+							// echo "<th>المنتج</th>";
+							if ($variation->name != 'DUMMY') {
+								echo "<td>" . $product->name .  " " . $variation->name . "<span style='font-weight:bold'>   (" . $sell_details->quantity . ")<span></td>";
+							} else {
+								echo "<td>" . $product->name . "<span style='font-weight:bold'>   (" . $sell_details->quantity . ")<span></td>";
+							}
+							echo "</tr>";
+							echo "<tr>";
+							?>
+							<tr>
+								<!-- <td>@lang('restaurant.table')</td> -->
+								<td><span style="font-weight: bold;">@lang('restaurant.service_staff')</span>({{ $name }} ) <span style="font-weight: bold;">@lang('restaurant.table')</span>({{$order->table_name}})</td>
+							</tr>
+						</div>
 						<?php
-						echo "<tr>";
-						// echo "<th>المنتج</th>";
-						if ($variation->name != 'DUMMY') {
-							echo "<td>" . $product->name .  " " . $variation->name . "<span style='font-weight:bold'>   (" . $sell_details->quantity . ")<span></td>";
-						} else {
-							echo "<td>" . $product->name . "<span style='font-weight:bold'>   (" . $sell_details->quantity . ")<span></td>";
-						}
+						echo "<td> </td>";
 						echo "</tr>";
 						echo "<tr>";
-						?>
-						<tr>
-							<!-- <td>@lang('restaurant.table')</td> -->
-							<td><span style="font-weight: bold;">@lang('restaurant.service_staff')</span>({{ $name }} ) <span style="font-weight: bold;">@lang('restaurant.table')</span>({{$order->table_name}})</td>
-						</tr>
-					</div>
-					<?php
-					echo "<td> </td>";
-					echo "</tr>";
-					echo "<tr>";
-					// echo "<th style='color:red!important;'>التعليق</th>";
-					echo "<td style='color:red!important;'>" . $sell_details->sell_line_note  .  "</td>";
-					echo "</tr>";
-					// Check adds
-					if (count($sell_adds) > 0) {
-						foreach ($sell_adds as  $add) {
-							$Var = \App\Variation::where('id', $add->variation_id)->first();
-							// echo "<th >أضافه</th>";
-							echo "<td style='color:orange;font-weight:bold;'>" . $Var->name  .  "</td>";
-							echo "</tr>";
+						// echo "<th style='color:red!important;'>التعليق</th>";
+						echo "<td style='color:red!important;'>" . $sell_details->sell_line_note  .  "</td>";
+						echo "</tr>";
+						// Check adds
+						if (count($sell_adds) > 0) {
+							foreach ($sell_adds as  $add) {
+								$Var = \App\Variation::where('id', $add->variation_id)->first();
+								// echo "<th >أضافه</th>";
+								echo "<td style='color:orange;font-weight:bold;'>" . $Var->name  .  "</td>";
+								echo "</tr>";
+							}
 						}
-					}
 
-					?>
-				</table>
+						?>
+					</table>
+				</div>
+				@if($orders_for == 'kitchen')
+				<!-- <a href="#" class="btn btn-flat small-box-footer bg-yellow mark_as_cooked_btn" data-href="{{action('Restaurant\KitchenController@markAsCooked', [$order->id])}}"><i class="fa fa-check-square-o"></i> @lang('restaurant.mark_as_cooked')</a> -->
+				@elseif($orders_for == 'waiter' && $order->res_order_status != 'served')
+				<a href="#" class="btn btn-flat small-box-footer bg-yellow mark_as_served_btn" data-href="{{action('Restaurant\OrderController@markAsServed', [$order->id])}}"><i class="fa fa-check-square-o"></i> @lang('restaurant.mark_as_served')</a>
+				@else
+				<div class="small-box-footer bg-gray">&nbsp;</div>
+				@endif
+				<a href="#" class="btn btn-flat small-box-footer bg-info btn-modal" data-href="{{ action('SellController@show', [$order->id])}}" data-container=".view_modal">@lang('restaurant.order_details') <i class="fa fa-arrow-circle-right"></i></a>
 			</div>
-			@if($orders_for == 'kitchen')
-			<!-- <a href="#" class="btn btn-flat small-box-footer bg-yellow mark_as_cooked_btn" data-href="{{action('Restaurant\KitchenController@markAsCooked', [$order->id])}}"><i class="fa fa-check-square-o"></i> @lang('restaurant.mark_as_cooked')</a> -->
-			@elseif($orders_for == 'waiter' && $order->res_order_status != 'served')
-			<a href="#" class="btn btn-flat small-box-footer bg-yellow mark_as_served_btn" data-href="{{action('Restaurant\OrderController@markAsServed', [$order->id])}}"><i class="fa fa-check-square-o"></i> @lang('restaurant.mark_as_served')</a>
-			@else
-			<div class="small-box-footer bg-gray">&nbsp;</div>
-			@endif
-			<a href="#" class="btn btn-flat small-box-footer bg-info btn-modal" data-href="{{ action('SellController@show', [$order->id])}}" data-container=".view_modal">@lang('restaurant.order_details') <i class="fa fa-arrow-circle-right"></i></a>
 		</div>
-	</div>
 
-	@endforeach
+		@endforeach
 
-	@if($loop->iteration % 4 == 0)
-	<div class="hidden-xs">
-		<div class="clearfix"></div>
-	</div>
-	@endif
-	@if($loop->iteration % 2 == 0)
-	<div class="visible-xs">
-		<div class="clearfix"></div>
-	</div>
-	@endif
-	@empty
-	<div class="col-md-12">
-		<h4 class="text-center">@lang('restaurant.no_orders_found')</h4>
-	</div>
+		@if($loop->iteration % 4 == 0)
+		<div class="hidden-xs">
+			<div class="clearfix"></div>
+		</div>
+		@endif
+		@if($loop->iteration % 2 == 0)
+		<div class="visible-xs">
+			<div class="clearfix"></div>
+		</div>
+		@endif
+		@empty
+		<div class="col-md-12">
+			<h4 class="text-center">@lang('restaurant.no_orders_found')</h4>
+		</div>
 </a>
 @endforelse
