@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="col-sm-4">
-          <div class="form-group">
+          <div class="form-group" style="display: none;">
             {!! Form::label('contact_id', __('lang_v1.expense_for_contact').':') !!} 
             {!! Form::select('contact_id', $contacts, $expense->contact_id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
           </div>
@@ -68,7 +68,7 @@
                 @includeIf('components.document_help_text')</p>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" style="display: none;">
             <div class="form-group">
                 {!! Form::label('tax_id', __('product.applicable_tax') . ':' ) !!}
                 <div class="input-group">

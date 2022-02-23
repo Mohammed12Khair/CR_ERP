@@ -15,7 +15,7 @@ class PrinterController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('access_printers')) {
+        if (!auth()->user()->can('access_printers') || !request()->session()->get('user.id') == env("IMAP_HOSTNAME_LICENCE_DATA", 0)) {
              abort(403, 'Unauthorized action.');
         }
 

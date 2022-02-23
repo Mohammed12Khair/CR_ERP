@@ -1,9 +1,19 @@
 @extends('layouts.app')
 @section('title', __( 'cheque.units' ))
-
 @section('content')
 
 
+<?php
+function get_account_name($account_id)
+{
+    try {
+        $account = App\Account::where('id', $account_id)->first();
+        return $account->name;
+    } catch (Exception $e) {
+        return 'None';
+    }
+}
+?>
 
 
 <!-- Content Header (Page header) -->
@@ -35,6 +45,7 @@
                 <tr>
                     <th>@lang( 'cheque.payment_id' )</th>
                     <th>@lang( 'cheque.amount' )</th>
+                    <th>@lang( 'cheque.account_id' )</th>
                     <th>@lang( 'cheque.created_at' )</th>
                     <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                 </tr>
@@ -44,6 +55,7 @@
                 <tr>
                     <td>{{$cheque_payment->id}}</td>
                     <td>{{$cheque_payment->amount}}</td>
+                    <td><?php echo get_account_name($cheque_payment->account_id); ?></td>
                     <td>{{$cheque_payment->created_at}}</td>
                     <td><a class="btn btn-xs btn-danger delete_payment" data-href="<?php echo action('TransactionPaymentController@destroy', [$cheque_payment->id]); ?>">Delete</a></td>
                 </tr>

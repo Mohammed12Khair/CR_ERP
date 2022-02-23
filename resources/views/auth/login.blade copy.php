@@ -44,7 +44,7 @@
             }
             }
             @endphp
-            <input id="username" type="text" class="form-control" name="username" value="{{ $username }}" required autofocus placeholder="@lang('lang_v1.username')">
+            <input id="username" type="text" class="form-control" name="username" value="{{ $username }}" required autofocus placeholder="@lang('lang_v1.username')" style="text-align:center";>
             <span class="fa fa-user form-control-feedback"></span>
             @if ($errors->has('username'))
             <span class="help-block">

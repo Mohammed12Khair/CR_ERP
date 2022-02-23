@@ -20,32 +20,71 @@
 
     @component('components.widget', ['class' => 'box-primary'])
         <div class="row">
-            <div class="col-sm-4">
-              <div class="form-group">
-                {!! Form::label('name', __('product.product_name') . ':*') !!}
-                  {!! Form::text('name', $product->name, ['class' => 'form-control', 'required',
-                  'placeholder' => __('product.product_name')]); !!}
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              {!! Form::label('product_locations', __('business.business_locations') . ':') !!} @show_tooltip(__('lang_v1.product_location_help'))
+                {!! Form::select('product_locations[]', $business_locations, $product->product_locations->pluck('id'), ['class' => 'form-control select2', 'multiple', 'id' => 'product_locations']); !!}
+            </div>
+          </div>
+
+          <div class="col-sm-3 @if(!session('business.enable_brand')) hide @endif">
+            <div class="form-group">
+              {!! Form::label('brand_id', __('product.brand') . ':') !!}
+              <div class="input-group">
+                {!! Form::select('brand_id', $brands, $product->brand_id, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
+                <span class="input-group-btn">
+                  <button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('BrandController@create', ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+                </span>
               </div>
             </div>
+          </div>
 
-            <div class="col-sm-4 @if(!(session('business.enable_category') && session('business.enable_sub_category'))) hide @endif">
-              <div class="form-group">
-                {!! Form::label('sku', __('product.sku')  . ':*') !!} @show_tooltip(__('tooltip.sku'))
-                {!! Form::text('sku', $product->sku, ['class' => 'form-control',
-                'placeholder' => __('product.sku'), 'required']); !!}
-              </div>
+          <div class="col-sm-3 @if(!(session('business.enable_category') && session('business.enable_sub_category'))) hide @endif">
+            <div class="form-group">
+              {!! Form::label('sku', __('product.sku')  . ':*') !!} @show_tooltip(__('tooltip.sku'))
+              {!! Form::text('sku', $product->sku, ['class' => 'form-control',
+              'placeholder' => __('product.sku'), 'required']); !!}
             </div>
+          </div>
 
-            <div class="col-sm-4">
-              <div class="form-group">
-                {!! Form::label('barcode_type', __('product.barcode_type') . ':*') !!}
-                  {!! Form::select('barcode_type', $barcode_types, $product->barcode_type, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2', 'required']); !!}
-              </div>
+          <div class="col-sm-3" >
+            <div class="form-group">
+              {!! Form::label('image', __('lang_v1.product_image') . ':') !!}
+              {!! Form::file('image', ['id' => 'upload_image', 'accept' => 'image/*']); !!}
+              {{-- <small><p class="help-block">@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)]). @lang('lang_v1.aspect_ratio_should_be_1_1') @if(!empty($product->image)) <br> @lang('lang_v1.previous_image_will_be_replaced') @endif</p></small> --}}
             </div>
+          </div>
 
-            <div class="clearfix"></div>
+          <div class="clearfix"></div>
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              {!! Form::label('name', __('product.product_name') . ':*') !!}
+                {!! Form::text('name', $product->name, ['class' => 'form-control', 'required',
+                'placeholder' => __('product.product_name')]); !!}
+            </div>
+          </div>
+
+
+          {{-- X --}}
+          <div class="col-sm-3" style="display: none;">
+            <div class="form-group">
+              {!! Form::label('barcode_type', __('product.barcode_type') . ':*') !!}
+                {!! Form::select('barcode_type', $barcode_types, $product->barcode_type, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2', 'required']); !!}
+            </div>
+          </div>
+
+
+
+         
+          {{-- <div class="clearfix"></div> --}}
+ 
+          
+
+            {{-- <div class="clearfix"></div> --}}
             
-            <div class="col-sm-4">
+            <div class="col-sm-3">
               <div class="form-group">
                 {!! Form::label('unit_id', __('product.unit') . ':*') !!}
                 <div class="input-group">
@@ -57,7 +96,7 @@
               </div>
             </div>
 
-            <div class="col-sm-4 @if(!session('business.enable_sub_units')) hide @endif">
+            <div class="col-sm-3 @if(!session('business.enable_sub_units')) hide @endif">
               <div class="form-group">
                 {!! Form::label('sub_unit_ids', __('lang_v1.related_sub_units') . ':') !!} @show_tooltip(__('lang_v1.sub_units_tooltip'))
 
@@ -72,45 +111,38 @@
               </div>
             </div>
 
-            <div class="col-sm-4 @if(!session('business.enable_brand')) hide @endif">
-              <div class="form-group">
-                {!! Form::label('brand_id', __('product.brand') . ':') !!}
-                <div class="input-group">
-                  {!! Form::select('brand_id', $brands, $product->brand_id, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
-                  <span class="input-group-btn">
-                    <button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('BrandController@create', ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-                  </span>
-                </div>
-              </div>
-            </div>
+           
 
-            
+      
 
-            <div class="clearfix"></div>
-            <div class="col-sm-4 @if(!session('business.enable_category')) hide @endif">
+            <div class="col-sm-3 @if(!session('business.enable_category')) hide @endif">
               <div class="form-group">
                 {!! Form::label('category_id', __('product.category') . ':') !!}
                   {!! Form::select('category_id', $categories, $product->category_id, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
               </div>
             </div>
 
-            <div class="col-sm-4 @if(!(session('business.enable_category') && session('business.enable_sub_category'))) hide @endif">
+            <div class="col-sm-3 @if(!(session('business.enable_category') && session('business.enable_sub_category'))) hide @endif">
               <div class="form-group">
                 {!! Form::label('sub_category_id', __('product.sub_category')  . ':') !!}
                   {!! Form::select('sub_category_id', $sub_categories, $product->sub_category_id, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
               </div>
             </div>
 
-            <div class="col-sm-4">
+            <div class="clearfix"></div>
+
+            <div class="col-sm-3">
               <div class="form-group">
-                {!! Form::label('product_locations', __('business.business_locations') . ':') !!} @show_tooltip(__('lang_v1.product_location_help'))
-                  {!! Form::select('product_locations[]', $business_locations, $product->product_locations->pluck('id'), ['class' => 'form-control select2', 'multiple', 'id' => 'product_locations']); !!}
+                <br>
+                <img src="{{ asset('img/index.jpg') }}" style="width:12%">
+                <label>
+                  {!! Form::checkbox('not_for_selling', 1, $product->not_for_selling, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.not_for_selling')</strong>
+                </label> @show_tooltip(__('lang_v1.tooltip_not_for_selling'))
               </div>
             </div>
-
-            <div class="clearfix"></div>
+   
             
-            <div class="col-sm-4">
+            <div class="col-sm-3">
               <div class="form-group">
               <br>
                 <label>
@@ -118,7 +150,7 @@
                 </label>@show_tooltip(__('tooltip.enable_stock')) <p class="help-block"><i>@lang('product.enable_stock_help')</i></p>
               </div>
             </div>
-            <div class="col-sm-4" id="alert_quantity_div" @if(!$product->enable_stock) style="display:none" @endif>
+            <div class="col-sm-3" id="alert_quantity_div" @if(!$product->enable_stock) style="display:none" @endif>
               <div class="form-group">
                 {!! Form::label('alert_quantity', __('product.alert_quantity') . ':') !!} @show_tooltip(__('tooltip.alert_quantity'))
                 {!! Form::text('alert_quantity', @format_quantity($product->alert_quantity), ['class' => 'form-control input_number',
@@ -126,7 +158,7 @@
               </div>
             </div>
             @if(!empty($common_settings['enable_product_warranty']))
-            <div class="col-sm-4">
+            <div class="col-sm-3">
               <div class="form-group">
                 {!! Form::label('warranty_id', __('lang_v1.warranty') . ':') !!}
                 {!! Form::select('warranty_id', $warranties, $product->warranty_id, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
@@ -141,22 +173,16 @@
                     @endif
                 @endforeach
             @endif
-            <div class="clearfix"></div>
-            <div class="col-sm-8">
+            {{-- <div class="clearfix"></div> --}}
+            <div class="col-sm-8" style="display: none;">
               <div class="form-group">
                 {!! Form::label('product_description', __('lang_v1.product_description') . ':') !!}
                   {!! Form::textarea('product_description', $product->product_description, ['class' => 'form-control']); !!}
               </div>
             </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                {!! Form::label('image', __('lang_v1.product_image') . ':') !!}
-                {!! Form::file('image', ['id' => 'upload_image', 'accept' => 'image/*']); !!}
-                <small><p class="help-block">@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)]). @lang('lang_v1.aspect_ratio_should_be_1_1') @if(!empty($product->image)) <br> @lang('lang_v1.previous_image_will_be_replaced') @endif</p></small>
-              </div>
+          
             </div>
-            </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3"   style="display: none;">
               <div class="form-group">
                 {!! Form::label('product_brochure', __('lang_v1.product_brochure') . ':') !!}
                 {!! Form::file('product_brochure', ['id' => 'product_brochure', 'accept' => implode(',', array_keys(config('constants.document_upload_mimes_types')))]); !!}
@@ -186,7 +212,7 @@
               $hide = false;
             @endphp
           @endif
-          <div class="col-sm-4 @if($hide) hide @endif">
+          <div class="col-sm-3 @if($hide) hide @endif">
             <div class="form-group">
               <div class="multi-input">
                 @php
@@ -207,7 +233,7 @@
             </div>
           </div>
           @endif
-          <div class="col-sm-4">
+          <div class="col-sm-3" style="display: none;">
             <div class="checkbox">
               <label>
                 {!! Form::checkbox('enable_sr_no', 1, $product->enable_sr_no, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.enable_imei_or_sr_no')</strong>
@@ -216,14 +242,7 @@
             </div>
           </div>
 
-          <div class="col-sm-4">
-          <div class="form-group">
-            <br>
-            <label>
-              {!! Form::checkbox('not_for_selling', 1, $product->not_for_selling, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.not_for_selling')</strong>
-            </label> @show_tooltip(__('lang_v1.tooltip_not_for_selling'))
-          </div>
-        </div>
+       
 
         <div class="clearfix"></div>
 
@@ -266,7 +285,7 @@
         @endif
 
 
-        <div class="col-sm-4">
+        <div class="col-sm-3" style="display: none;">
           <div class="form-group">
             {!! Form::label('weight',  __('lang_v1.weight') . ':') !!}
             {!! Form::text('weight', $product->weight, ['class' => 'form-control', 'placeholder' => __('lang_v1.weight')]); !!}
@@ -281,33 +300,33 @@
           $product_custom_field4 = !empty($custom_labels['product']['custom_field_4']) ? $custom_labels['product']['custom_field_4'] : __('lang_v1.product_custom_field4');
         @endphp
         <!--custom fields-->
-        <!-- <div class="col-sm-3">
+         <div class="col-sm-3" style="display: none;">
           <div class="form-group">
             {!! Form::label('product_custom_field1',  $product_custom_field1 . ':') !!}
             {!! Form::text('product_custom_field1', $product->product_custom_field1, ['class' => 'form-control', 'placeholder' => $product_custom_field1]); !!}
           </div>
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-3" style="display: none;">
           <div class="form-group">
             {!! Form::label('product_custom_field2',  $product_custom_field2 . ':') !!}
             {!! Form::text('product_custom_field2', $product->product_custom_field2, ['class' => 'form-control', 'placeholder' => $product_custom_field2]); !!}
           </div>
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-3" style="display: none;">
           <div class="form-group">
             {!! Form::label('product_custom_field3',  $product_custom_field3 . ':') !!}
             {!! Form::text('product_custom_field3', $product->product_custom_field3, ['class' => 'form-control', 'placeholder' => $product_custom_field3]); !!}
           </div>
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-3" style="display: none;">
           <div class="form-group">
             {!! Form::label('product_custom_field4',  $product_custom_field4 . ':') !!}
             {!! Form::text('product_custom_field4', $product->product_custom_field4, ['class' => 'form-control', 'placeholder' => $product_custom_field4]); !!}
           </div>
-        </div> -->
+        </div> 
         <!--custom fields-->
         @include('layouts.partials.module_form_part')
         </div>
@@ -315,14 +334,14 @@
 
     @component('components.widget', ['class' => 'box-primary'])
         <div class="row">
-            <div class="col-sm-4 @if(!session('business.enable_price_tax')) hide @endif">
+            <div  class="col-sm-3 @if(!session('business.enable_price_tax')) hide @endif" style="display: none;">
               <div class="form-group">
                 {!! Form::label('tax', __('product.applicable_tax') . ':') !!}
                   {!! Form::select('tax', $taxes, $product->tax, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2'], $tax_attributes); !!}
               </div>
             </div>
 
-            <div class="col-sm-4 @if(!session('business.enable_price_tax')) hide @endif">
+            <div class="col-sm-3 @if(!session('business.enable_price_tax')) hide @endif" style="display: none;">
               <div class="form-group">
                 {!! Form::label('tax_type', __('product.selling_price_tax_type') . ':*') !!}
                   {!! Form::select('tax_type',['inclusive' => __('product.inclusive'), 'exclusive' => __('product.exclusive')], $product->tax_type,
@@ -331,7 +350,7 @@
             </div>
 
             <div class="clearfix"></div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
               <div class="form-group">
                 {!! Form::label('type', __('product.product_type') . ':*') !!} @show_tooltip(__('tooltip.product_type'))
                 {!! Form::select('type', $product_types, $product->type, ['class' => 'form-control select2',
@@ -351,14 +370,14 @@
           <div class="text-center">
             <div class="btn-group">
               @if($selling_price_group_count)
-                <button type="submit" value="submit_n_add_selling_prices" class="btn btn-warning submit_product_form">@lang('lang_v1.save_n_add_selling_price_group_prices')</button>
+                <button type="submit" value="submit_n_add_selling_prices" class="btn btn-primary submit_product_form">@lang('lang_v1.save_n_add_selling_price_group_prices')</button>
               @endif
 
               @can('product.opening_stock')
-              <button type="submit" @if(empty($product->enable_stock)) disabled="true" @endif id="opening_stock_button"  value="update_n_edit_opening_stock" class="btn bg-purple submit_product_form">@lang('lang_v1.update_n_edit_opening_stock')</button>
+              <button type="submit" @if(empty($product->enable_stock)) disabled="true" @endif id="opening_stock_button"  value="update_n_edit_opening_stock" class="btn btn-primary submit_product_form">@lang('lang_v1.update_n_edit_opening_stock')</button>
               @endif
 
-              <button type="submit" value="save_n_add_another" class="btn bg-maroon submit_product_form">@lang('lang_v1.update_n_add_another')</button>
+              <button type="submit" value="save_n_add_another" class="btn btn-primary submit_product_form">@lang('lang_v1.update_n_add_another')</button>
 
               <button type="submit" value="submit" class="btn btn-primary submit_product_form">@lang('messages.update')</button>
             </div>

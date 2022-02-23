@@ -34,7 +34,7 @@
         </div>
 
         <div class="width-50 f-left">
-            <div class="input-group">
+            <div class="input-group" style="display: none;">
                 {!! Form::text($name . '[' . $variation_index . '][variations][' . $value_index . '][dpp_inc_tax]', $default, ['class' => 'form-control input-sm variable_dpp_inc_tax input_number', 'placeholder' => __('product.inc_of_tax'), 'required']); !!}
                 @if($value_index == 0)
                     <span class="input-group-btn">

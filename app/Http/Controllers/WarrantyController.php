@@ -17,6 +17,12 @@ class WarrantyController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
 
+        $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
+        
+        if (!in_array('warranties', $enabled_modules)){
+            abort(403, 'Unauthorized action.');
+        }
+
         if (request()->ajax()) {
             $warranties = Warranty::where('business_id', $business_id)
                          ->select(['id', 'name', 'description', 'duration', 'duration_type']);

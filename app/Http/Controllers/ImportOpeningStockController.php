@@ -43,6 +43,10 @@ class ImportOpeningStockController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
+        if (!in_array('print_labels', $enabled_modules)) {
+            abort(403, 'Unauthorized action.');
+        }
         $zip_loaded = extension_loaded('zip') ? true : false;
 
         $date_formats = Business::date_formats();
@@ -51,9 +55,10 @@ class ImportOpeningStockController extends Controller
 
         //Check if zip extension it loaded or not.
         if ($zip_loaded === false) {
-            $notification = ['success' => 0,
-                            'msg' => 'Please install/enable PHP Zip archive for import'
-                        ];
+            $notification = [
+                'success' => 0,
+                'msg' => 'Please install/enable PHP Zip archive for import'
+            ];
 
             return view('import_opening_stock.index')
                 ->with(compact('notification', 'date_format'));
@@ -80,14 +85,14 @@ class ImportOpeningStockController extends Controller
             if (!empty($notAllowed)) {
                 return $notAllowed;
             }
-            
+
             //Set maximum php execution time
             ini_set('max_execution_time', 0);
             ini_set('memory_limit', -1);
 
             if ($request->hasFile('products_csv')) {
                 $file = $request->file('products_csv');
-                
+
                 $parsed_array = Excel::toArray([], $file);
                 //Remove header row
                 $imported_data = array_splice($parsed_array[0], 1);
@@ -99,7 +104,7 @@ class ImportOpeningStockController extends Controller
 
                 $is_valid = true;
                 $error_msg = '';
-                
+
                 DB::beginTransaction();
                 foreach ($imported_data as $key => $value) {
                     $row_no = $key + 1;
@@ -108,13 +113,15 @@ class ImportOpeningStockController extends Controller
                     if (!empty($value[0])) {
                         $sku = $value[0];
                         $product_info = Variation::where('sub_sku', $sku)
-                                ->join('products AS P', 'variations.product_id', '=', 'P.id')
-                                ->leftjoin('tax_rates AS TR', 'P.tax', 'TR.id')
-                                ->where('P.business_id', $business_id)
-                                ->select(['P.id', 'variations.id as variation_id',
-                                    'P.enable_stock', 'TR.amount as tax_percent',
-                                    'TR.id as tax_id'])
-                                ->first();
+                            ->join('products AS P', 'variations.product_id', '=', 'P.id')
+                            ->leftjoin('tax_rates AS TR', 'P.tax', 'TR.id')
+                            ->where('P.business_id', $business_id)
+                            ->select([
+                                'P.id', 'variations.id as variation_id',
+                                'P.enable_stock', 'TR.amount as tax_percent',
+                                'TR.id as tax_id'
+                            ])
+                            ->first();
                         if (empty($product_info)) {
                             $is_valid =  false;
                             $error_msg = "Product with sku $sku not found in row no. $row_no";
@@ -134,8 +141,8 @@ class ImportOpeningStockController extends Controller
                     if (!empty(trim($value[1]))) {
                         $location_name = trim($value[1]);
                         $location = BusinessLocation::where('name', $location_name)
-                                            ->where('business_id', $business_id)
-                                            ->first();
+                            ->where('business_id', $business_id)
+                            ->first();
                         if (empty($location)) {
                             $is_valid = false;
                             $error_msg = "Location with name '$location_name' not found in row no. $row_no";
@@ -145,10 +152,11 @@ class ImportOpeningStockController extends Controller
                         $location = BusinessLocation::where('business_id', $business_id)->first();
                     }
 
-                    $opening_stock = ['quantity' => trim($value[2]),
-                                        'location_id' => $location->id,
-                                        'lot_number' => trim($value[4]),
-                                    ];
+                    $opening_stock = [
+                        'quantity' => trim($value[2]),
+                        'location_id' => $location->id,
+                        'lot_number' => trim($value[4]),
+                    ];
                     if (!empty(trim($value[5]))) {
                         $opening_stock['exp_date'] = $this->productUtil->uf_date($value[5]);
                     }
@@ -169,17 +177,17 @@ class ImportOpeningStockController extends Controller
 
                     //Check for tra, location_id, opening_stock_product_id, type=opening stock.
                     $os_transaction = Transaction::where('business_id', $business_id)
-                            ->where('location_id', $location->id)
-                            ->where('type', 'opening_stock')
-                            ->where('opening_stock_product_id', $product_info->id)
-                            ->first();
+                        ->where('location_id', $location->id)
+                        ->where('type', 'opening_stock')
+                        ->where('opening_stock_product_id', $product_info->id)
+                        ->first();
 
                     $this->addOpeningStock($opening_stock, $product_info, $business_id, $unit_cost_before_tax, $os_transaction);
 
                     // //If exist add to it.
                     // if(!empty($os_transaction)){
                     //  //If not create new
-                        
+
                     // } else {
                     //  //If not create new
                     //  $this->addOpeningStock($opening_stock, $product_info, $business_id, $unit_cost_before_tax);
@@ -191,18 +199,20 @@ class ImportOpeningStockController extends Controller
                 throw new \Exception($error_msg);
             }
 
-            $output = ['success' => 1,
-                            'msg' => __('product.file_imported_successfully')
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('product.file_imported_successfully')
+            ];
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => "File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage()
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => "File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage()
+            ];
             return redirect('import-opening-stock')->with('notification', $output);
         }
 
@@ -253,18 +263,18 @@ class ImportOpeningStockController extends Controller
 
         //Create purchase line
         $transaction->purchase_lines()->create([
-                        'product_id' => $product->id,
-                        'variation_id' => $product->variation_id,
-                        'quantity' => $opening_stock['quantity'],
-                        'pp_without_discount' => $unit_cost_before_tax,
-                        'item_tax' => $item_tax,
-                        'tax_id' => $tax_id,
-                        'pp_without_discount' => $unit_cost_before_tax,
-                        'purchase_price' => $unit_cost_before_tax,
-                        'purchase_price_inc_tax' => $unit_cost_before_tax + $item_tax,
-                        'exp_date' => !empty($opening_stock['exp_date']) ? $opening_stock['exp_date'] : null,
-                        'lot_number' => !empty($opening_stock['lot_number']) ? $opening_stock['lot_number'] : null,
-                    ]);
+            'product_id' => $product->id,
+            'variation_id' => $product->variation_id,
+            'quantity' => $opening_stock['quantity'],
+            'pp_without_discount' => $unit_cost_before_tax,
+            'item_tax' => $item_tax,
+            'tax_id' => $tax_id,
+            'pp_without_discount' => $unit_cost_before_tax,
+            'purchase_price' => $unit_cost_before_tax,
+            'purchase_price_inc_tax' => $unit_cost_before_tax + $item_tax,
+            'exp_date' => !empty($opening_stock['exp_date']) ? $opening_stock['exp_date'] : null,
+            'lot_number' => !empty($opening_stock['lot_number']) ? $opening_stock['lot_number'] : null,
+        ]);
         //Update variation location details
         $this->productUtil->updateProductQuantity($opening_stock['location_id'], $product->id, $product->variation_id, $opening_stock['quantity']);
     }

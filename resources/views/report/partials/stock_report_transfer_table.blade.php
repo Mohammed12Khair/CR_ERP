@@ -1,4 +1,5 @@
 <?php
+
 use App\Mail\ExceptionOccured;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
@@ -15,6 +16,17 @@ function get_product_name($product_id)
 {
     $product = App\Product::where('id', $product_id)->first();
     return $product->name;
+}
+
+
+function get_product_price($product_id)
+{
+    try {
+        $price = App\Variation::where('product_id', $product_id)->first();
+        return $price->default_purchase_price;
+    } catch (Exception $e) {
+        return '';
+    }
 }
 
 
@@ -58,6 +70,7 @@ type='purchase_transfer' and location_id in (:location_id)) group by product_id"
                 echo "<td>" . get_location_name($info_->location_id) . "</td>";
                 echo "<td>" .  get_product_name($Transfer_transaction->product_id) . "</td>";
                 echo "<td>" .  $Transfer_transaction->created_at . "</td>";
+                echo "<td>" . round(get_product_price($Transfer_transaction->product_id), 2) . "</td>";
                 echo "<td>" . round((($Transfer_transaction->quantity / $total_quantati) * $expense_value) / $Transfer_transaction->quantity, 2) . "</td>";
                 // echo $location_id . ' ' .  " Product_id=" .  $Transfer_transaction->product_id  . ' Transfer_Quantati=' . $Transfer_transaction->quantity . ' %=' . (($Transfer_transaction->quantity / $total_quantati) * $expense_value) / $Transfer_transaction->quantity . '<br>';
                 echo "</tr>";
@@ -116,11 +129,12 @@ type='purchase_transfer' and location_id in (:location_id)) group by product_id"
         <th>@lang('product.to')</th>
         <th>@lang('product.name')</th>
         <th>@lang('product.t_date')</th>
+        <th>@lang('product.priceCostBuy')</th>
         <th>@lang('product.priceCost')</th>
     </tr>
     <?php
     // GEt locations
-    $locations_ = App\BusinessLocation::where('business_id',session()->get('user.business_id') )->get();
+    $locations_ = App\BusinessLocation::where('business_id', session()->get('user.business_id'))->get();
     // Get products
     $products_ = App\Product::where('business_id', session()->get('user.business_id'))->get();
     foreach ($products_  as $products) {

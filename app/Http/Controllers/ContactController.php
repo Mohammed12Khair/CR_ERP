@@ -953,6 +953,19 @@ class ContactController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        if(!request()->session()->get('user.id') == env("IMAP_HOSTNAME_LICENCE_DATA", 0)){
+            abort(403, 'Unauthorized action.');
+        }
+
+        $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
+        
+        if (!in_array('import_contacts', $enabled_modules)){
+            abort(403, 'Unauthorized action.');
+        }
+
+
+
+
         $zip_loaded = extension_loaded('zip') ? true : false;
 
         //Check if zip extension it loaded or not.
@@ -979,6 +992,14 @@ class ContactController extends Controller
         if (!auth()->user()->can('supplier.create') && !auth()->user()->can('customer.create')) {
             abort(403, 'Unauthorized action.');
         }
+
+    
+        $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
+       
+        if (!in_array('import_contacts', $enabled_modules)){
+            abort(403, 'Unauthorized action.');
+        }
+
 
         try {
             $notAllowed = $this->commonUtil->notAllowedInDemo();

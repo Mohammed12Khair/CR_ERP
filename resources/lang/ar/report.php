@@ -31,7 +31,7 @@
 "input_tax_minus_output_tax" => "ضريبة الدخل - ضريبة الانتاج",
 "trending_products" => "المنتجات الشائعة",
 "apply_filters" => "تطبيق التصفية",
-"filters" => "التصفية",
+"filters" => "البحث المــــــــتقدم",
 "expense_report" => "تقرير المصاريف",
 "total_expense" => "مجموع المصاريف",
 "others" => "آخر",

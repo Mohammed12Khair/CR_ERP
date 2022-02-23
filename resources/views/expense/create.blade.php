@@ -11,30 +11,20 @@
 <!-- Main content -->
 <section class="content">
 	{!! Form::open(['url' => action('ExpenseController@store'), 'method' => 'post', 'id' => 'add_expense_form', 'files' => true ]) !!}
+	
+	@include('expense.recur_expense_form_part')
+	
 	<div class="box box-solid">
 		<div class="box-body">
 			<div class="row">
 
-				@if(count($business_locations) == 1)
-					@php 
-						$default_location = current(array_keys($business_locations->toArray())) 
-					@endphp
-				@else
-					@php $default_location = null; @endphp
-				@endif
-				<div class="col-sm-4">
-					<div class="form-group">
-						{!! Form::label('location_id', __('purchase.business_location').':*') !!}
-						{!! Form::select('location_id', $business_locations, $default_location, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required'], $bl_attributes); !!}
-					</div>
+				<div class="col-md-4 col-sm-6">
+					<br>
+					<label>
+		              {!! Form::checkbox('is_refund', 1, false, ['class' => 'input-icheck', 'id' => 'is_refund']); !!} @lang('lang_v1.is_refund') 
+		            </label>@show_tooltip(__('lang_v1.is_refund_help'))
 				</div>
 
-				<div class="col-sm-4">
-					<div class="form-group">
-						{!! Form::label('expense_category_id', __('expense.expense_category').':') !!}
-						{!! Form::select('expense_category_id', $expense_categories, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
-					</div>
-				</div>
 				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('ref_no', __('purchase.ref_no').':') !!}
@@ -44,7 +34,9 @@
 			            </p>
 					</div>
 				</div>
-				<div class="clearfix"></div>
+
+			
+
 				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('transaction_date', __('messages.date') . ':*') !!}
@@ -56,19 +48,53 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="clearfix"></div>
+
+				@if(count($business_locations) == 1)
+				@php 
+					$default_location = current(array_keys($business_locations->toArray())) 
+				@endphp
+			@else
+				@php $default_location = null; @endphp
+			@endif
+			<div class="col-sm-4">
+				<div class="form-group">
+					{!! Form::label('location_id', __('purchase.business_location').':*') !!}
+					{!! Form::select('location_id', $business_locations, $default_location, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required'], $bl_attributes); !!}
+				</div>
+			</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						{!! Form::label('expense_category_id', __('expense.expense_category').':') !!}
+						{!! Form::select('expense_category_id', $expense_categories, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
+					</div>
+				</div>
+
 				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('expense_for', __('expense.expense_for').':') !!} @show_tooltip(__('tooltip.expense_for'))
 						{!! Form::select('expense_for', $users, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
 					</div>
 				</div>
-				<div class="col-sm-4">
+			
+				<div class="clearfix"></div>
+		
+				
+				<div class="col-sm-4" style="display: none;">
 					<div class="form-group">
 						{!! Form::label('contact_id', __('lang_v1.expense_for_contact').':') !!} 
 						{!! Form::select('contact_id', $contacts, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select')]); !!}
 					</div>
 				</div>
 				<div class="clearfix"></div>
+
+				<div class="col-sm-4">
+					<div class="form-group">
+						{!! Form::label('final_total', __('sale.total_amount') . ':*') !!}
+						{!! Form::text('final_total', null, ['class' => 'form-control input_number', 'placeholder' => __('sale.total_amount'), 'required']); !!}
+					</div>
+				</div>
 				<div class="col-sm-4">
                     <div class="form-group">
                         {!! Form::label('document', __('purchase.attach_document') . ':') !!}
@@ -77,8 +103,13 @@
                         @includeIf('components.document_help_text')</p></small>
                     </div>
                 </div>
-				
-				<div class="col-md-4">
+				<div class="col-sm-4">
+					<div class="form-group">
+						{!! Form::label('additional_notes', __('expense.expense_note') . ':') !!}
+								{!! Form::textarea('additional_notes', null, ['class' => 'form-control', 'rows' => 3]); !!}
+					</div>
+				</div>
+				<div class="col-md-4" style="display: none;">
 			    	<div class="form-group">
 			            {!! Form::label('tax_id', __('product.applicable_tax') . ':' ) !!}
 			            <div class="input-group">
@@ -92,30 +123,14 @@
 			            </div>
 			        </div>
 			    </div>
-			    <div class="col-sm-4">
-					<div class="form-group">
-						{!! Form::label('final_total', __('sale.total_amount') . ':*') !!}
-						{!! Form::text('final_total', null, ['class' => 'form-control input_number', 'placeholder' => __('sale.total_amount'), 'required']); !!}
-					</div>
-				</div>
+			 
 				<div class="clearfix"></div>
-				<div class="col-sm-4">
-					<div class="form-group">
-						{!! Form::label('additional_notes', __('expense.expense_note') . ':') !!}
-								{!! Form::textarea('additional_notes', null, ['class' => 'form-control', 'rows' => 3]); !!}
-					</div>
-				</div>
-				<div class="col-md-4 col-sm-6">
-					<br>
-					<label>
-		              {!! Form::checkbox('is_refund', 1, false, ['class' => 'input-icheck', 'id' => 'is_refund']); !!} @lang('lang_v1.is_refund')?
-		            </label>@show_tooltip(__('lang_v1.is_refund_help'))
-				</div>
+			
+			
 			</div>
 		</div>
 	</div> <!--box end-->
 	
-	@include('expense.recur_expense_form_part')
 
 	@component('components.widget', ['class' => 'box-solid', 'id' => "payment_rows_div", 'title' => __('purchase.add_payment')])
 

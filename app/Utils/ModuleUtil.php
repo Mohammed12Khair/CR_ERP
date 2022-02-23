@@ -520,7 +520,18 @@ class ModuleUtil extends Util
             'subscription' => ['name' => __('lang_v1.enable_subscription')],
             'types_of_service' => ['name' => __('lang_v1.types_of_service'),
                         'tooltip' => __('lang_v1.types_of_service_help_long')
-                    ]
+        ],
+        'import_contacts' => ['name' => __('lang_v1.import_contacts')],
+        'import_products' => ['name' => __('product.import_products')],
+        'import_opening_stock' => ['name' => __('lang_v1.import_opening_stock')],
+        'print_labels' => ['name' => __('barcode.print_labels')],
+        'warranties' => ['name' => __('lang_v1.warranties')],
+        'discounts' => ['name' => __('lang_v1.discounts')],
+        'shipments' => ['name' => __('lang_v1.shipments')],
+        'import_sales' => ['name' => __('lang_v1.import_sales')],
+        'sales_order' => ['name' => __('lang_v1.sales_order')],
+        'purchase_order' => ['name' => __('lang_v1.purchase_order')],
+        'pending_shipments' => ['name' => __('lang_v1.pending_shipments')],
         ];
     }
 

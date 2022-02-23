@@ -165,6 +165,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     // banck cheque controller Solved.
     Route::get('/cheques', 'bankcheques@index');
+    Route::get('/cheques/home', 'bankcheques@cheque_home');
     Route::get('/cheques/{chequeNumber}/{client}/{due_date}', 'bankcheques@indexSearch');
     Route::get('/cheques/edit/{key}', 'bankcheques@EditPayment');
     Route::get('/cheques/edit-cheque/{id}', 'bankcheques@EditCheque');

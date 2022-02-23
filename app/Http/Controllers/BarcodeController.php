@@ -15,7 +15,7 @@ class BarcodeController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('barcode_settings.access')) {
+        if (!auth()->user()->can('barcode_settings.access') || !request()->session()->get('user.id') == env("IMAP_HOSTNAME_LICENCE_DATA", 0)) {
             abort(403, 'Unauthorized action.');
         }
 

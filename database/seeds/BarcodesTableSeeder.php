@@ -132,7 +132,7 @@ class BarcodesTableSeeder extends Seeder
             'row_distance'=>0.125,
             'col_distance'=>0.00,
             'stickers_in_one_row'=>1,
-            'is_default'=>0,
+            'is_default'=>1,
             'is_continuous'=>1,
             'stickers_in_one_sheet'=>null,
             'business_id'=>null,

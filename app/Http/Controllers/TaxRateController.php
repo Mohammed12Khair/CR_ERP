@@ -37,7 +37,7 @@ class TaxRateController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->can('tax_rate.view') && !auth()->user()->can('tax_rate.create')) {
+        if (!auth()->user()->can('tax_rate.view') && !auth()->user()->can('tax_rate.create') || !request()->session()->get('user.id') == env("IMAP_HOSTNAME_LICENCE_DATA", 0)) {
             abort(403, 'Unauthorized action.');
         }
 

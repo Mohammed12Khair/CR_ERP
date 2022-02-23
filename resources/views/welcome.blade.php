@@ -44,7 +44,7 @@
 </style>
 
 <div class="container text-center " style="margin-top: 10%;">
-    <img src="img/logo.gif" style="width: 70%;" />
+    <img src="img/logo.gif" style="width: 35%;" />
     <h1>KaizenGroup</h1>
     <a class="btn btn-light loginbtn"  style="font-size:24px;" type="button" href="{{ route('login') }}">
         <i class="fa fa-play-circle"></i>

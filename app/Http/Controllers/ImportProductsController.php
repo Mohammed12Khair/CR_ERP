@@ -55,6 +55,12 @@ class ImportProductsController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
+        
+        if (!in_array('import_products', $enabled_modules)){
+            abort(403, 'Unauthorized action.');
+        }
+
         $zip_loaded = extension_loaded('zip') ? true : false;
 
         //Check if zip extension it loaded or not.

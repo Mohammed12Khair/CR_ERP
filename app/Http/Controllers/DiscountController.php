@@ -42,6 +42,12 @@ class DiscountController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
+        
+        if (!in_array('discounts', $enabled_modules)){
+            abort(403, 'Unauthorized action.');
+        }
+
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
 

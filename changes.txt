@@ -1,1 +1,6 @@
-login language AR eN as button
+1-http://127.0.0.1:8000/contacts/3
+Change customer information to row horizan
+
+2-change taps (حساب المبيعات الاشتراكات المتنداتززز الخ)  horzantal
+
+ 

@@ -132,6 +132,10 @@
             },
         });
     });
+
+    $('document').ready(function() {
+            $("[data-toggle=collapse]").click();
+        });
 </script>
 	
 @endsection

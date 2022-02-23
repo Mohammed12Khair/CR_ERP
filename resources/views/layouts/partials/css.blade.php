@@ -133,6 +133,31 @@
 			rgba(45, 206, 137, 0.09) 0px -3px 20px !important;
 	}
 
+	.btn-danger:hover {
+		/* border-radius: 2px !important; */
+		background-color: white !important;
+		color: rgba(45, 206, 137, 100) !important;
+		transition: .5s;
+		box-shadow: rgba(45, 206, 137, 0.25) 0px 54px 65px,
+			rgba(45, 206, 137, 0.12) 0px -12px 40px,
+			rgba(45, 206, 137, 0.12) 0px 4px 6px,
+			rgba(45, 206, 137, 0.17) 0px 12px 23px,
+			rgba(45, 206, 137, 0.09) 0px -3px 20px !important;
+	}
+
+
+	.btn-warning:hover {
+		/* border-radius: 2px !important; */
+		background-color: white !important;
+		color: rgba(45, 206, 137, 100) !important;
+		transition: .5s;
+		box-shadow: rgba(45, 206, 137, 0.25) 0px 54px 65px,
+			rgba(45, 206, 137, 0.12) 0px -12px 40px,
+			rgba(45, 206, 137, 0.12) 0px 4px 6px,
+			rgba(45, 206, 137, 0.17) 0px 12px 23px,
+			rgba(45, 206, 137, 0.09) 0px -3px 20px !important;
+	}
+
 	.btn-primary:hover {
 		/* border-radius: 2px !important; */
 		background-color: white !important;

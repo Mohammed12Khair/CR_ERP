@@ -53,7 +53,7 @@
                         {!! Form::text('product_variation[' . $row_index .'][variations][0][default_purchase_price]', $default, ['class' => 'form-control input-sm variable_dpp input_number', 'placeholder' => __('product.exc_of_tax'), 'required']); !!}
                     </div>
 
-                    <div class="width-50 f-left">
+                    <div class="width-50 f-left" style="display: none;">
                         <div class="input-group">
                             {!! Form::text('product_variation[' . $row_index .'][variations][0][dpp_inc_tax]', $default, ['class' => 'form-control input-sm variable_dpp_inc_tax input_number', 'placeholder' => __('product.inc_of_tax'), 'required']); !!}
                             <span class="input-group-btn">

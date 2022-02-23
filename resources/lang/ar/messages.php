@@ -24,6 +24,8 @@
 "no" => "لا",
 "all" => "كل",
 "settings" => "إعدادات",
+'deactivate' => 'تعطيل',
+'activate' => 'تفعيل',
 "business_location_settings" => "إعدادات موقع الشركة",
 "print" => "طباعة",
 "submit" => "إرسال",

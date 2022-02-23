@@ -1,10 +1,12 @@
 <?php 
  return [ 
+"info_names" => "معلومات الخصم والشحن",
+"pass_cheque" => "تمرير شيك مصرفي",
 "supplier" => "المورد",
 "ref_no" => "الرقم المرجعي",
 "business_location" => "الفرع",
 "purchases" => "المشتريات",
-"add_payment" => "إضافة قسط",
+"add_payment" => "الدفــــع",
 "edit_payment" => "تعديل قسط",
 "view_payments" => "عرض المدفوعات",
 "amount_already_paid" => "المبلغ المسدد بالفعل",

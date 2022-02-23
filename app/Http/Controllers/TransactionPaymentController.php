@@ -458,7 +458,7 @@ class TransactionPaymentController extends Controller
 
 
 
-                $view = view('transaction_payment.payment_row_cheque')
+                $view = view('transaction_payment.payment_row_cheque_all')
                     ->with(compact('transaction', 'payment_types', 'payment_line', 'amount_formated', 'accounts', 'accounts_cheques', 'payment_ref_data', 'open_amount'))->render();
 
                 $output = [
@@ -495,7 +495,8 @@ class TransactionPaymentController extends Controller
                 ->findOrFail($transaction_id);
             if ($transaction->payment_status != 'paid') {
                 $show_advance = in_array($transaction->type, ['sell', 'purchase']) ? true : false;
-                $payment_types = $this->transactionUtil->payment_types_cheque($transaction->location, $show_advance);
+                // $payment_types = $this->transactionUtil->payment_types_cheque($transaction->location, $show_advance);
+                $payment_types = ['cheque_accept' => __('lang_v1.cheque_accept')];
 
                 $paid_amount = $this->transactionUtil->getTotalPaid($transaction_id);
                 $amount = $transaction->final_total - $paid_amount;

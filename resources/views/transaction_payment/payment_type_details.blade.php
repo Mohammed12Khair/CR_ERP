@@ -1,72 +1,18 @@
 @if(isset($read_only))
 <div class="payment_details_div" data-type="cheque_accept">
-	@if(!empty($accounts))
-	<div class="col-md-6">
-		<div class="form-group">
-			{!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-			<!-- Cash -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fas fa-money-bill-alt"></i>
-				</span>
-				{!! Form::select("account_id", $accounts_cheques, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
-
-			</div>
-		</div>
-	</div>
-	@endif
+ 
 </div>
 @else
 <div class="payment_details_div @if( $payment_line->method !== 'cheque_accept' ) {{ 'hide' }} @endif" data-type="cheque_accept">
-	@if(!empty($accounts))
-	<div class="col-md-6">
-		<div class="form-group">
-			{!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-			<!-- Cash -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fas fa-money-bill-alt"></i>
-				</span>
-				{!! Form::select("account_id", $accounts_cheques, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
-
-			</div>
-		</div>
-	</div>
-	@endif
+	 
 </div>
 <div class="payment_details_div @if( $payment_line->method !== 'cash' ) {{ 'hide' }} @endif" data-type="cash">
-	@if(!empty($accounts))
-	<div class="col-md-6">
-		<div class="form-group">
-			{!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-			<!-- Cash -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fas fa-money-bill-alt"></i>
-				</span>
-				{!! Form::select("account_id", $accounts, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
-			</div>
-		</div>
-	</div>
-	@endif
+	 
 
 
 </div>
 <div class="payment_details_div @if( $payment_line->method !== 'card' ) {{ 'hide' }} @endif" data-type="card">
-	@if(!empty($accounts))
-	<div class="col-md-6">
-		<div class="form-group">
-			{!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-			<!-- Cash -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fas fa-money-bill-alt"></i>
-				</span>
-				{!! Form::select("account_id", $accounts, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
-			</div>
-		</div>
-	</div>
-	@endif
+	 
 
 
 
@@ -118,21 +64,7 @@
 	<div class="clearfix"></div>
 </div>
 <div class="payment_details_div @if( $payment_line->method !== 'cheque' ) {{ 'hide' }} @endif" data-type="cheque">
-	@if(!empty($accounts))
-	<div class="col-md-6">
-		<div class="form-group">
-			{!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-			<!-- Cash -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fas fa-money-bill-alt"></i>
-				</span>
-				{!! Form::select("account_id", $accounts_cheques, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
-
-			</div>
-		</div>
-	</div>
-	@endif
+ 
 
 
 	<!-- edit Data -->
@@ -152,20 +84,7 @@
 
 
 <div class="payment_details_div @if( $payment_line->method !== 'bank_transfer' ) {{ 'hide' }} @endif" data-type="bank_transfer">
-	@if(!empty($accounts))
-	<div class="col-md-6">
-		<div class="form-group">
-			{!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-			<!-- Cash -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fas fa-money-bill-alt"></i>
-				</span>
-				{!! Form::select("account_id", $accounts, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
-			</div>
-		</div>
-	</div>
-	@endif
+	 
 
 
 
@@ -177,20 +96,7 @@
 	</div>
 </div>
 <div class="payment_details_div @if( $payment_line->method !== 'custom_pay_1' ) {{ 'hide' }} @endif" data-type="custom_pay_1">
-	@if(!empty($accounts))
-	<div class="col-md-6">
-		<div class="form-group">
-			{!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-			<!-- Cash -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fas fa-money-bill-alt"></i>
-				</span>
-				{!! Form::select("account_id", $accounts, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
-			</div>
-		</div>
-	</div>
-	@endif
+ 
 
 
 
@@ -202,20 +108,7 @@
 	</div>
 </div>
 <div class="payment_details_div @if( $payment_line->method !== 'custom_pay_2' ) {{ 'hide' }} @endif" data-type="custom_pay_2">
-	@if(!empty($accounts))
-	<div class="col-md-6">
-		<div class="form-group">
-			{!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-			<!-- Cash -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fas fa-money-bill-alt"></i>
-				</span>
-				{!! Form::select("account_id", $accounts, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
-			</div>
-		</div>
-	</div>
-	@endif
+ 
 
 
 
@@ -227,20 +120,7 @@
 	</div>
 </div>
 <div class="payment_details_div @if( $payment_line->method !== 'custom_pay_3' ) {{ 'hide' }} @endif" data-type="custom_pay_3">
-	@if(!empty($accounts))
-	<div class="col-md-6">
-		<div class="form-group">
-			{!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
-			<!-- Cash -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fas fa-money-bill-alt"></i>
-				</span>
-				{!! Form::select("account_id", $accounts, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
-			</div>
-		</div>
-	</div>
-	@endif
+	 
 
 
 

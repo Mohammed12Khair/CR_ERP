@@ -1,7 +1,11 @@
-<div>
-	<div class="box box-solid @if(!empty($expense->type) && $expense->type == 'expense_refund') hide @endif" id="recur_expense_div">
+
+@component('components.filters', ['title' => __('purchase.add_payment')])
+ 
+	<div class="box @if(!empty($expense->type) && $expense->type == 'expense_refund') hide @endif" id="recur_expense_div">
 		<div class="box-body">
 			<div class="row">
+
+				
 				<div class="col-md-4 col-sm-6">
 					<br>
 					<label>
@@ -37,4 +41,5 @@
 			</div>
 		</div>
 	</div>
-</div>
+ 
+@endcomponent

@@ -1602,6 +1602,12 @@ class SellController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
+        
+        if (!in_array('shipments', $enabled_modules)){
+            abort(403, 'Unauthorized action.');
+        }
+
         $shipping_statuses = $this->transactionUtil->shipping_statuses();
 
         $business_id = request()->session()->get('user.business_id');

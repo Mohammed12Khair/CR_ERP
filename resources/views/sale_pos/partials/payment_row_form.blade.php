@@ -1,4 +1,18 @@
 <div class="row">
+	@if(!empty($show_date))
+	<div class="{{$col_class}}">
+		<div class="form-group">
+			{!! Form::label("paid_on_$row_index" , __('lang_v1.paid_on') . ':*') !!}
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="fa fa-calendar"></i>
+				</span>
+				{!! Form::text("payment[$row_index][paid_on]", isset($payment_line['paid_on']) ? @format_datetime($payment_line['paid_on']) : @format_datetime('now'), ['class' => 'form-control paid_on', 'readonly', 'required']); !!}
+			</div>
+		</div>
+	</div>
+	@endif
+	
 	<input type="hidden" class="payment_row_index" value="{{ $row_index}}">
 	@php
 	$col_class = 'col-md-6';
@@ -23,19 +37,7 @@
 			</div>
 		</div>
 	</div>
-	@if(!empty($show_date))
-	<div class="{{$col_class}}">
-		<div class="form-group">
-			{!! Form::label("paid_on_$row_index" , __('lang_v1.paid_on') . ':*') !!}
-			<div class="input-group">
-				<span class="input-group-addon">
-					<i class="fa fa-calendar"></i>
-				</span>
-				{!! Form::text("payment[$row_index][paid_on]", isset($payment_line['paid_on']) ? @format_datetime($payment_line['paid_on']) : @format_datetime('now'), ['class' => 'form-control paid_on', 'readonly', 'required']); !!}
-			</div>
-		</div>
-	</div>
-	@endif
+
 	<div class="{{$col_class}}">
 		<div class="form-group">
 			{!! Form::label("method_$row_index" , __('lang_v1.payment_method') . ':*') !!}
@@ -57,6 +59,25 @@
 
 
 	<div class="clearfix"></div>
+
+	@if(!empty($accounts))
+	<div class="{{$col_class}}">
+		<div class="form-group @if($readonly) hide @endif">
+			{!! Form::label("account_$row_index" , __('lang_v1.payment_account') . ':') !!}
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="fas fa-money-bill-alt"></i>
+				</span>
+				{!! Form::select("payment[$row_index][account_id]", $accounts, !empty($payment_line['account_id']) ? $payment_line['account_id'] : '' , ['class' => 'form-control select2 account-dropdown', 'id' => !$readonly ? "account_$row_index" : "account_advance_$row_index", 'style' => 'width:100%;', 'disabled' => $readonly,'required']); !!}
+			</div>
+		</div>
+	</div>
+	@endif
+
+ 
+
+ 
+
 	@include('sale_pos.partials.payment_type_details')
 	<div class="col-md-12">
 		<div class="form-group">

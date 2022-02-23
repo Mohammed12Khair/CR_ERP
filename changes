@@ -29,9 +29,15 @@ php artisan migrate:refresh --path=/database/migrations/2021_11_23_223407_create
 php artisan migrate:refresh --path=/database/migrations/2021_12_03_201824_create_bankcheque_accounts_table.php
 
 php artisan migrate:refresh --path=/database/migrations/2021_12_28_215221_create_bankcheques_payments_table.php
-php artisan migrate:refresh --path=/database/migrations/2018_01_08_104124_create_expense_categories_table.php
 
-{{ action('BankchequesController@addPayment') }}
+php artisan migrate:refresh --path=/database/migrations/2017_11_21_064540_create_barcodes_table.php
+php artisan migrate:refresh --path=/database/migrations/2018_03_06_210206_modify_product_barcode_types.php
+php artisan migrate:refresh --path=/database/migrations/2018_03_06_210206_modify_product_barcode_types.php
+
+{{ action('BankchequesController@addPayment') }}2020_09_29_184909_add_product_catalogue_version.php
+
+
+php artisan migrate:refresh --path=/Modules/ProductCatalogue/Database/Migrations/2020_09_29_184909_add_product_catalogue_version.php --seed
 
 
 test
@@ -80,5 +86,42 @@ ___logic
 3-create view based on business_id
 4-cheque payment linked  to other payments by main payment ID and and customer payment_ref_no column value
 !!!4-if normal payment comment is edit to cheque payment_ref_no the payment will consider as paid_amount to cheques.
+
+
+__________
+SAAS PErmission
+
+    if(request()->session()->get('user.id') == env("IMAP_HOSTNAME_LICENCE_DATA", "not_set")){{
+
+___
+اخفاء الضريبه من المنتجات  في جميع المنتجات
+
+تغير لون الدفـــع في المشتريات
+
+
+
+الحالة:*  نوع الفاتوره
+انهاء  نهائية
+مسوده مبدئية
+ تاب تفاصيل الخصم والشحن
+
+ تفاصيل الشحن  
+سلمت لـ:
+
+اخفاء نفقات اضافيه\
+
+______________
+لضافه للوحدات في الاعدادات
+م نالمنتجات
+استيبراد المخزون الافتتاحي  x
+استيراد المنتجات
+العملاء والموردين استيراد العملاء والموردين
+طباعه الملصقات
+الضمانات
+خصومات 
+شحنات
+مبيعات الاستيراد
+
+_______________
 
 

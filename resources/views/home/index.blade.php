@@ -272,6 +272,8 @@
     @endif
   </div>
   @endcan
+
+  @if(in_array('sales_order', $enabled_modules))
   @if(auth()->user()->can('so.view_all') || auth()->user()->can('so.view_own'))
   <div class="row" @if(!auth()->user()->can('dashboard.data'))style="margin-top: 190px !important;"@endif>
     <div class="col-sm-12">
@@ -304,6 +306,11 @@
     </div>
   </div>
   @endif
+  @endif
+
+
+
+  @if(in_array('purchase_order', $enabled_modules))
   @if(!empty($common_settings['enable_purchase_order']) && (auth()->user()->can('purchase_order.view_all') || auth()->user()->can('purchase_order.view_own')) )
   <div class="row" @if(!auth()->user()->can('dashboard.data'))style="margin-top: 190px !important;"@endif>
     <div class="col-sm-12">
@@ -334,7 +341,10 @@
     </div>
   </div>
   @endif
+  @endif
 
+
+  @if(in_array('pending_shipments', $enabled_modules))
   @if(auth()->user()->can('access_pending_shipments_only') || auth()->user()->can('access_shipping') || auth()->user()->can('access_own_shipping') )
   @component('components.widget', ['class' => 'box-warning'])
   @slot('icon')
@@ -386,6 +396,7 @@
     </table>
   </div>
   @endcomponent
+  @endif
   @endif
 
   @if(!empty($widgets['after_dashboard_reports']))

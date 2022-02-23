@@ -37,6 +37,13 @@ class LabelsController extends Controller
      */
     public function show(Request $request)
     {
+
+        $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
+        
+        if (!in_array('import_opening_stock', $enabled_modules)){
+            abort(403, 'Unauthorized action.');
+        }
+
         $business_id = $request->session()->get('user.business_id');
         $purchase_id = $request->get('purchase_id', false);
         $product_id = $request->get('product_id', false);

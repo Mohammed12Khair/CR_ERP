@@ -58,6 +58,11 @@ class ImportSalesController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+		$enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
+        
+        if (!in_array('import_sales', $enabled_modules)){
+            abort(403, 'Unauthorized action.');
+        }
     	$business_id = request()->session()->get('user.business_id');
 
     	$imported_sales = Transaction::where('business_id', $business_id)

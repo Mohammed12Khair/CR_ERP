@@ -8,7 +8,7 @@
 "add_contact" => "اضافة جهة اتصال",
 "contact_type" => "نوع جهة الاتصال",
 "tax_no" => "الرقم الضريبي",
-"pay_term" => "فترة الدفع",
+"pay_term" => "تنبيه الدفع",
 "pay_term_period" => "كل",
 "mobile" => "الموبايل",
 "landline" => "الهاتف",

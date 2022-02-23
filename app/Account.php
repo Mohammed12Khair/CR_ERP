@@ -36,7 +36,7 @@ class Account extends Model
         // $query = Account::where('business_id', $business_id)->whereIn('account_type_id', $active_);
 
         // shoe allowed accounts only Jan 04
-        $userid = request()->session()->get('user.business_id');
+        $userid = request()->session()->get('user.id');
         $allowed_accounts = Activeaccounts::where('userid', $userid)->get();
         $allowed_accounts_data = [];
         foreach ($allowed_accounts as $allowed_account) {
@@ -120,7 +120,7 @@ class Account extends Model
         // $query = Account::where('business_id', $business_id)->whereIn('account_type_id', $active_);
 
         // shoe allowed accounts only Jan 04
-        $userid = request()->session()->get('user.business_id');
+        $userid = request()->session()->get('user.id');
         $allowed_accounts = Activeaccounts::where('userid', $userid)->get();
         $allowed_accounts_data = [];
         foreach ($allowed_accounts as $allowed_account) {
@@ -195,7 +195,7 @@ class Account extends Model
     public static function forDropdown($business_id, $prepend_none, $closed = false, $show_balance = false)
     {
         // shoe allowed accounts only Jan 04
-        $userid = request()->session()->get('user.business_id');
+        $userid = request()->session()->get('user.id');
         $allowed_accounts = Activeaccounts::where('userid', $userid)->get();
         $allowed_accounts_data = [];
         foreach ($allowed_accounts as $allowed_account) {
@@ -212,6 +212,7 @@ class Account extends Model
         // commect
 
         $query = Account::where('business_id', $business_id)->whereIn('id', $allowed_accounts_data);
+        // $query = Account::where('business_id', $business_id);
 
 
         $permitted_locations = auth()->user()->permitted_locations();

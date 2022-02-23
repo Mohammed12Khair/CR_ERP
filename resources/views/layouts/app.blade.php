@@ -30,9 +30,22 @@ $whitelist = ['127.0.0.1', '::1'];
 
 
     <style>
+
+        .select2{
+            border-radius: 20px !important;
+        }
+        input,select{
+            border-radius: 20px !important;
+        }
+        input:focus{
+            background-color: #449DD1 !important;
+            color:white !important;
+            text-align: center;
+            transition: 0.9s;
+        }
         .box-header,
         .modal-header {
-            /* background-image: url("{{ asset('img/logo.gif') }}"); */
+            /* background-image: url("{{ ('img/logo.gif') }}"); */
             background-image: url("{{ asset('img/kg_clean.png') }}");
             background-size: contain;
             background-repeat: no-repeat;
@@ -94,7 +107,6 @@ $whitelist = ['127.0.0.1', '::1'];
         }
     </style>
 
-
 </head>
 
 <body class="@if($pos_layout) hold-transition lockscreen @else hold-transition skin-@if(!empty(session('business.theme_color'))){{session('business.theme_color')}}@else{{'blue-light'}}@endif sidebar-mini @endif">
@@ -117,7 +129,7 @@ $whitelist = ['127.0.0.1', '::1'];
         @endif
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="@if(!$pos_layout) content-wrapper @endif">
+        <div class="@if(!$pos_layout) content-wrapper @endif"   style="background-image: url('{{ asset('img/logo.gifx') }}');background-repeat:no-repeat;background-position:center;background-size:fill;">
             <!-- empty div for vuejs -->
             <div id="app">
                 @yield('vue')

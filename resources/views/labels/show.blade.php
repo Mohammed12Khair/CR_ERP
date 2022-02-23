@@ -107,7 +107,7 @@
 
 						<td>
 							
-							<div class="" id="price_type_div">
+							<div class="" id="price_type_div" style="display: none;">
 								<div class="form-group">
 									{!! Form::label('print[price_type]', @trans( 'barcode.show_price' ) . ':') !!}
 									<div class="input-group">
@@ -139,13 +139,13 @@
 						</td>
 
 						<td>
-							<div class="checkbox">
+							<div class="checkbox" style="display: none;">
 							    <label>
 							    	<input type="checkbox" checked name="print[packing_date]" value="1"> <b>@lang( 'lang_v1.print_packing_date' )</b>
 							    </label>
 							</div>
 
-							<div class="input-group">
+							<div class="input-group" style="display: none;">
       							<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
 								<input type="text" class="form-control" 
 									name="print[packing_date_size]" 
@@ -199,7 +199,7 @@
 				<hr/>
 			</div>
 
-			<div class="col-sm-4">
+			<div class="col-sm-4" style="display: none;">
 				<div class="form-group">
 					{!! Form::label('price_type', @trans( 'barcode.barcode_setting' ) . ':') !!}
 					<div class="input-group">

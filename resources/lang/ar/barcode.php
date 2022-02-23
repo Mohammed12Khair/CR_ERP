@@ -31,7 +31,7 @@
 "no_of_labels" => "عدد الملصقات",
 "info_in_labels" => "معلومات لعرضها في الملصقات",
 "print_name" => "اسم المنتج",
-"print_variations" => "تباين المنتج (موصى به)",
+"print_variations" => "تنوع المنتج (موصى به)",
 "print_price" => "سعر المنتج",
 "show_price" => "عرض السعر",
 "preview" => "عرض",

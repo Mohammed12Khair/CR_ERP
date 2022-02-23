@@ -8,11 +8,11 @@
     @endif
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title">@lang( 'purchase.add_payment' )</h4>
+      <h4 class="modal-title">@lang( 'purchase.pass_cheque' )</h4>
     </div>
 
     <div class="modal-body">
-      <div class="row">
+      <div class="row" style="display: none;">
         @if(!empty($transaction->contact))
         <div class="col-md-4">
           <div class="well">
@@ -64,7 +64,7 @@
         </div>
       </div>
       <div class="row payment_row">
-        <div class="col-md-4">
+        <div class="col-md-7">
           <div class="form-group">
             {!! Form::label("amount" , __('sale.amount') . ':*') !!}
             <div class="input-group">
@@ -79,14 +79,14 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6" style="display: none;">
           <div class="form-group">
             {!! Form::label("paid_on" , __('lang_v1.paid_on') . ':*') !!}
             <div class="input-group">
               <span class="input-group-addon">
                 <i class="fa fa-calendar"></i>
               </span>
-              {!! Form::text('paid_on', @format_datetime($payment_line->paid_on), ['class' => 'form-control', 'readonly', 'required']); !!}
+              {!! Form::text('paid_on', @format_datetime($payment_line->paid_on), ['class' => 'form-control', 'readonly'=>'true', 'required' =>'true','hidden'=>'true']); !!}
             </div>
           </div>
         </div>
@@ -102,6 +102,23 @@
           </div>
         </div>
 
+
+        @if(!empty($accounts))
+        <div class="col-md-6">
+          <div class="form-group">
+            {!! Form::label("account_id" , __('lang_v1.payment_account') . ':') !!}
+            <div class="input-group">
+              <span class="input-group-addon">
+                <i class="fas fa-money-bill-alt"></i>
+              </span>
+              {!! Form::select("account_id", $accounts_cheques, !empty($payment_line->account_id) ? $payment_line->account_id : '' , ['class' => 'form-control select2', 'id' => "account_id", 'style' => 'width:100%;' , 'required']); !!}
+            </div>
+          </div>
+        </div>
+        @endif
+
+
+
         <div class="col-md-4">
           <div class="form-group">
             {!! Form::label('document', __('purchase.attach_document') . ':') !!}
@@ -114,7 +131,7 @@
         @include('transaction_payment.payment_type_details')
         <div class="col-md-12">
           <div class="form-group">
-            {!! Form::textarea("note", $payment_ref_data, ['class' => 'form-control', 'rows' => 1,'readonly']); !!}
+            {!! Form::hidden("note", $payment_ref_data, ['class' => 'form-control', 'rows' => 1,'readonly']); !!}
           </div>
         </div>
       </div>

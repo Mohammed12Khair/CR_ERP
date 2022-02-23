@@ -14,9 +14,13 @@
 </section>
 
 <!-- Main content -->
+
+
 <section class="content">
     @if (session('notification') || !empty($notification))
+    
         <div class="row">
+           
             <div class="col-sm-12">
                 <div class="alert alert-danger alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -29,8 +33,8 @@
             </div>  
         </div>     
     @endif
-    @component('components.widget', ['class' => 'box-primary', 'title' => __('lang_v1.import_export_selling_price_group_prices')])
-            <div class="row">
+    {{-- @component('components.widget', ['class' => 'box-primary', 'title' => __('lang_v1.import_export_selling_price_group_prices')]) --}}
+    <div class="row" style="display: none;">
                 <div class="col-sm-6">
                     <a href="{{action('SellingPriceGroupController@export')}}" class="btn btn-primary">@lang('lang_v1.export_selling_price_group_prices')</a>
                 </div>
@@ -58,7 +62,7 @@
                     </p>
                 </div>
             </div>
-    @endcomponent
+    {{-- @endcomponent --}}
     @component('components.widget', ['class' => 'box-primary', 'title' => __( 'lang_v1.all_selling_price_group' )])
         @slot('tool')
             <div class="box-tools">
@@ -87,6 +91,8 @@
 
 </section>
 <!-- /.content -->
+
+
 @stop
 @section('javascript')
 <script type="text/javascript">
