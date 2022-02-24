@@ -25,7 +25,7 @@
                 {!! Form::text('amount', 0, ['class' => 'form-control input_number', 'required','placeholder' => __( 'sale.amount' ) ]); !!}
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="display: none;">
                 {!! Form::label('from_account', __( 'account.deposit_from' ) .":") !!}
                 {!! Form::select('from_account', $from_accounts, null, ['class' => 'form-control', 'placeholder' => __('messages.please_select') ]); !!}
             </div>

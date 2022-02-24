@@ -172,7 +172,11 @@
   </div>
 
   </div>
+
+  <div style="display: none;">
     @include('user.edit_profile_form_part')
+
+  </div>
 
     @if(!empty($form_partials))
       @foreach($form_partials as $partial)

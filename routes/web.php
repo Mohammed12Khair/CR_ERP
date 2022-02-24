@@ -174,7 +174,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     // Search
     Route::get('/cheques/Search/', 'bankcheques@AdvanceSearch');
-    Route::post('/cheques/GetSearch/', 'bankcheques@GetAdvanceSearch');
+    Route::get('/cheques/GetSearch/', 'bankcheques@GetAdvanceSearch');
 
     //Reports...
     Route::get('/reports/get-stock-by-sell-price', 'ReportController@getStockBySellingPrice');

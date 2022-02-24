@@ -1,6 +1,6 @@
 <?php
 return [
-"account" => "الحسابات",
+"account" => "خزن",
 "manage_your_account" => "ادارة الحسابات",
 "all_accounts" => "جميع الحسابات",
 "account_number" => "رقم حساب",
@@ -10,7 +10,7 @@ return [
 "edit_account" => "تحرير الحساب",
 "account_closed_success" => "تم إغلاق الحساب بنجاح",
 "closed" => "مغلق",
-"list_accounts" => "قائمة الحسابات",
+"list_accounts" => "قائمة الخزن",
 "opening_balance" => "الرصيد الافتتاحي",
 "account_book" => "دفتر الحسابات",
 "credit" => "ائتمان",
@@ -39,7 +39,7 @@ return [
 "capital" => "رأس المال",
 "not_applicable" => "لايمكن تطبيقه",
 "account_type" => "نوع الحساب",
-"accounts" => "الحسابات",
+"accounts" => "خزن",
 "capital_accounts" => "حسابات رأس المال",
 "deposit_from" => "الإيداع من",
 "no_capital_account_created" => "لا يوجد حساب رأس مال نشط.",

@@ -212,42 +212,48 @@ class bankcheques extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
 
+        $cheques_info = DB::select(DB::raw("select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
+        CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and  a.business_id=:business_id"), ["business_id" => $business_id]);
+
+        $client_data = [];
+        $transaction_tp = [];
+        $status = ['New', 'Partial', 'Paid'];
+        foreach ($cheques_info as $cheques_info_pice) {
+            array_push($client_data, $cheques_info_pice->client);
+            array_push($transaction_tp, $cheques_info_pice->transaction_type);
+        }
+        $client_data = array_unique($client_data);
+        $transaction_tp = array_unique($transaction_tp);
+
+
         $client = $request->input('client');
         // return $client;
         $transaction_type = $request->input('transaction_type');
-        $status = $request->input('status');
+        $status_select = $request->input('status');
         $cheque_number = $request->input('cheque_number');
 
+        $Query = "select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
+        CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and  a.business_id=:business_id";
 
-      
-
-        $cheques = DB::select(DB::raw("select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
-        CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and  a.business_id=:business_id "), ["business_id" => $business_id]);
-
-        // if ($client != null) {
-        //     $cheques = DB::select(DB::raw("select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
-        //     CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and e.name=:client"), ["client" => $client]);
-        // }
-
-      
-
-      
-
+        $Values = ["business_id" => $business_id];
+        // $cheques = DB::select(DB::raw($Query), $Values);
+        if ($client != null) {
+            $Query .= " and e.name=:client ";
+            $Values["client"] = $client;
+        }
         if ($transaction_type != null) {
-            $cheques = DB::select(DB::raw("select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
-            CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and a.transaction_type=:transaction_type"), ["transaction_type" => $transaction_type]);
+            $Query .= " and a.transaction_type=:transaction_type ";
+            $Values["transaction_type"] = $transaction_type;
         }
-
-  
-
         if ($cheque_number != null) {
-            $cheques = DB::select(DB::raw("select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
-            CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and a.cheque_number=:cheque_number"), ["cheque_number" => $cheque_number]);
+            $Query .= " and a.cheque_number=:cheque_number ";
+            $Values["cheque_number"] = $cheque_number;
         }
+        $cheques = DB::select(DB::raw($Query), $Values);
 
-        return $cheques;
 
-        return  $cheques;
+        return view('cheques.search_results')->with('cheques',$cheques)->with('client_data', $client_data)->with('transaction_tp', $transaction_tp)->with('status', $status)->with('status_select',$status_select);
+        // return $cheques;
     }
 
 

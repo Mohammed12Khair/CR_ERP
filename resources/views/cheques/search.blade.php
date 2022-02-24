@@ -15,7 +15,7 @@
     <!-- Main content -->
     <section class="content">
         @component('components.filters', ['class' => 'box-primary'])
-            <form method="post" action="<?php echo action('bankcheques@GetAdvanceSearch'); ?>">
+            <form method="get" action="<?php echo action('bankcheques@GetAdvanceSearch'); ?>">
                 @csrf 
                 <div class="row">
                     <div style="margin-top:1%;" class="col-md-3">
@@ -40,7 +40,7 @@
                     </div>
                     <div style="margin-top:1%;" class="col-md-2">
                         <select class="form-control" name="status">
-                            <option value="">@lang( 'cheque.status' )</option>
+                            <option value="All">@lang( 'cheque.status' )</option>
                             @foreach ($status as $statu)
                                 <option value="{{ $statu }}">{{ $statu }}</option>
                             @endforeach
@@ -52,6 +52,7 @@
                     <div class="col-md-2">
                         <button type="submit" class="btn btn-md btn-primary">Filter</button>
                     </div>
+                  
                 </div>
             </form>
         @endcomponent

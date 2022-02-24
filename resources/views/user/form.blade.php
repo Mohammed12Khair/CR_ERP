@@ -5,6 +5,7 @@
   $user_custom_field3 = !empty($custom_labels['user']['custom_field_3']) ? $custom_labels['user']['custom_field_3'] : __('lang_v1.user_custom_field3');
   $user_custom_field4 = !empty($custom_labels['user']['custom_field_4']) ? $custom_labels['user']['custom_field_4'] : __('lang_v1.user_custom_field4');
 @endphp
+<div style="display: none;">
 <div class="form-group col-md-3"  >
     {!! Form::label('user_dob', __( 'lang_v1.dob' ) . ':') !!}
     {!! Form::text('dob', !empty($user->dob) ? @format_date($user->dob) : null, ['class' => 'form-control', 'placeholder' => __( 'lang_v1.dob'), 'readonly', 'id' => 'user_dob' ]); !!}
@@ -116,4 +117,5 @@
     {!! Form::label('tax_payer_id', __( 'lang_v1.tax_payer_id') . ':') !!}
     @show_tooltip(__('lang_v1.tax_payer_id_help'))
     {!! Form::text('bank_details[tax_payer_id]', !empty($bank_details['tax_payer_id']) ? $bank_details['tax_payer_id'] : null, ['class' => 'form-control', 'id' => 'tax_payer_id', 'placeholder' => __( 'lang_v1.tax_payer_id') ]); !!}
+</div>
 </div>

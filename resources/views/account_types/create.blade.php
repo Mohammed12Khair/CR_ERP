@@ -13,7 +13,7 @@
         {!! Form::text('name', null, ['class' => 'form-control', 'required', 'placeholder' => __( 'lang_v1.name' )]); !!}
       </div>
 
-      <div class="form-group">
+      <div class="form-group" style="display: none;">
         {!! Form::label('parent_account_type_id', __( 'lang_v1.parent_account_type' ) . ':') !!}
         {!! Form::select('parent_account_type_id', $account_types->pluck('name', 'id'), null, ['class' => 'form-control', 'placeholder' => __( 'messages.please_select' )]); !!}
       </div>

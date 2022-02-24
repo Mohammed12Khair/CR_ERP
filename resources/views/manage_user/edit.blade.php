@@ -178,8 +178,10 @@
             @endcomponent
         </div>
     </div>
-    @include('user.edit_profile_form_part', ['bank_details' => !empty($user->bank_details) ? json_decode($user->bank_details, true) : null])
 
+    <div style="display: none;">
+    @include('user.edit_profile_form_part', ['bank_details' => !empty($user->bank_details) ? json_decode($user->bank_details, true) : null])
+    </div>
     @if(!empty($form_partials))
       @foreach($form_partials as $partial)
         {!! $partial !!}

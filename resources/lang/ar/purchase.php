@@ -1,7 +1,7 @@
 <?php 
  return [ 
 "info_names" => "معلومات الخصم والشحن",
-"pass_cheque" => "تمرير شيك مصرفي",
+"pass_cheque" => "تمرير شيك  ",
 "supplier" => "المورد",
 "ref_no" => "الرقم المرجعي",
 "business_location" => "الفرع",
