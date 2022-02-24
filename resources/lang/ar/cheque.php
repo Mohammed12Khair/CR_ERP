@@ -1,5 +1,6 @@
 <?php 
  return [ 
+"status" => " حالة الشيك",
 "account_id" => " الحساب",
 "client_name" => "ألاسم",
 "units" => "الشيكات",

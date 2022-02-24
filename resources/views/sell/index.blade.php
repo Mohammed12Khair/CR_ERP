@@ -215,6 +215,11 @@ $(document).ready( function(){
         sell_table.ajax.reload();
     });
 });
+
+$('document').ready(function() {
+            $("[data-toggle=collapse]").click();
+        });
+     
 </script>
 <script src="{{ asset('js/payment.js?v=' . $asset_v) }}"></script>
 @endsection

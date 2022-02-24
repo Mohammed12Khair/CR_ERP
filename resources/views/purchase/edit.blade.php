@@ -461,7 +461,7 @@
             @endif
             </div>
     
-        <div class="row" >
+        <div class="row"  style="display: none;">
           <div class="col-md-12 text-center">
             <button type="button" class="btn btn-primary btn-sm" id="toggle_additional_expense" style="display: none;"> <i class="fas fa-plus"></i> @lang('lang_v1.add_additional_expenses') <i class="fas fa-chevron-down"></i></button>
           </div>
@@ -715,6 +715,11 @@
       update_grand_total();
       __page_leave_confirmation('#add_purchase_form');
     });
+  
+  	$('document').ready(function() {
+            $("[data-toggle=collapse]").click();
+        });
   </script>
+  
   @include('purchase.partials.keyboard_shortcuts')
 @endsection

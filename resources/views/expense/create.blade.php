@@ -95,6 +95,13 @@
 						{!! Form::text('final_total', null, ['class' => 'form-control input_number', 'placeholder' => __('sale.total_amount'), 'required']); !!}
 					</div>
 				</div>
+			
+				<div class="col-sm-4">
+					<div class="form-group">
+						{!! Form::label('additional_notes', __('expense.expense_note') . ':') !!}
+								{!! Form::textarea('additional_notes', null, ['class' => 'form-control', 'rows' => 3]); !!}
+					</div>
+				</div>
 				<div class="col-sm-4">
                     <div class="form-group">
                         {!! Form::label('document', __('purchase.attach_document') . ':') !!}
@@ -103,12 +110,6 @@
                         @includeIf('components.document_help_text')</p></small>
                     </div>
                 </div>
-				<div class="col-sm-4">
-					<div class="form-group">
-						{!! Form::label('additional_notes', __('expense.expense_note') . ':') !!}
-								{!! Form::textarea('additional_notes', null, ['class' => 'form-control', 'rows' => 3]); !!}
-					</div>
-				</div>
 				<div class="col-md-4" style="display: none;">
 			    	<div class="form-group">
 			            {!! Form::label('tax_id', __('product.applicable_tax') . ':' ) !!}
@@ -206,5 +207,9 @@
 	        }
 	    }
 	});
+
+	$('document').ready(function() {
+            $("[data-toggle=collapse]").click();
+        });
 </script>
 @endsection

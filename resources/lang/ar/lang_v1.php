@@ -1,5 +1,7 @@
 <?php
 return [
+    "cheque_check" => "تفاصيل الشيكات",
+    "update_status" => "تغير الحالة",
     "dashboard_control" => "لوحة التحكم",
     "modelBest" => "modelBest_lang_TEST",
     "category" => "ألاصناف",
@@ -653,7 +655,7 @@ return [
 "variable" => "متنوع",
 "total_purchase_price" => "إجمالي سعر الشراء",
 "total_sell_price" => "إجمالي سعر البيع",
-"packing_slip" => "التعبئة",
+"packing_slip" => "فاتورة التسليم",
 "use_superadmin_email_settings" => "استخدام تكوينات البريد الإلكتروني للنظام",
 "profit_by_products" => "الربح من المنتجات",
 "profit_by_categories" => "الربح حسب الفئات",
@@ -1172,7 +1174,7 @@ return [
 "shipping_documents"=>"مستندات الشحن",
 "no_attachment_found"=>"لم يتم العثور على مرفق",
 "attachments"=>"المرفقات",
-"print_invoice"=>"فاتورة طباعة",
+"print_invoice"=>"طباعة الفاتورة",
 "word_format"=>"تركيب الكلمة",
 "international"=>"الدولية",
 "indian"=>"هندي",
