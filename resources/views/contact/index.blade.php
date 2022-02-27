@@ -78,7 +78,7 @@
             @endslot
         @endif
         @if(auth()->user()->can('supplier.view') || auth()->user()->can('customer.view') || auth()->user()->can('supplier.view_own') || auth()->user()->can('customer.view_own'))
-            <table class="table table-bordered table-striped" id="contact_table">
+            <table class="table table-bordered table-striped" id="contact_table" style="width:100%;">
                 <thead>
                     <tr>
                         <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
@@ -87,7 +87,7 @@
                             <th>@lang('business.business_name')</th>
                             <th>@lang('contact.name')</th>
                             <th>@lang('business.email')</th>
-                            <th>@lang('contact.tax_no')</th>
+                            <th >@lang('contact.tax_no')</th>
                             <th>@lang('contact.pay_term')</th>
                             <th>@lang('account.opening_balance')</th>
                             <th>@lang('lang_v1.advance_balance')</th>
