@@ -223,8 +223,12 @@ class StockTransferController extends Controller
         $user_id = $request->session()->get('user.id');
 
         $Data_['location_id'] = $request->get('transfer_location_id');
-        $expense_values = $request->input('expense_value');
-        $expense = $request->input('expense');
+        try {
+            $expense_values = $request->input('expense_value');
+            $expense = $request->input('expense');
+        } catch (\Exception $x) {
+            error_log($x);
+        }
 
         $shippingChargeFromExp = array_sum($expense_values);
         $combine_epensis = array_combine($expense, $expense_values);
@@ -360,14 +364,18 @@ class StockTransferController extends Controller
 
             // Khair
             // Expensis Creator 
-            foreach ($combine_epensis as  $expense => $expense_values) {
-                if ($expense_values == 0) {
-                    continue;
+            try {
+                foreach ($combine_epensis as  $expense => $expense_values) {
+                    if ($expense_values == 0) {
+                        continue;
+                    }
+                    $Data_['final_total'] = $expense_values;
+                    $Data_['expense_category_id'] = $expense;
+                    $Data_['additional_notes'] = $business_id . '_' .   str_replace("/", "_", $input_data['ref_no']);
+                    $this->transactionUtil->createExpense_transfer($Data_, $business_id, $user_id);
                 }
-                $Data_['final_total'] = $expense_values;
-                $Data_['expense_category_id'] = $expense;
-                $Data_['additional_notes'] = $business_id . '_' .   str_replace("/", "_", $input_data['ref_no']);
-                $this->transactionUtil->createExpense_transfer($Data_, $business_id, $user_id);
+            } catch (\Exception $x) {
+                error_log($x);
             }
 
             $output = [

@@ -51,8 +51,8 @@
                 <br>
                 <div class="row">
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-md btn-primary">Filter</button>
-                        <a href="<?php echo action('bankcheques@AdvanceSearch'); ?>" class="btn btn-md btn-primary">Reset</a>
+                        <button type="submit" class="btn btn-md btn-primary">@lang("cheque.filter")</button>
+                        <a href="<?php echo action('bankcheques@AdvanceSearch'); ?>" class="btn btn-md btn-primary">@lang("cheque.all")</a>
                     </div>
                 </div>
             </form>

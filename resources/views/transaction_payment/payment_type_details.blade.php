@@ -77,7 +77,7 @@
 	<div class="col-md-12">
 		<div class="form-group">
 			{!! Form::label("cheque_number",__('lang_v1.cheque_no')) !!}
-			{!! Form::text("cheque_number", $payment_line->cheque_number, ['class' => 'form-control', 'placeholder' => __('lang_v1.cheque_no'),'required']); !!}
+			{!! Form::number("cheque_number", $payment_line->cheque_number, ['class' => 'form-control', 'placeholder' => __('lang_v1.cheque_no'),'required']); !!}
 		</div>
 	</div>
 </div>

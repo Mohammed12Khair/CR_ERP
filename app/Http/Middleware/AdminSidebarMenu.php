@@ -480,11 +480,11 @@ class AdminSidebarMenu
                         //     __('lang_v1.cheque_home'),
                         //     ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
                         // );
-                        $sub->url(
-                            action('bankcheques@index'),
-                            __('lang_v1.cheque_list'),
-                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
-                        );
+                        // $sub->url(
+                        //     action('bankcheques@index'),
+                        //     __('lang_v1.cheque_list'),
+                        //     ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
+                        // );
                         $sub->url(
                             action('bankcheques@AdvanceSearch'),
                             __('lang_v1.cheque_check'),

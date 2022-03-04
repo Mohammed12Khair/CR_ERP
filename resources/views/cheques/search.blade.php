@@ -50,7 +50,7 @@
                 <br>
                 <div class="row">
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-md btn-primary">Filter</button>
+                        <button type="submit" class="btn btn-md btn-primary">@lang("cheque.filter")</button>
                     </div>
                   
                 </div>

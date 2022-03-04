@@ -1,206 +1,49 @@
-[11-Feb-2022 23:53:24 Asia/Kolkata] Bus1
-[11-Feb-2022 23:53:24 Asia/Kolkata] user1
-[11-Feb-2022 23:53:24 Asia/Kolkata] 1
-[11-Feb-2022 23:53:24 Asia/Kolkata] Not In array
-[11-Feb-2022 23:53:25 Asia/Kolkata] 1
-[11-Feb-2022 23:53:25 Asia/Kolkata] 1
-[11-Feb-2022 23:53:26 Asia/Kolkata] Bus1
-[11-Feb-2022 23:53:26 Asia/Kolkata] user1
-[11-Feb-2022 23:53:26 Asia/Kolkata] 1
-[11-Feb-2022 23:53:26 Asia/Kolkata] 1
-[11-Feb-2022 23:53:26 Asia/Kolkata] In array
-[11-Feb-2022 23:55:21 Asia/Kolkata] _______________
-[11-Feb-2022 23:55:21 Asia/Kolkata] 
-[11-Feb-2022 23:55:21 Asia/Kolkata] _______________
-[11-Feb-2022 23:55:27 Asia/Kolkata] 0
-[11-Feb-2022 23:55:28 Asia/Kolkata] 0
-[12-Feb-2022 00:00:39 Asia/Kolkata] 0
-[12-Feb-2022 00:00:41 Asia/Kolkata] 0
-[12-Feb-2022 00:01:29 Asia/Kolkata] 0
-[12-Feb-2022 00:01:30 Asia/Kolkata] 0
-[12-Feb-2022 00:01:55 Asia/Kolkata] 0
-[12-Feb-2022 00:01:57 Asia/Kolkata] 0
-[12-Feb-2022 00:03:08 Asia/Kolkata] 0
-[12-Feb-2022 00:03:10 Asia/Kolkata] 0
-[12-Feb-2022 00:03:44 Asia/Kolkata] 0
-[12-Feb-2022 00:03:45 Asia/Kolkata] 0
-[12-Feb-2022 00:04:12 Asia/Kolkata] 0
-[12-Feb-2022 00:04:13 Asia/Kolkata] 0
-[12-Feb-2022 00:05:40 Asia/Kolkata] 0
-[12-Feb-2022 00:05:42 Asia/Kolkata] 0
-[12-Feb-2022 00:07:15 Asia/Kolkata] 0
-[12-Feb-2022 00:07:16 Asia/Kolkata] 0
-[12-Feb-2022 00:07:22 Asia/Kolkata] 0
-[12-Feb-2022 00:07:23 Asia/Kolkata] 0
-[12-Feb-2022 00:07:35 Asia/Kolkata] 0
-[12-Feb-2022 00:07:37 Asia/Kolkata] 0
-[12-Feb-2022 00:09:18 Asia/Kolkata] 0
-[12-Feb-2022 00:09:20 Asia/Kolkata] 0
-[12-Feb-2022 00:09:30 Asia/Kolkata] 0
-[12-Feb-2022 00:09:31 Asia/Kolkata] 0
-[12-Feb-2022 00:09:36 Asia/Kolkata] 0
-[12-Feb-2022 00:09:37 Asia/Kolkata] 0
-[12-Feb-2022 00:11:09 Asia/Kolkata] 0
-[12-Feb-2022 00:11:10 Asia/Kolkata] 0
-[12-Feb-2022 00:11:20 Asia/Kolkata] 0
-[12-Feb-2022 00:11:21 Asia/Kolkata] 0
-[12-Feb-2022 00:11:34 Asia/Kolkata] 0
-[12-Feb-2022 00:11:36 Asia/Kolkata] 0
-[12-Feb-2022 00:11:52 Asia/Kolkata] 0
-[12-Feb-2022 00:11:53 Asia/Kolkata] 0
-[12-Feb-2022 00:12:05 Asia/Kolkata] 0
-[12-Feb-2022 00:12:09 Asia/Kolkata] 0
-[12-Feb-2022 00:12:28 Asia/Kolkata] 0
-[12-Feb-2022 00:12:30 Asia/Kolkata] 0
-[12-Feb-2022 00:12:31 Asia/Kolkata] 0
-[12-Feb-2022 00:12:32 Asia/Kolkata] 0
-[12-Feb-2022 01:39:03 Asia/Kolkata] 0
-[12-Feb-2022 01:39:05 Asia/Kolkata] 0
-[12-Feb-2022 01:40:53 Asia/Kolkata] 0
-[12-Feb-2022 01:40:55 Asia/Kolkata] 0
-[12-Feb-2022 01:40:57 Asia/Kolkata] 0
-[12-Feb-2022 01:41:01 Asia/Kolkata] 0
-[12-Feb-2022 01:41:02 Asia/Kolkata] 0
-[12-Feb-2022 01:41:02 Asia/Kolkata] 0
-[12-Feb-2022 01:41:03 Asia/Kolkata] 0
-[12-Feb-2022 01:41:03 Asia/Kolkata] 0
-[12-Feb-2022 01:41:04 Asia/Kolkata] 0
-[12-Feb-2022 01:41:07 Asia/Kolkata] 0
-[12-Feb-2022 01:41:07 Asia/Kolkata] 0
-[12-Feb-2022 01:41:08 Asia/Kolkata] 0
-[12-Feb-2022 01:43:42 Asia/Kolkata] 0
-[12-Feb-2022 01:43:50 Asia/Kolkata] 0
-[12-Feb-2022 01:44:04 Asia/Kolkata] 0
-[12-Feb-2022 01:44:21 Asia/Kolkata] 0
-[12-Feb-2022 01:44:23 Asia/Kolkata] 0
-[12-Feb-2022 01:46:08 Asia/Kolkata] 0
-[12-Feb-2022 01:46:26 Asia/Kolkata] 0
-[12-Feb-2022 01:46:28 Asia/Kolkata] 0
-[12-Feb-2022 01:46:31 Asia/Kolkata] 0
-[12-Feb-2022 01:46:34 Asia/Kolkata] 0
-[12-Feb-2022 01:46:36 Asia/Kolkata] 0
-[12-Feb-2022 01:50:32 Asia/Kolkata] 0
-[12-Feb-2022 01:51:29 Asia/Kolkata] 0
-[12-Feb-2022 01:52:00 Asia/Kolkata] 0
-[12-Feb-2022 15:11:31 Africa/Cairo] _______________
-[12-Feb-2022 15:11:31 Africa/Cairo] 
-[12-Feb-2022 15:11:31 Africa/Cairo] _______________
-[12-Feb-2022 15:49:47 Africa/Cairo] _______________
-[12-Feb-2022 15:49:47 Africa/Cairo] 
-[12-Feb-2022 15:49:47 Africa/Cairo] _______________
-[13-Feb-2022 08:26:47 Africa/Cairo] Bus3
-[13-Feb-2022 08:26:47 Africa/Cairo] user4
-[13-Feb-2022 08:26:47 Africa/Cairo] 2
-[13-Feb-2022 08:26:47 Africa/Cairo] Not In array
-[13-Feb-2022 08:26:47 Africa/Cairo] 3
-[13-Feb-2022 08:26:47 Africa/Cairo] Not In array
-[13-Feb-2022 08:26:53 Africa/Cairo] 4
-[13-Feb-2022 08:26:53 Africa/Cairo] 2
-[13-Feb-2022 08:26:53 Africa/Cairo] Bus3
-[13-Feb-2022 08:26:53 Africa/Cairo] user4
-[13-Feb-2022 08:26:53 Africa/Cairo] 2
-[13-Feb-2022 08:26:53 Africa/Cairo] 2
-[13-Feb-2022 08:26:53 Africa/Cairo] In array
-[13-Feb-2022 08:26:53 Africa/Cairo] 3
-[13-Feb-2022 08:26:53 Africa/Cairo] Not In array
-[13-Feb-2022 08:27:11 Africa/Cairo] Bus3
-[13-Feb-2022 08:27:11 Africa/Cairo] user4
-[13-Feb-2022 08:27:11 Africa/Cairo] 2
-[13-Feb-2022 08:27:11 Africa/Cairo] 2
-[13-Feb-2022 08:27:11 Africa/Cairo] In array
-[13-Feb-2022 08:27:11 Africa/Cairo] 3
-[13-Feb-2022 08:27:11 Africa/Cairo] Not In array
-[13-Feb-2022 08:27:16 Africa/Cairo] 4
-[13-Feb-2022 08:27:16 Africa/Cairo] 3
-[13-Feb-2022 08:27:16 Africa/Cairo] Bus3
-[13-Feb-2022 08:27:16 Africa/Cairo] user4
-[13-Feb-2022 08:27:16 Africa/Cairo] 2
-[13-Feb-2022 08:27:16 Africa/Cairo] 3
-[13-Feb-2022 08:27:16 Africa/Cairo] 2
-[13-Feb-2022 08:27:16 Africa/Cairo] In array
-[13-Feb-2022 08:27:16 Africa/Cairo] 3
-[13-Feb-2022 08:27:16 Africa/Cairo] In array
-[13-Feb-2022 08:28:51 Africa/Cairo] Bus3
-[13-Feb-2022 08:28:51 Africa/Cairo] user4
-[13-Feb-2022 08:28:51 Africa/Cairo] 2
-[13-Feb-2022 08:28:51 Africa/Cairo] 3
-[13-Feb-2022 08:28:51 Africa/Cairo] 2
-[13-Feb-2022 08:28:51 Africa/Cairo] In array
-[13-Feb-2022 08:28:51 Africa/Cairo] 3
-[13-Feb-2022 08:28:51 Africa/Cairo] In array
-[13-Feb-2022 08:34:46 Africa/Cairo] _______________
-[13-Feb-2022 08:34:46 Africa/Cairo] 
-[13-Feb-2022 08:34:46 Africa/Cairo] _______________
-[13-Feb-2022 08:36:01 Africa/Cairo] 0
-[13-Feb-2022 08:41:40 Africa/Cairo] 0
-[13-Feb-2022 09:07:56 Africa/Cairo] Bus3
-[13-Feb-2022 09:07:56 Africa/Cairo] user4
-[13-Feb-2022 09:07:56 Africa/Cairo] 2
-[13-Feb-2022 09:07:56 Africa/Cairo] 3
-[13-Feb-2022 09:07:56 Africa/Cairo] 2
-[13-Feb-2022 09:07:56 Africa/Cairo] In array
-[13-Feb-2022 09:07:56 Africa/Cairo] 3
-[13-Feb-2022 09:07:56 Africa/Cairo] In array
-[13-Feb-2022 09:07:56 Africa/Cairo] 4
-[13-Feb-2022 09:07:56 Africa/Cairo] Not In array
-[13-Feb-2022 09:07:58 Africa/Cairo] 4
-[13-Feb-2022 09:07:58 Africa/Cairo] 4
-[13-Feb-2022 09:07:59 Africa/Cairo] Bus3
-[13-Feb-2022 09:07:59 Africa/Cairo] user4
-[13-Feb-2022 09:07:59 Africa/Cairo] 2
-[13-Feb-2022 09:07:59 Africa/Cairo] 3
-[13-Feb-2022 09:07:59 Africa/Cairo] 4
-[13-Feb-2022 09:07:59 Africa/Cairo] 2
-[13-Feb-2022 09:07:59 Africa/Cairo] In array
-[13-Feb-2022 09:07:59 Africa/Cairo] 3
-[13-Feb-2022 09:07:59 Africa/Cairo] In array
-[13-Feb-2022 09:07:59 Africa/Cairo] 4
-[13-Feb-2022 09:07:59 Africa/Cairo] In array
-[13-Feb-2022 16:25:13 Africa/Cairo] Bus3
-[13-Feb-2022 16:25:13 Africa/Cairo] user4
-[13-Feb-2022 16:25:13 Africa/Cairo] 2
-[13-Feb-2022 16:25:13 Africa/Cairo] 3
-[13-Feb-2022 16:25:13 Africa/Cairo] 4
-[13-Feb-2022 16:25:13 Africa/Cairo] 2
-[13-Feb-2022 16:25:13 Africa/Cairo] In array
-[13-Feb-2022 16:25:13 Africa/Cairo] 3
-[13-Feb-2022 16:25:13 Africa/Cairo] In array
-[13-Feb-2022 16:25:13 Africa/Cairo] 4
-[13-Feb-2022 16:25:13 Africa/Cairo] In array
-[13-Feb-2022 16:25:25 Africa/Cairo] Bus3
-[13-Feb-2022 16:25:25 Africa/Cairo] user4
-[13-Feb-2022 16:25:25 Africa/Cairo] 3
-[13-Feb-2022 16:25:25 Africa/Cairo] 4
-[13-Feb-2022 16:25:25 Africa/Cairo] 2
-[13-Feb-2022 16:25:25 Africa/Cairo] Not In array
-[13-Feb-2022 16:25:25 Africa/Cairo] 3
-[13-Feb-2022 16:25:25 Africa/Cairo] In array
-[13-Feb-2022 16:25:25 Africa/Cairo] 4
-[13-Feb-2022 16:25:25 Africa/Cairo] In array
-[13-Feb-2022 16:25:28 Africa/Cairo] 4
-[13-Feb-2022 16:25:28 Africa/Cairo] 2
-[13-Feb-2022 16:25:28 Africa/Cairo] Bus3
-[13-Feb-2022 16:25:28 Africa/Cairo] user4
-[13-Feb-2022 16:25:28 Africa/Cairo] 3
-[13-Feb-2022 16:25:28 Africa/Cairo] 4
-[13-Feb-2022 16:25:28 Africa/Cairo] 2
-[13-Feb-2022 16:25:28 Africa/Cairo] 2
-[13-Feb-2022 16:25:28 Africa/Cairo] In array
-[13-Feb-2022 16:25:28 Africa/Cairo] 3
-[13-Feb-2022 16:25:28 Africa/Cairo] In array
-[13-Feb-2022 16:25:28 Africa/Cairo] 4
-[13-Feb-2022 16:25:28 Africa/Cairo] In array
-[13-Feb-2022 16:26:33 Africa/Cairo] Bus3
-[13-Feb-2022 16:26:33 Africa/Cairo] user4
-[13-Feb-2022 16:26:33 Africa/Cairo] 3
-[13-Feb-2022 16:26:33 Africa/Cairo] 4
-[13-Feb-2022 16:26:33 Africa/Cairo] 2
-[13-Feb-2022 16:26:33 Africa/Cairo] 2
-[13-Feb-2022 16:26:33 Africa/Cairo] In array
-[13-Feb-2022 16:26:33 Africa/Cairo] 3
-[13-Feb-2022 16:26:33 Africa/Cairo] In array
-[13-Feb-2022 16:26:33 Africa/Cairo] 4
-[13-Feb-2022 16:26:33 Africa/Cairo] In array
-[13-Feb-2022 16:27:41 Africa/Cairo] 0
-[13-Feb-2022 16:27:44 Africa/Cairo] 0
-[13-Feb-2022 16:27:45 Africa/Cairo] 0
+[28-Feb-2022 16:11:33 Africa/Cairo] 0
+[28-Feb-2022 16:12:34 Africa/Cairo] 0
+[28-Feb-2022 16:12:47 Africa/Cairo] 0
+[28-Feb-2022 16:12:53 Africa/Cairo] 0
+[28-Feb-2022 16:16:20 Africa/Cairo] 0
+[01-Mar-2022 15:46:51 Africa/Cairo] Bus3
+[01-Mar-2022 15:46:51 Africa/Cairo] user4
+[01-Mar-2022 15:46:51 Africa/Cairo] 4
+[01-Mar-2022 15:46:51 Africa/Cairo] Not In array
+[01-Mar-2022 15:46:51 Africa/Cairo] 5
+[01-Mar-2022 15:46:51 Africa/Cairo] Not In array
+[01-Mar-2022 15:46:54 Africa/Cairo] 4
+[01-Mar-2022 15:46:54 Africa/Cairo] 4
+[01-Mar-2022 15:46:55 Africa/Cairo] Bus3
+[01-Mar-2022 15:46:55 Africa/Cairo] user4
+[01-Mar-2022 15:46:55 Africa/Cairo] 4
+[01-Mar-2022 15:46:55 Africa/Cairo] 4
+[01-Mar-2022 15:46:55 Africa/Cairo] In array
+[01-Mar-2022 15:46:55 Africa/Cairo] 5
+[01-Mar-2022 15:46:55 Africa/Cairo] Not In array
+[01-Mar-2022 15:46:57 Africa/Cairo] 4
+[01-Mar-2022 15:46:57 Africa/Cairo] 5
+[01-Mar-2022 15:46:58 Africa/Cairo] Bus3
+[01-Mar-2022 15:46:58 Africa/Cairo] user4
+[01-Mar-2022 15:46:58 Africa/Cairo] 4
+[01-Mar-2022 15:46:58 Africa/Cairo] 5
+[01-Mar-2022 15:46:58 Africa/Cairo] 4
+[01-Mar-2022 15:46:58 Africa/Cairo] In array
+[01-Mar-2022 15:46:58 Africa/Cairo] 5
+[01-Mar-2022 15:46:58 Africa/Cairo] In array
+[01-Mar-2022 15:47:40 Africa/Cairo] _______________
+[01-Mar-2022 15:47:40 Africa/Cairo] 
+[01-Mar-2022 15:47:40 Africa/Cairo] _______________
+[01-Mar-2022 15:50:28 Africa/Cairo] _______________
+[01-Mar-2022 15:50:28 Africa/Cairo] 
+[01-Mar-2022 15:50:28 Africa/Cairo] _______________
+[01-Mar-2022 15:50:57 Africa/Cairo] 0
+[01-Mar-2022 15:51:05 Africa/Cairo] 0
+[01-Mar-2022 15:52:17 Africa/Cairo] 0
+[01-Mar-2022 15:52:25 Africa/Cairo] 0
+[01-Mar-2022 15:58:11 Africa/Cairo] 0
+[01-Mar-2022 16:29:53 Africa/Cairo] 0
+[01-Mar-2022 16:31:21 Africa/Cairo] 0
+[01-Mar-2022 16:39:50 Africa/Cairo] 0
+[01-Mar-2022 16:40:41 Africa/Cairo] _______________
+[01-Mar-2022 16:40:41 Africa/Cairo] 
+[01-Mar-2022 16:40:41 Africa/Cairo] _______________
+[01-Mar-2022 16:40:49 Africa/Cairo] 0
+[01-Mar-2022 16:41:17 Africa/Cairo] 0

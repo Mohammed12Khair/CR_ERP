@@ -669,6 +669,7 @@ class TransactionUtil extends Util
         error_log("_______________");
         error_log($payment['account_id']);
         error_log("_______________");
+        
         $payments_formatted = [];
         $edit_ids = [0];
         $account_transactions = [];

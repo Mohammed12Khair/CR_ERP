@@ -12,34 +12,28 @@
 </style>
 
 <!-- Content Header (Page header) -->
-<section class="content-header content-header-custom" style="text-align: center;margin-bottom:14px;">
+<section class="content-header content-header-custom" style="text-align: center;margin-bottom:30px;">
   <h1>@lang('messages.wellcome_msg')</h1>
-  
+  <button style="float: right;" class="btn" id="switch">switch</button>
 </section>
 <!-- Main content -->
 
 <section class="content content-custom no-print">
+ 
+
+ 
   @if(auth()->user()->can('sell.view') || auth()->user()->can('direct_sell.view'))
   @if(!empty($all_locations))
   <!-- sales chart start -->
+ 
   <div class="row">
-    <div class="col-sm-6">
+
+    <div class="col" id="sells_last_30_days">
+
       @component('components.widget', ['class' => 'box-primary', 'title' => __('home.sells_last_30_days')])
       {!! $sells_chart_1->container() !!}
       @endcomponent
     </div>
-    <div class="col-sm-6">
-      @component('components.widget', ['class' => 'box-primary', 'title' => __('home.most_purchase_item')])
-      {!! $sells_chart_3->container() !!}
-      @endcomponent
-    </div>
-    <div class="col-sm-6">
-      @component('components.widget', ['class' => 'box-primary', 'title' => __('home.product_sell')])
-      {!! $sells_chart_4->container() !!}
-      @endcomponent
-    </div>
-    <!-- </div> -->
-    @endif
     @if(!empty($widgets['after_sales_last_30_days']))
     @foreach($widgets['after_sales_last_30_days'] as $widget)
     {!! $widget !!}
@@ -47,11 +41,27 @@
     @endif
     @if(!empty($all_locations))
     <!-- <div class="row"> -->
-    <div class="col-sm-6">
+    <div class="col" id="sells_current_fy">
       @component('components.widget', ['class' => 'box-primary', 'title' => __('home.sells_current_fy')])
       {!! $sells_chart_2->container() !!}
       @endcomponent
     </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      @component('components.widget', ['class' => 'box-primary', 'title' => __('home.product_sell')])
+      {!! $sells_chart_4->container() !!}
+      @endcomponent
+    </div>
+    <!-- </div> -->
+    @endif
+
+    <div class="col-sm-6">
+      @component('components.widget', ['class' => 'box-primary', 'title' => __('home.most_purchase_item')])
+      {!! $sells_chart_3->container() !!}
+      @endcomponent
+    </div>
+
   </div>
   @endif
   @endif
@@ -633,6 +643,27 @@
     createdRow: function(row, data, dataIndex) {
       $(row).find('td:eq(4)').attr('class', 'clickable_td');
     }
+  });
+
+  $('document').ready(function(){
+    var show=false;
+    $('#sells_last_30_days').show();
+
+    $('#switch').click(function(){
+      if(show){
+      $('#sells_last_30_days').hide();
+      $('#sells_current_fy').show();
+      // $('#switch').text(last_year);
+      show=false
+      }else{
+        $('#sells_last_30_days').show();
+      $('#sells_current_fy').hide();
+      // $('#switch').text(last_30days);
+        show=true;
+      }
+
+    });
+
   });
 </script>
 @endsection
