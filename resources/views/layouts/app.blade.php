@@ -46,9 +46,9 @@ $whitelist = ['127.0.0.1', '::1'];
         .box-header,
         .modal-header {
             /* background-image: url("{{ ('img/logo.gif') }}"); */
-            background-image: url("{{ asset('img/kg_clean.png') }}");
-            background-size: contain;
-            background-repeat: no-repeat;
+            /* background-image: url("{{ asset('img/kg_clean.png') }}"); */
+            /* background-size: contain; */
+            /* background-repeat: no-repeat; */
             <?php
             if (config('app.locale') == 'ar') {
                 echo  "background-position: left;";

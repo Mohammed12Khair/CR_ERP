@@ -316,6 +316,7 @@ class AccountController extends Controller
                 ->leftJoin('users AS u', 'account_transactions.created_by', '=', 'u.id')
                 ->with(['transaction', 'transaction.contact', 'transfer_transaction', 'transaction.transaction_for'])
                 ->where('A.business_id', $business_id)
+                ->where('account_transactions.amount','>','0')
                 ->where('A.id', $id)
                 ->with(['transaction', 'transaction.contact', 'transfer_transaction', 'media', 'transfer_transaction.media'])
                 ->select([
@@ -802,6 +803,7 @@ class AccountController extends Controller
                 ->leftJoin('users AS u', 'account_transactions.created_by', '=', 'u.id')
                 ->leftJoin('contacts AS c', 'TP.payment_for', '=', 'c.id')
                 ->where('A.business_id', $business_id)
+                ->where('account_transactions.amount','>',0)
                 ->with(['transaction', 'transaction.contact', 'transfer_transaction', 'transaction.transaction_for'])
                 ->select([
                     'account_transactions.type', 'account_transactions.amount', 'operation_date',

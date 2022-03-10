@@ -122,14 +122,12 @@ class HomeController extends Controller
         $sells_chart_1 = new CommonChart;
 
         $sells_chart_1->labels($labels)
-            ->options($this->__chartOptions(__(
-                'home.total_sells',
-                ['currency' => $currency->code]
+            ->options($this->__chartOptions(__('home.total_sells',['currency' => $currency->code]
             )));
 
         if (!empty($location_sells)) {
             foreach ($location_sells as $location_sell) {
-                $sells_chart_1->dataset($location_sell['values'], 'bar', $location_sell['loc_label']);
+                $sells_chart_1->dataset($location_sell['loc_label'], 'bar', $location_sell['values']);
             }
         }
 

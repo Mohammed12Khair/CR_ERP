@@ -1,5 +1,6 @@
 <?php
 return [
+    "cheque_rejected" => "شيك راجع",
     "pay_customer" => "قبض",
     "cheque_check" => "تفاصيل الشيكات",
     "update_status" => "تغير الحالة",
