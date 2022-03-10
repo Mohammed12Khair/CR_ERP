@@ -202,8 +202,7 @@ class HomeController extends Controller
         }
         // Custom Data
         $sells_chart_3 = new CommonChart;
-        $Transaction_Details = DB::select(DB::raw("select type type,sum(final_total) total from transactions where type not in ('sell_transfer','purchase_transfer') and  business_id=:business_id GROUP by type"), array(
-            'business_id' => $business_id,
+        $Transaction_Details = DB::select(DB::raw("select type type,sum(final_total) total from transactions where type not in ('sell_transfer','purchase_transfer') and  business_id=:business_id GROUP by type"), array('business_id' => $business_id,
         ));
 
         $labe_ = [];
@@ -216,7 +215,7 @@ class HomeController extends Controller
         $sells_chart_3->dataset('Transactions', 'pie', $labe_v);
 
         $sells_chart_4 = new CommonChart;
-        $Transaction_sells = DB::select(DB::raw(" select b.name type,sum(a.quantity) total from transaction_sell_lines a,products b where a.product_id=b.id and transaction_id in (select transaction_id from transactions where business_id=:business_id and type='sell' ) group by product_id order by sum(a.quantity) desc limit 10"), array(
+        $Transaction_sells = DB::select(DB::raw("select b.name type,sum(a.quantity) total from transaction_sell_lines a,products b where a.product_id=b.id and transaction_id in (select transaction_id from transactions where business_id=:business_id and type='sell' ) group by product_id order by sum(a.quantity) desc limit 10"), array(
             'business_id' => $business_id,
         ));
         $Data_labe_ = [];
