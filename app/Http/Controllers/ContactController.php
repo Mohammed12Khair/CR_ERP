@@ -492,7 +492,7 @@ class ContactController extends Controller
             $contacts->removeColumn('total_rp');
         }
 
-        $contacts->removeColumn('tax_number');
+        // $contacts->removeColumn('tax_number');
         return $contacts->rawColumns(['action', 'opening_balance', 'credit_limit', 'pay_term', 'due', 'return_due', 'name', 'balance'])
                         ->make(true);
     }
