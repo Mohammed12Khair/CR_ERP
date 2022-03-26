@@ -133,9 +133,11 @@ class Util
     //Returns all avilable purchase statuses
     public function orderStatuses()
     {
-        return ['received' => __('lang_v1.received'),
-        //  'pending' => __('lang_v1.pending'),
-        'ordered' => __('lang_v1.ordered')];
+        return [
+            'received' => __('lang_v1.received'),
+            //  'pending' => __('lang_v1.pending'),
+            'ordered' => __('lang_v1.ordered')
+        ];
     }
 
     /**
@@ -215,9 +217,22 @@ class Util
                 $custom_labels = [];
             }
         }
+        $payment_types = [];
+        if (auth()->user()->can('cash')) {
+            $payment_types['cash'] = __('lang_v1.cash'); //, 'card' => __('lang_v1.card'), 'bank_transfer' => __('lang_v1.bank_transfer'),'cheque' => __('lang_v1.cheque')];
+        }
+        if (auth()->user()->can('card')) {
+            $payment_types['card'] = __('lang_v1.card'); //, 'bank_transfer' => __('lang_v1.bank_transfer'),'cheque' => __('lang_v1.cheque')];
+        }
+        if (auth()->user()->can('bank_transfer')) {
+            $payment_types['bank_transfer'] = __('lang_v1.bank_transfer'); //,'cheque' => __('lang_v1.cheque')];
+        }
+        if (auth()->user()->can('cheque')) {
+            $payment_types['cheque'] = __('lang_v1.cheque');
+        }
 
         // $payment_types = ['cash' => __('lang_v1.cash'), 'card' => __('lang_v1.card'), 'cheque' => __('lang_v1.cheque'), 'bank_transfer' => __('lang_v1.bank_transfer'), 'other' => __('lang_v1.other')];
-        $payment_types = ['cash' => __('lang_v1.cash'), 'card' => __('lang_v1.card'), 'bank_transfer' => __('lang_v1.bank_transfer'),'cheque' => __('lang_v1.cheque')];
+        // $payment_types = ['cash' => __('lang_v1.cash'), 'card' => __('lang_v1.card'), 'bank_transfer' => __('lang_v1.bank_transfer'),'cheque' => __('lang_v1.cheque')];
 
         // $payment_types['custom_pay_1'] = !empty($custom_labels['payments']['custom_pay_1']) ? $custom_labels['payments']['custom_pay_1'] : __('lang_v1.custom_payment', ['number' => 1]);
         // $payment_types['custom_pay_2'] = !empty($custom_labels['payments']['custom_pay_2']) ? $custom_labels['payments']['custom_pay_2'] : __('lang_v1.custom_payment', ['number' => 2]);
@@ -244,7 +259,10 @@ class Util
         }
 
         if ($show_advance) {
-            $payment_types = ['advance' => __('lang_v1.advance')] + $payment_types;
+            if (auth()->user()->can('advance')) {
+                $payment_types['advance'] = __('lang_v1.advance');
+            }
+            // $payment_types = ['advance' => __('lang_v1.advance')] + $payment_types;
         }
 
         return $payment_types;

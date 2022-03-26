@@ -1658,6 +1658,53 @@
 
     </div>
   </div>
+<hr>
+
+     {{-- $payment_types = ['cash' => __('lang_v1.cash'), 'card' => __('lang_v1.card'), 'bank_transfer' => __('lang_v1.bank_transfer'),'cheque' => __('lang_v1.cheque')]; --}}
+     <div class="row check_group">
+      <div class="col-md-3">
+          <h4>@lang( 'lang_v1.payment_method' )</h4>
+      </div>
+      <div class="col-md-9">
+          <div class="col-md-12">
+              <div class="checkbox">
+                  <label>
+                      {!! Form::checkbox('permissions[]', 'cash', in_array('cash', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.cash') }}
+                  </label>
+              </div>
+          </div>
+          <div class="col-md-12">
+              <div class="checkbox">
+                  <label>
+                      {!! Form::checkbox('permissions[]', 'card', in_array('card', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.card') }}
+                  </label>
+              </div>
+          </div>
+          <div class="col-md-12">
+              <div class="checkbox">
+                  <label>
+                      {!! Form::checkbox('permissions[]', 'bank_transfer', in_array('bank_transfer', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.bank_transfer') }}
+                  </label>
+              </div>
+          </div>
+          <div class="col-md-12">
+              <div class="checkbox">
+                  <label>
+                      {!! Form::checkbox('permissions[]', 'cheque', in_array('cheque', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.cheque') }}
+                  </label>
+              </div>
+          </div>
+          <div class="col-md-12">
+              <div class="checkbox">
+                  <label>
+                      {!! Form::checkbox('permissions[]', 'advance', in_array('advance', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.advance') }}
+                  </label>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
   <hr>
   @if(in_array('booking', $enabled_modules))
   <div class="row check_group">
