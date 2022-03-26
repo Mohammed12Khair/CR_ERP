@@ -49,6 +49,25 @@ class bankcheques extends Controller
             // from bankcheques_payments a,transaction_payments b,users c where CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and a.business_id=:business_id"), ["business_id" => $business_id]);
             // $cheques = DB::select(DB::raw("select a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id
             // from bankcheques_payments a,transaction_payments b,users c where CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and a.business_id=:business_id"), ["business_id" => $business_id]);
+            // $cheques = DB::select(DB::raw("
+            // select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
+            // from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
+            // CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and  a.business_id=:business_id union all
+            // select '-' client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
+            // from bankcheques_payments a,transaction_payments b,users c,transactions d where
+            // CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and d.contact_id is null and  a.business_id=:business_id1"), ["business_id" => $business_id, "business_id1" => $business_id]);
+            // union all
+            // select 'e.name' as client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
+            // from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
+            // CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and a.business_id=:business_id"), ["business_id" => $business_id,"business_id" => $business_id]);
+            $user_id = request()->session()->get('user.id');
+            // $cheques = DB::select(DB::raw("select a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id
+            // from bankcheques_payments a,transaction_payments b,users c where CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and a.business_id=:business_id"), ["business_id" => $business_id]);
+            // $cheques = DB::select(DB::raw("select a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id
+            // from bankcheques_payments a,transaction_payments b,users c where CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and a.business_id=:business_id"), ["business_id" => $business_id]);
+            // $cheques = DB::select(DB::raw("select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
+            // CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and  a.business_id=:business_id"), ["business_id" => $business_id]);
+            if (auth()->user()->can('all_cheques.access')){
             $cheques = DB::select(DB::raw("
             select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
             from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
@@ -56,11 +75,15 @@ class bankcheques extends Controller
             select '-' client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
             from bankcheques_payments a,transaction_payments b,users c,transactions d where
             CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and d.contact_id is null and  a.business_id=:business_id1"), ["business_id" => $business_id, "business_id1" => $business_id]);
-            // union all
-            // select 'e.name' as client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
-            // from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
-            // CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and a.business_id=:business_id"), ["business_id" => $business_id,"business_id" => $business_id]);
-
+            }elseif(auth()->user()->can('view_own_cheques')){
+                $cheques = DB::select(DB::raw("
+                select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
+                from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
+                CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and  a.business_id=:business_id and c.id=:user_id union all
+                select '-' client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
+                from bankcheques_payments a,transaction_payments b,users c,transactions d where
+                CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and d.contact_id is null and  a.business_id=:business_id1 and  c.id=:user_id1"), ["business_id" => $business_id,"user_id"=>$user_id, "business_id1" => $business_id,"user_id1"=>$user_id]);   
+            }
 
             return Datatables::of($cheques)
                 ->addColumn('action', function ($row) {
@@ -71,18 +94,21 @@ class bankcheques extends Controller
                     ])->sum('amount');
                     $action = '';
                     if ($total_payment == 0) {
-                        $action .= '<button data-href="' . action('TransactionPaymentController@destroy', [$row->payment_id]) . '" class="btn btn-xs btn-danger delete_payment"><i class="glyphicon glyphicon-trash"></i></button>';
-                        $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.cheque_accept") . '</a>';
-                        //     $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-danger btn-xs"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                        //     <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                        //     <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-                        //   </svg>' . __("lang_v1.cheque_rejected") . '</a>';
-                        // $action .= '<button data-href="' . action('TransactionPaymentController@addPayment_cheque_pass', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="btn btn-xs btn-primary"><i class="fas fa-check">Collect</i></button>';
+                        if (auth()->user()->can('cheque.delete')) {
+                            $action .= '<button data-href="' . action('TransactionPaymentController@destroy', [$row->payment_id]) . '" class="btn btn-xs btn-danger delete_payment"><i class="glyphicon glyphicon-trash"></i></button>';
+                        }
+                        if (auth()->user()->can('cheque.accept')) {
+                            $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.cheque_accept") . '</a>';
+                        }
                     } else {
-                        $action .= '<a href="' . action('bankcheques@EditPayment', [str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id]) . '" class="btn btn-info btn-xs"><i class="fas fa-eye" aria-hidden="true"></i>' . __("cheque.edit_payment") . '</a>';
+                        if (auth()->user()->can('cheque.edit') || auth()->user()->can('cheque.details')) {
+                            $action .= '<a href="' . action('bankcheques@EditPayment', [str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id]) . '" class="btn btn-info btn-xs"><i class="fas fa-eye" aria-hidden="true"></i>' . __("cheque.edit_payment") . '</a>';
+                        }
                     }
                     if ($total_payment != $row->amount) {
-                        $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-warning btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("purchase.add_payment") . '</a>';
+                        if (auth()->user()->can('cheque.pay')) {
+                            $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-warning btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("purchase.add_payment") . '</a>';
+                        }
                     }
                     return $action;
                 })
@@ -146,7 +172,7 @@ class bankcheques extends Controller
         CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and d.contact_id is null and  a.business_id=:business_id1"), ["business_id" => $business_id, "business_id1" => $business_id]);
 
 
-        // return   $cheques;
+        // return   $cheques::where('transaction_id',22);
 
         $client_data = [];
         $transaction_tp = [];
@@ -171,12 +197,14 @@ class bankcheques extends Controller
 
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
+            $user_id = request()->session()->get('user.id');
             // $cheques = DB::select(DB::raw("select a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id
             // from bankcheques_payments a,transaction_payments b,users c where CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and a.business_id=:business_id"), ["business_id" => $business_id]);
             // $cheques = DB::select(DB::raw("select a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id
             // from bankcheques_payments a,transaction_payments b,users c where CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and a.business_id=:business_id"), ["business_id" => $business_id]);
             // $cheques = DB::select(DB::raw("select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
             // CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and  a.business_id=:business_id"), ["business_id" => $business_id]);
+            if (auth()->user()->can('all_cheques.access')){
             $cheques = DB::select(DB::raw("
             select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
             from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
@@ -184,6 +212,15 @@ class bankcheques extends Controller
             select '-' client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
             from bankcheques_payments a,transaction_payments b,users c,transactions d where
             CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and d.contact_id is null and  a.business_id=:business_id1"), ["business_id" => $business_id, "business_id1" => $business_id]);
+            }elseif(auth()->user()->can('view_own_cheques')){
+                $cheques = DB::select(DB::raw("
+                select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
+                from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
+                CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and  a.business_id=:business_id and c.id=:user_id union all
+                select '-' client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
+                from bankcheques_payments a,transaction_payments b,users c,transactions d where
+                CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and d.contact_id is null and  a.business_id=:business_id1 and  c.id=:user_id1"), ["business_id" => $business_id,"user_id"=>$user_id, "business_id1" => $business_id,"user_id1"=>$user_id]);   
+            }
             return Datatables::of($cheques)
                 ->addColumn('action', function ($row) {
                     $key = str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id;
@@ -193,15 +230,25 @@ class bankcheques extends Controller
                     ])->sum('amount');
                     $action = '';
                     if ($total_payment == 0) {
-                        $action .= '<button data-href="' . action('TransactionPaymentController@destroy', [$row->payment_id]) . '" class="btn btn-xs btn-danger delete_payment"><i class="glyphicon glyphicon-trash"></i></button>';
-                        $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.cheque_accept") . '</a>';
-                        $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.cheque_rejected") . '</a>';
+                        if (auth()->user()->can('cheque.delete')) {
+                            $action .= '<button data-href="' . action('TransactionPaymentController@destroy', [$row->payment_id]) . '" class="btn btn-xs btn-danger delete_payment"><i class="glyphicon glyphicon-trash"></i></button>';
+                        }
+                        if (auth()->user()->can('cheque.accept')) {
+                            $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.cheque_accept") . '</a>';
+                        }
+                        if (auth()->user()->can('cheque.delete')) {
+                            $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.cheque_rejected") . '</a>';
+                        }
                         // $action .= '<button data-href="' . action('TransactionPaymentController@addPayment_cheque_pass', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="btn btn-xs btn-primary"><i class="fas fa-check">Collect</i></button>';
                     } else {
-                        $action .= '<a href="' . action('bankcheques@EditPayment', [str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id]) . '" class="btn btn-info btn-xs"><i class="fas fa-eye" aria-hidden="true"></i>' . __("cheque.edit_payment") . '</a>';
+                        if (auth()->user()->can('cheque.edit')) {
+                            $action .= '<a href="' . action('bankcheques@EditPayment', [str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id]) . '" class="btn btn-info btn-xs"><i class="fas fa-eye" aria-hidden="true"></i>' . __("cheque.edit_payment") . '</a>';
+                        }
                     }
                     if ($total_payment != $row->amount) {
-                        $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-warning btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("purchase.add_payment") . '</a>';
+                        if (auth()->user()->can('cheque.pay')) {
+                            $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque', [$row->transaction_id, str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id, $row->amount - $total_payment]) . '" class="add_payment_modal  btn btn-warning btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("purchase.add_payment") . '</a>';
+                        }
                     }
                     return $action;
                 })
@@ -300,6 +347,14 @@ class bankcheques extends Controller
             $Query .= " and a.cheque_number=:cheque_number ";
             $Values["cheque_number"] = $cheque_number;
         }
+
+        // Edit
+        if (auth()->user()->can('view_own_cheques')){
+            $Query .= " and c.id=:user_id ";
+            $Values["user_id"] =request()->session()->get('user.id');
+        }
+
+
         $cheques = DB::select(DB::raw($Query), $Values);
 
 
@@ -487,6 +542,12 @@ class bankcheques extends Controller
     public function EditPayment($key)
     {
         $business_id = request()->session()->get('user.business_id');
+
+        if (!auth()->user()->can('cheque.details') && !auth()->user()->can('cheque.edit')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+
         $cheque_payments = TransactionPayment::where([
             ['note', '=', $key],
             ['business_id', '=', $business_id]

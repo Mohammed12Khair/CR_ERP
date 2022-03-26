@@ -29,9 +29,11 @@
 					<i class="fas fa-money-bill-alt"></i>
 				</span>
 				@can('sell.payments')
+				
 				{!! Form::text("payment[$row_index][amount]", @num_format($payment_line['amount']), ['class' => 'form-control payment-amount input_number', 'required', 'id' => "amount_$row_index", 'placeholder' => __('sale.amount'), 'readonly' => $readonly]); !!}
 				@else
-				{!! Form::text("payment[$row_index][amount]", @num_format($payment_line['amount']), ['class' => 'form-control input_number', 'required', 'id' => "amount_$row_index", 'placeholder' => __('sale.amount'), 'readonly' => $readonly]); !!}
+				
+				{!! Form::text("payment[$row_index][amount]", @num_format($payment_line['amount']), ['class' => 'form-control', 'id' => "amount_$row_index", 'placeholder' => __('sale.amount'), 'readonly' => True,"value" => "0"]); !!}
 				@endcan
 			
 			</div>

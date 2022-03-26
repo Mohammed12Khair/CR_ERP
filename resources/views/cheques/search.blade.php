@@ -82,6 +82,8 @@
                         </thead>
                     </table>
                 </div>
+            @else
+            ليس لديك الصلاحية
             @endcan
         @endcomponent
 

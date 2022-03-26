@@ -960,7 +960,7 @@
 		}
 	@endphp
 	@if((empty($status) || (!in_array($status, ['quotation', 'draft'])) || $is_enabled_download_pdf) && $sale_type != 'sales_order')
-		@can('sell.payments')
+	
 			@component('components.widget', ['class' => 'box-solid', 'id' => $payment_body_id, 'title' => __('purchase.add_payment')])
 			@if($is_enabled_download_pdf)
 				<div class="well row">
@@ -984,7 +984,7 @@
 								<span class="input-group-addon">
 									<i class="fas fa-money-bill-alt"></i>
 								</span>
-								{!! Form::select("prefer_payment_account", $accounts, null, ['class' => 'form-control','style' => 'width:100%;']); !!}
+								{!! Form::select("prefer_payment_account", $accounts,null, ['class' => 'form-control','style' => 'width:100%;']); !!}
 							</div>
 						</div>
 					</div>
@@ -1008,7 +1008,7 @@
 				</div>
 			@endif
 			@endcomponent
-		@endcan
+	
 	@endif
 	
 	<div class="row">

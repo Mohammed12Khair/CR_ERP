@@ -7,9 +7,9 @@
             <small>@lang( 'cheque.manage_your_units' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
-                                                            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                                                            <li class="active">Here</li>
-                                                        </ol> -->
+                                                                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                                                                <li class="active">Here</li>
+                                                            </ol> -->
     </section>
 
     <!-- Main content -->
@@ -119,14 +119,41 @@
                                             $total_payment = App\TransactionPayment::where([['note', '=', $key], ['business_id', '=', $cheque->business_id]])->sum('amount');
                                             $action = '';
                                             if ($total_payment == 0) {
-                                                $action .= '<button data-href="' . action('TransactionPaymentController@destroy', [$cheque->payment_id]) . '" class="btn btn-xs btn-danger delete_payment"><i class="glyphicon glyphicon-trash"></i></button>';
-                                                $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$cheque->transaction_id, str_replace('/', '_', $cheque->cheque_ref) . '_' . $cheque->payment_id, $cheque->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __('lang_v1.cheque_accept') . '</a>';
-                                                // $action .= '<button data-href="' . action('TransactionPaymentController@addPayment_cheque_pass', [$cheque->transaction_id, str_replace('/', '_', $cheque->cheque_ref) . '_' . $cheque->payment_id, $cheque->amount - $total_payment]) . '" class="btn btn-xs btn-primary"><i class="fas fa-check">Collect</i></button>';
+                                                if (
+                                                    auth()
+                                                        ->user()
+                                                        ->can('cheque.delete')
+                                                ) {
+                                                    $action .= '<button data-href="' . action('TransactionPaymentController@destroy', [$cheque->payment_id]) . '" class="btn btn-xs btn-danger delete_payment"><i class="glyphicon glyphicon-trash"></i></button>';
+                                                }
+                                            
+                                                if (
+                                                    auth()
+                                                        ->user()
+                                                        ->can('cheque.accept')
+                                                ) {
+                                                    $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque_accept', [$cheque->transaction_id, str_replace('/', '_', $cheque->cheque_ref) . '_' . $cheque->payment_id, $cheque->amount - $total_payment]) . '" class="add_payment_modal  btn btn-success btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __('lang_v1.cheque_accept') . '</a>';
+                                                } // $action .= '<button data-href="' . action('TransactionPaymentController@addPayment_cheque_pass', [$cheque->transaction_id, str_replace('/', '_', $cheque->cheque_ref) . '_' . $cheque->payment_id, $cheque->amount - $total_payment]) . '" class="btn btn-xs btn-primary"><i class="fas fa-check">Collect</i></button>';
                                             } else {
-                                                $action .= '<a href="' . action('bankcheques@EditPayment', [str_replace('/', '_', $cheque->cheque_ref) . '_' . $cheque->payment_id]) . '" class="btn btn-info btn-xs"><i class="fas fa-eye" aria-hidden="true"></i>' . __('cheque.edit_payment') . '</a>';
+                                                if (
+                                                    auth()
+                                                        ->user()
+                                                        ->can('cheque.edit') ||
+                                                    auth()
+                                                        ->user()
+                                                        ->can('cheque.details')
+                                                ) {
+                                                    $action .= '<a href="' . action('bankcheques@EditPayment', [str_replace('/', '_', $cheque->cheque_ref) . '_' . $cheque->payment_id]) . '" class="btn btn-info btn-xs"><i class="fas fa-eye" aria-hidden="true"></i>' . __('cheque.edit_payment') . '</a>';
+                                                }
                                             }
                                             if ($total_payment != $cheque->amount) {
-                                                $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque', [$cheque->transaction_id, str_replace('/', '_', $cheque->cheque_ref) . '_' . $cheque->payment_id, $cheque->amount - $total_payment]) . '" class="add_payment_modal  btn btn-warning btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __('purchase.add_payment') . '</a>';
+                                                if (
+                                                    auth()
+                                                        ->user()
+                                                        ->can('cheque.pay')
+                                                ) {
+                                                    $action .= '<a href="' . action('TransactionPaymentController@addPayment_cheque', [$cheque->transaction_id, str_replace('/', '_', $cheque->cheque_ref) . '_' . $cheque->payment_id, $cheque->amount - $total_payment]) . '" class="add_payment_modal  btn btn-warning btn-xs"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __('purchase.add_payment') . '</a>';
+                                                }
                                             }
                                             echo $action;
                                         @endphp
