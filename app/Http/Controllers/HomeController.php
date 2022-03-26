@@ -127,12 +127,12 @@ class HomeController extends Controller
 
         if (!empty($location_sells)) {
             foreach ($location_sells as $location_sell) {
-                $sells_chart_1->dataset($location_sell['loc_label'], 'bar', $location_sell['values']);
+                $sells_chart_1->dataset($location_sell['loc_label'], 'line', $location_sell['values']);
             }
         }
 
         if (count($all_locations) > 1) {
-            $sells_chart_1->dataset(__('report.all_locations'), 'bar', $all_sell_values);
+            $sells_chart_1->dataset(__('report.all_locations'), 'line', $all_sell_values);
         }
 
         //Chart for sells this financial year

@@ -217,7 +217,7 @@ class StockTransferController extends Controller
         if (!auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
         }
-
+        $shippingChargeFromExp = 0;
         // $Data_ = $request;
         $business_id = $request->session()->get('user.business_id');
         $user_id = $request->session()->get('user.id');
@@ -226,12 +226,13 @@ class StockTransferController extends Controller
         try {
             $expense_values = $request->input('expense_value');
             $expense = $request->input('expense');
+
         } catch (\Exception $x) {
             error_log($x);
         }
-
         $shippingChargeFromExp = array_sum($expense_values);
         $combine_epensis = array_combine($expense, $expense_values);
+        
 
         try {
             $business_id = $request->session()->get('user.business_id');

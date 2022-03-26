@@ -648,6 +648,7 @@
   $('document').ready(function(){
     var show=false;
     $('#sells_last_30_days').show();
+    $('#sells_current_fy').hide();
 
     $('#switch').click(function(){
       if(show){
