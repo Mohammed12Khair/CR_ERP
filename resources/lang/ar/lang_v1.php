@@ -1,5 +1,13 @@
 <?php
 return [
+   "access_all_cheques"=>"عرض جميع الشيكات",
+   "view_own_cheques"=>"عرض الشيكات الخاصة",
+   "cheque.view"=>"عرض الشيكات ",
+   "cheque.accept"=>"تمرير الشيكات ",
+   "cheque.pay"=>"دفع قسط الشيكات ",
+   "cheque.details"=>" تفاصيل الشيكات ",
+   "cheque.delete"=>" حذف الشيكات ",
+   "cheque.edit"=>" تعديل الشيكات ",
     "cheque_rejected" => "شيك راجع",
     "pay_customer" => "قبض",
     "cheque_check" => "تفاصيل الشيكات",

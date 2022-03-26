@@ -1588,6 +1588,74 @@
         </div>
       </div>
 
+      {{-- Cheques --}}
+
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::radio('radio_option[cheques_view]', 'all_cheques.access', in_array('all_cheques.access', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.access_all_cheques' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::radio('radio_option[cheques_view]', 'view_own_cheques', in_array('view_own_cheques', $role_permissions),['class' => 'input-icheck']); !!}
+            {{ __('lang_v1.view_own_cheques') }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'cheque.view', in_array('cheque.view', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.cheque.view' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'cheque.accept', in_array('cheque.accept', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.cheque.accept' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'cheque.pay', in_array('cheque.pay', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.cheque.pay' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'cheque.details', in_array('cheque.details', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.cheque.details' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'cheque.delete', in_array('cheque.delete', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.cheque.delete' ) }}
+          </label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('permissions[]', 'cheque.edit', in_array('cheque.edit', $role_permissions),
+            [ 'class' => 'input-icheck']); !!} {{ __( 'lang_v1.cheque.edit' ) }}
+          </label>
+        </div>
+      </div>
+        {{-- Cheques --}}
+
     </div>
   </div>
   <hr>
