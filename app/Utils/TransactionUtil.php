@@ -4991,7 +4991,7 @@ class TransactionUtil extends Util
                 'payment_method_key' => $payment->method,
                 'debit' => in_array($payment->transaction_type, ['purchase', 'sell_return']) || $payment->is_return == 1  ? $payment->amount : '',
                 'credit' => (in_array($payment->transaction_type, ['sell', 'purchase_return', 'opening_balance']) || $payment->is_advance == 1) && $payment->is_return == 0 ? $payment->amount : '',
-                'others' =>  $note
+                'others' =>  $note,
             ];
         }
 
