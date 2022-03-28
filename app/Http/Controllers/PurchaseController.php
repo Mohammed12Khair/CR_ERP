@@ -233,6 +233,10 @@ class PurchaseController extends Controller
      */
     public function create()
     {
+
+
+        // return auth()->user()->permitted_locations();
+
         if (!auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
         }

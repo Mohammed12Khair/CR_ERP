@@ -638,9 +638,7 @@ class ContactController extends Controller
         }
 
         $reward_enabled = (request()->session()->get('business.enable_rp') == 1 && in_array($contact->type, ['customer', 'both'])) ? true : false;
-
         $contact_dropdown = Contact::contactDropdown($business_id, false, false);
-
         $business_locations = BusinessLocation::forDropdown($business_id, true);
 
         //get contact view type : ledger, notes etc.
@@ -648,9 +646,7 @@ class ContactController extends Controller
         if (is_null($view_type)) {
             $view_type = 'ledger';
         }
-
         $contact_view_tabs = $this->moduleUtil->getModuleData('get_contact_view_tabs');
-
         $activities = Activity::forSubject($contact)
            ->with(['causer', 'subject'])
            ->latest()

@@ -78,11 +78,9 @@
                     <?php
                     // echo $data['debit'] .' ____';
                     // echo $data['payment_method'];
-                    // if ($data['debit'] != '' && $data['debit'] > 0) {
-                    //     // continue;
-                    // }else{
-                    //     continue;
-                    // }
+                    if ($data['payment_method'] == "cheque" && $data['debit'] == 0) {
+                        continue;
+                    }
                     ?>
                     <tr @if (!empty($for_pdf) && $loop->iteration % 2 == 0) class="odd" @endif>
                         <td class="row-border">{{ @format_datetime($data['date']) }}</td>
@@ -92,10 +90,10 @@
                         <td>{{ $data['payment_status'] }}</td>
                         {{-- <td class="ws-nowrap align-right">@if ($data['total'] !== '') @format_currency($data['total']) @endif</td> --}}
                         <td class="ws-nowrap align-right">
-                            @if ($data['debit'] != '' && $data['debit'] > 0 )
-                                @format_currency($data['debit'])     
-                            @else                         
-                            
+                            @if ($data['debit'] != '' && $data['debit'] > 0)
+                                @format_currency($data['debit'])
+                            @else
+                                 {{ $data['payment_method'] }}
                             @endif
                         </td>
                         <td class="ws-nowrap align-right">

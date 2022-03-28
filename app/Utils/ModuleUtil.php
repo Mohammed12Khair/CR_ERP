@@ -413,14 +413,11 @@ class ModuleUtil extends Util
     public function accountsDropdown_not_cheque($business_id, $prepend_none = false, $closed = false, $show_balance = false)
     {
         $dropdown = [];
-
         if ($this->isModuleEnabled('account')) {
             $dropdown = Account::forDropdown_cheque_not_cheques($business_id, $prepend_none, $closed, $show_balance);
         }
-
         return $dropdown;
     }
-
     public function accountsDropdown($business_id, $prepend_none = false, $closed = false, $show_balance = false)
     {
         $dropdown = [];
@@ -428,7 +425,6 @@ class ModuleUtil extends Util
         if ($this->isModuleEnabled('account')) {
             $dropdown = Account::forDropdown($business_id, $prepend_none, $closed, $show_balance);
         }
-
         return $dropdown;
     }
 
