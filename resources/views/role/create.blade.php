@@ -1479,6 +1479,64 @@
                     <h4>@lang( 'account.account' )</h4>
                 </div>
                 <div class="col-md-9">
+                    {{-- Accounts --}}
+
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account.createnewaccount', false, ['class' => 'input-icheck']) !!} {{ __("messages.add") }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account.fund_edit', false, ['class' => 'input-icheck']) !!} {{ __("messages.edit") }}
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account.account_book', false, ['class' => 'input-icheck']) !!} {{ __("account.account_book") }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account.fund_transfer', false, ['class' => 'input-icheck']) !!} {{ __('account.fund_transfer') }}
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account.deposit', false, ['class' => 'input-icheck']) !!} {{ __('account.deposit') }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account.close', false, ['class' => 'input-icheck']) !!} {{ __('messages.close') }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account.active', false, ['class' => 'input-icheck']) !!} {{ __('messages.activate') }}
+                            </label>
+                        </div>
+                    </div>
+
+                    {{-- Accounts --}}
                     <div class="col-md-12">
                         <div class="checkbox">
                             <label>

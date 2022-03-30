@@ -58,11 +58,13 @@
                                         {!! Form::select('account_status', ['active' => __('business.is_active'), 'closed' => __('account.closed')], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'account_status']); !!}
                                     </div>
                                     <div class="col-md-8">
+                                        @can('account.createnewaccount')
                                         <button type="button" class="btn btn-primary btn-modal pull-right" 
                                             data-container=".account_model"
                                             data-href="{{action('AccountController@create')}}">
                                             <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
-                                    </div>
+                                 @endcan
+                                        </div>
                                 @endcomponent
                             </div>
                             <div class="col-sm-12">

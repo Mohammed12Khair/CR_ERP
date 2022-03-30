@@ -54,7 +54,7 @@ class AccountController extends Controller
             array_push($activeAccounts, $active_accounts_ID->account_id);
         }
         if (request()->ajax()) {
-       
+
             // $arr=[6]; 
             $accounts = Account::leftjoin('account_transactions as AT', 'AT.account_id', '=', 'accounts.id')
                 ->leftjoin(
@@ -114,17 +114,56 @@ class AccountController extends Controller
             return DataTables::of($accounts)
                 ->addColumn(
                     'action',
-                    '<button data-href="{{action(\'AccountController@edit\',[$id])}}" data-container=".account_model" class="btn btn-xs btn-primary btn-modal"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
-                                <a href="{{action(\'AccountController@show\',[$id])}}" class="btn btn-warning btn-xs"><i class="fa fa-book"></i> @lang("account.account_book")</a>&nbsp;
-                                @if($is_closed == 0)
-                                <button data-href="{{action(\'AccountController@getFundTransfer\',[$id])}}" class="btn btn-xs btn-info btn-modal" data-container=".view_modal"><i class="fa fa-exchange"></i> @lang("account.fund_transfer")</button>
+                    function ($row) {
+                        $html = '';
+                        if(auth()->user()->can('account.fund_edit')){
+                        $html .= '<button data-href="' . action('AccountController@edit', [$row->id]) . '" data-container=".account_model" class="btn btn-xs btn-primary btn-modal"><i class="glyphicon glyphicon-edit"></i>' . __("messages.edit") . '</button>';
+                        }
 
-                                <button data-href="{{action(\'AccountController@getDeposit\',[$id])}}" class="btn btn-xs btn-success btn-modal" data-container=".view_modal"><i class="fas fa-money-bill-alt"></i> @lang("account.deposit")</button>
+                        if(auth()->user()->can('account.account_book')){
+                        $html .= '<a href="' . action('AccountController@show', $row->id) . '" class="btn btn-warning btn-xs"><i class="fa fa-book"></i>' . __("account.account_book") . '</a>&nbsp;';
+                        }
+                        if ($row->is_closed == 0) {
+                            if(auth()->user()->can('account.fund_transfer')){
+                            $html .= '<button data-href="' . action('AccountController@getFundTransfer', $row->id) . '" class="btn btn-xs btn-info btn-modal" data-container=".view_modal"><i class="fa fa-exchange"></i>' . __("account.fund_transfer") . '</button>';
+                            }
+                            if(auth()->user()->can('account.deposit')){
+                            $html .= '<button data-href="' . action('AccountController@getDeposit', $row->id) . '" class="btn btn-xs btn-success btn-modal" data-container=".view_modal"><i class="fas fa-money-bill-alt"></i>' . __("account.deposit") . '</button>';
+                            }
 
-                                <button data-url="{{action(\'AccountController@close\',[$id])}}" class="btn btn-xs btn-danger close_account"><i class="fa fa-power-off"></i> @lang("messages.close")</button>
-                                @elseif($is_closed == 1)
-                                    <button data-url="{{action(\'AccountController@activate\',[$id])}}" class="btn btn-xs btn-success activate_account"><i class="fa fa-power-off"></i> @lang("messages.activate")</button>
-                                @endif'
+                            if(auth()->user()->can('account.close')){
+                            $html .= '<button data-url="' . action('AccountController@close', $row->id) . '" class="btn btn-xs btn-danger close_account"><i class="fa fa-power-off"></i>' . __("messages.close") . '</button>';
+                            }
+                        } elseif ($row->is_closed == 1) {
+                            if(auth()->user()->can('account.active')){
+                            $html .= '<button data-url="' . action('AccountController@activate', $row->id) . '" class="btn btn-xs btn-success activate_account"><i class="fa fa-power-off"></i>' . __("messages.activate") . '</button>';
+                            }
+                        }
+                        // $html.= '<a href="'. action('AccountController@show',$row->id) . '" class="btn btn-warning btn-xs"><i class="fa fa-book"></i>' . __("account.account_book") . '</a>&nbsp;';
+                        // $html= '<button data-href="{{action(\'AccountController@edit\',[' . $row->id . '])}}" data-container=".account_model" class="btn btn-xs btn-primary btn-modal"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
+                        //         <a href="{{action(\'AccountController@show\',[' . $row->id . '])}}" class="btn btn-warning btn-xs"><i class="fa fa-book"></i> @lang("account.account_book")</a>&nbsp;
+                        //         @if($is_closed == 0)
+                        //        <button data-href="{{action(\'AccountController@getFundTransfer\',[' . $row->id . '])}}" class="btn btn-xs btn-info btn-modal" data-container=".view_modal"><i class="fa fa-exchange"></i> @lang("account.fund_transfer")</button>
+                        //         <button data-href="{{action(\'AccountController@getDeposit\',[' . $row->id . '])}}" class="btn btn-xs btn-success btn-modal" data-container=".view_modal"><i class="fas fa-money-bill-alt"></i> @lang("account.deposit")</button>
+                        //         <button data-url="{{action(\'AccountController@close\',[' . $row->id . '])}}" class="btn btn-xs btn-danger close_account"><i class="fa fa-power-off"></i> @lang("messages.close")</button>
+                        //         @elseif($is_closed == 1)
+                        //             <button data-url="{{action(\'AccountController@activate\',[' . $row->id . '])}}" class="btn btn-xs btn-success activate_account"><i class="fa fa-power-off"></i> @lang("messages.activate")</button>
+                        //         @endif';
+                        return $html;
+                        // return '<button data-href="{{action(\'AccountController@edit\',[' . $row->id . '])}}" data-container=".account_model" class="btn btn-xs btn-primary btn-modal"><i class="glyphicon glyphicon-edit"></i>' . __("messages.edit") . '</button>';
+                        // $html= '<button data-href="{{action(\'AccountController@edit\',[' . $row->id . '])}}" data-container=".account_model" class="btn btn-xs btn-primary btn-modal"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
+                        //         <a href="{{action(\'AccountController@show\',[' . $row->id . '])}}" class="btn btn-warning btn-xs"><i class="fa fa-book"></i> @lang("account.account_book")</a>&nbsp;
+                        //         @if($is_closed == 0)
+                        //        <button data-href="{{action(\'AccountController@getFundTransfer\',[' . $row->id . '])}}" class="btn btn-xs btn-info btn-modal" data-container=".view_modal"><i class="fa fa-exchange"></i> @lang("account.fund_transfer")</button>
+                        //         <button data-href="{{action(\'AccountController@getDeposit\',[' . $row->id . '])}}" class="btn btn-xs btn-success btn-modal" data-container=".view_modal"><i class="fas fa-money-bill-alt"></i> @lang("account.deposit")</button>
+                        //         <button data-url="{{action(\'AccountController@close\',[' . $row->id . '])}}" class="btn btn-xs btn-danger close_account"><i class="fa fa-power-off"></i> @lang("messages.close")</button>
+                        //         @elseif($is_closed == 1)
+                        //             <button data-url="{{action(\'AccountController@activate\',[' . $row->id . '])}}" class="btn btn-xs btn-success activate_account"><i class="fa fa-power-off"></i> @lang("messages.activate")</button>
+                        //         @endif';
+                        //         return $html;
+                        // return $html;
+                    }
+
                 )
                 ->editColumn('name', function ($row) {
                     if ($row->is_closed == 1) {
@@ -277,7 +316,7 @@ class AccountController extends Controller
      */
     public function show($id)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.account_book')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -316,7 +355,7 @@ class AccountController extends Controller
                 ->leftJoin('users AS u', 'account_transactions.created_by', '=', 'u.id')
                 ->with(['transaction', 'transaction.contact', 'transfer_transaction', 'transaction.transaction_for'])
                 ->where('A.business_id', $business_id)
-                ->where('account_transactions.amount','>','0')
+                ->where('account_transactions.amount', '>', '0')
                 ->where('A.id', $id)
                 ->with(['transaction', 'transaction.contact', 'transfer_transaction', 'media', 'transfer_transaction.media'])
                 ->select([
@@ -419,7 +458,7 @@ class AccountController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.fund_edit')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -528,7 +567,7 @@ class AccountController extends Controller
      */
     public function close($id)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.close')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -565,7 +604,7 @@ class AccountController extends Controller
      */
     public function getFundTransfer($id)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.fund_transfer')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -663,7 +702,7 @@ class AccountController extends Controller
      */
     public function getDeposit($id)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.deposit')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -803,7 +842,7 @@ class AccountController extends Controller
                 ->leftJoin('users AS u', 'account_transactions.created_by', '=', 'u.id')
                 ->leftJoin('contacts AS c', 'TP.payment_for', '=', 'c.id')
                 ->where('A.business_id', $business_id)
-                ->where('account_transactions.amount','>',0)
+                ->where('account_transactions.amount', '>', 0)
                 ->with(['transaction', 'transaction.contact', 'transfer_transaction', 'transaction.transaction_for'])
                 ->select([
                     'account_transactions.type', 'account_transactions.amount', 'operation_date',
@@ -1020,7 +1059,7 @@ class AccountController extends Controller
      */
     public function activate($id)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.active')) {
             abort(403, 'Unauthorized action.');
         }
 

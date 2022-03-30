@@ -222,7 +222,7 @@ class Util
 
         $payment_types = [];
   
-
+if(auth()->user()){
         if (auth()->user()->can('cheque_accept')) {
             $payment_types['cheque_accept'] = __('lang_v1.cheque_accept');//, 'card' => __('lang_v1.card'), 'bank_transfer' => __('lang_v1.bank_transfer'),'cheque' => __('lang_v1.cheque')];
         }
@@ -238,6 +238,7 @@ class Util
         if (auth()->user()->can('cheque')) {
             $payment_types['cheque'] = __('lang_v1.cheque');
         }
+    }
 
         // $payment_types = ['cash' => __('lang_v1.cash'), 'card' => __('lang_v1.card'), 'cheque' => __('lang_v1.cheque'), 'bank_transfer' => __('lang_v1.bank_transfer'), 'other' => __('lang_v1.other')];
         // $payment_types = ['cash' => __('lang_v1.cash'), 'card' => __('lang_v1.card'), 'bank_transfer' => __('lang_v1.bank_transfer'),'cheque' => __('lang_v1.cheque')];
