@@ -24,7 +24,7 @@ class AccountTypeController extends Controller
      */
     public function create()
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.account_types')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -46,7 +46,7 @@ class AccountTypeController extends Controller
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.account_types')) {
             abort(403, 'Unauthorized action.');
         }
         try {
@@ -89,7 +89,7 @@ class AccountTypeController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.account_types')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -115,7 +115,7 @@ class AccountTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.account_types')) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -160,7 +160,7 @@ class AccountTypeController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.account_types')) {
             abort(403, 'Unauthorized action.');
         }
 

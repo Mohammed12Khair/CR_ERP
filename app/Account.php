@@ -132,26 +132,26 @@ class Account extends Model
 
         $permitted_locations = auth()->user()->permitted_locations();
         $account_ids = [];
-        if ($permitted_locations != 'all') {
-            $locations = BusinessLocation::where('business_id', $business_id)
-                ->whereIn('id', $permitted_locations)
-                ->get();
+        // if ($permitted_locations != 'all') {
+        //     $locations = BusinessLocation::where('business_id', $business_id)
+        //         ->whereIn('id', $permitted_locations)
+        //         ->get();
 
-            foreach ($locations as $location) {
-                if (!empty($location->default_payment_accounts)) {
-                    $default_payment_accounts = json_decode($location->default_payment_accounts, true);
-                    foreach ($default_payment_accounts as $key => $account) {
-                        if (!empty($account['is_enabled']) && !empty($account['account'])) {
-                            $account_ids[] = $account['account'];
-                        }
-                    }
-                }
-            }
-            $account_ids = array_unique($account_ids);
-        }
+        //     foreach ($locations as $location) {
+        //         if (!empty($location->default_payment_accounts)) {
+        //             $default_payment_accounts = json_decode($location->default_payment_accounts, true);
+        //             foreach ($default_payment_accounts as $key => $account) {
+        //                 if (!empty($account['is_enabled']) && !empty($account['account'])) {
+        //                     $account_ids[] = $account['account'];
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     $account_ids = array_unique($account_ids);
+        // }
 
         if ($permitted_locations != 'all') {
-            $query->whereIn('accounts.id', $account_ids);
+            // $query->whereIn('accounts.id', $account_ids);
         }
 
         $can_access_account = auth()->user()->can('account.access');

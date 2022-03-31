@@ -43,10 +43,12 @@
                     </li>
                     --}}
                     <li>
+                        @can('account.account_types')
                         <a href="#account_types" data-toggle="tab">
                             <i class="fa fa-list"></i> <strong>
                             @lang('lang_v1.account_types') </strong>
                         </a>
+                        @endcan
                     </li>
                 </ul>
                 <div class="tab-content">

@@ -1536,6 +1536,14 @@
                         </div>
                     </div>
 
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account.account_types', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.account_types') }}
+                            </label>
+                        </div>
+                    </div>
+
                     {{-- Accounts --}}
                     <div class="col-md-12">
                         <div class="checkbox">

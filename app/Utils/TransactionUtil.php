@@ -4873,11 +4873,256 @@ class TransactionUtil extends Util
         return $sells;
     }
 
+
+
+      /**
+     * Function to get ledger details
+     *
+     */
+    public function getLedgerDetails($contact_id, $start, $end, $format = 'format_1', $location_id = null)
+    {
+        $business_id = request()->session()->get('user.business_id');
+        //Get sum of totals before start date
+        $previous_transaction_sums = $this->__transactionQuery($contact_id, $start, $location_id)
+                ->select(
+                    DB::raw("SUM(IF(type = 'purchase', final_total, 0)) as total_purchase"),
+                    DB::raw("SUM(IF(type = 'sell' AND status = 'final', final_total, 0)) as total_invoice"),
+                    DB::raw("SUM(IF(type = 'sell_return', final_total, 0)) as total_sell_return"),
+                    DB::raw("SUM(IF(type = 'purchase_return', final_total, 0)) as total_purchase_return"),
+                    DB::raw("SUM(IF(type = 'opening_balance', final_total, 0)) as total_opening_balance")
+                )->first();
+
+        //Get payment totals before start date
+        $prev_payments = $this->__paymentQuery($contact_id, $start, $location_id)
+                            ->select('transaction_payments.*', 'bl.name as location_name', 't.type as transaction_type', 'is_advance')
+                                    ->get();
+
+        $prev_total_invoice_paid = $prev_payments->where('transaction_type', 'sell')->where('is_return', 0)->sum('amount');
+        $prev_total_ob_paid = $prev_payments->where('transaction_type', 'opening_balance')->where('is_return', 0)->sum('amount');
+        $prev_total_sell_change_return = $prev_payments->where('transaction_type', 'sell')->where('is_return', 1)->sum('amount');
+        $prev_total_sell_change_return = !empty($prev_total_sell_change_return) ? $prev_total_sell_change_return : 0;
+        $prev_total_invoice_paid -= $prev_total_sell_change_return;
+        $prev_total_purchase_paid = $prev_payments->where('transaction_type', 'purchase')->where('is_return', 0)->sum('amount');
+        $prev_total_sell_return_paid = $prev_payments->where('transaction_type', 'sell_return')->sum('amount');
+        $prev_total_purchase_return_paid = $prev_payments->where('transaction_type', 'purchase_return')->sum('amount');
+        //$prev_total_advance_payment = $prev_payments->where('is_advance', 1)->sum('amount');
+        $prev_total_advance_payment = $this->__paymentQuery($contact_id, $start, $location_id)
+                                        ->select('bl.name as location_name', 
+                                                't.type as transaction_type', 
+                                                'is_advance',
+                                                'transaction_payments.id',
+                                                DB::raw('(transaction_payments.amount - COALESCE((SELECT SUM(amount) from transaction_payments as TP where TP.parent_id = transaction_payments.id), 0)) as amount')
+                                        )
+                                        ->where('is_advance', 1)
+                                        ->get()
+                                        ->sum('amount');
+
+        $total_prev_paid = $prev_total_invoice_paid + $prev_total_purchase_paid - $prev_total_sell_return_paid - $prev_total_purchase_return_paid + $prev_total_ob_paid + $prev_total_advance_payment;
+
+        $total_prev_invoice = $previous_transaction_sums->total_purchase + $previous_transaction_sums->total_invoice -  $previous_transaction_sums->total_sell_return -  $previous_transaction_sums->total_purchase_return + $previous_transaction_sums->total_opening_balance;
+        //$total_prev_paid = $prev_payments_sum->total_paid;
+        $beginning_balance = $total_prev_invoice - $total_prev_paid;
+
+        $contact = Contact::find($contact_id);
+
+        //Get transaction totals between dates
+        $transaction_query = $this->__transactionQuery($contact_id, $start, $end, $location_id)
+                            ->with(['location'])
+                            ->select('transactions.*');
+
+        if ($format == 'format_2') {
+            $transaction_query->leftjoin('transaction_payments as tp', 'tp.transaction_id', '=', 'transactions.id')
+                            ->addSelect(DB::raw('COALESCE(SUM(tp.amount), 0) as total_paid'))
+                            ->groupBy('transactions.id');
+        }
+
+        $transactions = $transaction_query->get();
+        $transaction_types = Transaction::transactionTypes();
+        $ledger = [];
+
+        $opening_balance = 0;
+        $opening_balance_paid = 0;
+        
+        foreach ($transactions as $transaction) {
+
+            if($transaction->type == 'opening_balance'){
+                //Skip opening balance, it will be added in the end
+                $opening_balance += $transaction->final_total;
+
+                continue;
+            }
+
+            $temp_array = [
+                'date' => $transaction->transaction_date,
+                'ref_no' => in_array($transaction->type, ['sell', 'sell_return']) ? $transaction->invoice_no : $transaction->ref_no,
+                'type' => $transaction_types[$transaction->type],
+                'location' => $transaction->location->name,
+                'payment_status' =>  __('lang_v1.' . $transaction->payment_status),
+                'total' => '',
+                'payment_method' => '',
+                'debit' => in_array($transaction->type, ['sell', 'purchase_return'])  ? $transaction->final_total : '',
+                'credit' => in_array($transaction->type, ['purchase', 'sell_return']) ? $transaction->final_total : '',
+                'others' => $transaction->additional_notes
+            ];
+
+            if ($format == 'format_2') {
+                $temp_array['final_total'] = $transaction->final_total;
+                $temp_array['total_due'] = $transaction->final_total - $transaction->total_paid;
+                $temp_array['due_date'] = $transaction->due_date;
+                $temp_array['payment_status'] = $transaction->payment_status;
+            }
+
+            $ledger[] = $temp_array;
+        }
+
+        $invoice_sum = $transactions->where('type', 'sell')->sum('final_total');
+        $purchase_sum = $transactions->where('type', 'purchase')->sum('final_total');
+        $sell_return_sum = $transactions->where('type', 'sell_return')->sum('final_total');
+        $purchase_return_sum = $transactions->where('type', 'purchase_return')->sum('final_total');
+
+        //Get payment totals between dates
+        if ($format == 'format_1') {
+            $payments = $this->__paymentQuery($contact_id, $start, $end, $location_id)
+                            ->select('transaction_payments.*', 'bl.name as location_name', 't.type as transaction_type', 't.ref_no', 't.invoice_no')
+                            ->get();
+        } else {
+            $payments = [];
+        }
+
+        $paymentTypes = $this->payment_types(null, true, $business_id);
+
+        foreach ($payments as $payment) {
+
+            if($payment->transaction_type == 'opening_balance'){
+                $opening_balance_paid += $payment->amount;
+            }
+
+            //Hide all the adjusted payments because it has already been summed as advance payment
+            if (!empty($payment->parent_id)) {
+                continue;
+            }
+
+            $ref_no = in_array($payment->transaction_type, ['sell', 'sell_return']) ?  $payment->invoice_no :  $payment->ref_no;
+            $note = $payment->note;
+            if (!empty($ref_no)) {
+                $note .='<small>' . __('account.payment_for') . ': ' . $ref_no . '</small>';
+            }
+
+            if ($payment->is_advance == 1) {
+                $note .='<small>' . __('lang_v1.advance_payment') . '</small>';
+            }
+
+            if ($payment->is_return == 1) {
+                $note .='<small>(' . __('lang_v1.change_return') . ')</small>';
+            }
+
+            $ledger[] = [
+                'date' => $payment->paid_on,
+                'ref_no' => $payment->payment_ref_no,
+                'type' => $transaction_types['payment'],
+                'location' => $payment->location_name,
+                'payment_status' => '',
+                'total' => '',
+                'payment_method' => !empty($paymentTypes[$payment->method]) ? $paymentTypes[$payment->method] : '',
+                'payment_method_key' => $payment->method,
+                'debit' => in_array($payment->transaction_type, ['purchase', 'sell_return']) || ($payment->is_advance == 1 && $contact->type == 'supplier') ? $payment->amount : '',
+                'credit' => (in_array($payment->transaction_type, ['sell', 'purchase_return', 'opening_balance']) || ($payment->is_advance == 1 && in_array($contact->type, ['customer', 'both']))) && $payment->is_return == 0 ? $payment->amount : '',
+                'others' =>  $note 
+            ];
+        }
+
+        $total_invoice_paid = !empty($payments) ? $payments->where('transaction_type', 'sell')->where('is_return', 0)->sum('amount') : 0;
+        $total_sell_change_return = !empty($payments) ? $payments->where('transaction_type', 'sell')->where('is_return', 1)->sum('amount') : 0;
+        $total_sell_change_return = !empty($total_sell_change_return) ? $total_sell_change_return : 0;
+        $total_invoice_paid -= $total_sell_change_return;
+        $total_purchase_paid = !empty($payments) ? $payments->where('transaction_type', 'purchase')->where('is_return', 0)->sum('amount') : 0;
+        $total_sell_return_paid = !empty($payments) ? $payments->where('transaction_type', 'sell_return')->sum('amount') : 0;
+        $total_purchase_return_paid = !empty($payments) ? $payments->where('transaction_type', 'purchase_return')->sum('amount') : 0;
+
+        $total_invoice_paid += $opening_balance_paid;
+
+        $start_date = $this->format_date($start);
+        $end_date = $this->format_date($end);
+
+        $total_invoice = $invoice_sum - $sell_return_sum;
+        $total_purchase = $purchase_sum - $purchase_return_sum;
+
+        $opening_balance_due = $opening_balance;
+
+        $total_paid = $total_invoice_paid + $total_purchase_paid - $total_sell_return_paid - $total_purchase_return_paid;
+        $curr_due = $total_invoice + $total_purchase - $total_paid + $beginning_balance + $opening_balance_due;
+
+        //Sort by date
+        if (!empty($ledger)) {
+            usort($ledger, function ($a, $b) {
+                $t1 = strtotime($a['date']);
+                $t2 = strtotime($b['date']);
+                return $t1 - $t2;
+            });
+        }
+
+        $total_opening_bal = $beginning_balance + $opening_balance_due;
+        if ($format != 'format_2') {
+            //Add Beginning balance & openining balance to ledger
+            $ledger = array_merge([[
+                'date' => $start,
+                'ref_no' => '',
+                'type' => __('lang_v1.opening_balance') ,
+                'location' => '',
+                'payment_status' => '',
+                'total' => '',
+                'payment_method' => '',
+                'debit' => $contact->type == 'customer' ? abs($total_opening_bal) : '',
+                'credit' => $contact->type == 'supplier' ? abs($total_opening_bal) : '',
+                'others' => '',
+                'final_total' => abs($total_opening_bal),
+                'total_due' => 0,
+                'due_date' => null
+            ]], $ledger) ;
+        }
+        
+
+        $bal = 0;
+        foreach($ledger as $key => $val) {
+            $credit = !empty($val['credit']) ? $val['credit'] : 0;
+            $debit = !empty($val['debit']) ? $val['debit'] : 0;
+
+            if (!empty($val['payment_method_key']) && $val['payment_method_key'] == 'advance') {
+                $credit = 0;
+                $debit = 0;
+            }
+            $bal += ($credit - $debit);
+            $balance = $this->num_f(abs($bal));
+
+            if ($bal < 0) {
+                $balance .= ' ' . __('lang_v1.dr');
+            } else if ($bal > 0) {
+                $balance .= ' ' . __('lang_v1.cr');
+            }
+
+            $ledger[$key]['balance'] = $balance;
+        }
+
+        $output = [
+            'ledger' => $ledger,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'total_invoice' => $total_invoice,
+            'total_purchase' => $total_purchase,
+            'beginning_balance' => $beginning_balance + $opening_balance_due,
+            'balance_due' => $curr_due,
+            'total_paid' => $total_paid
+        ];
+
+        return $output;
+    }
+
+    
     /**
      * Function to get ledger details
      *
      */
-    public function getLedgerDetails($contact_id, $start, $end)
+    public function getLedgerDetails_old($contact_id, $start, $end)
     {
         $business_id = request()->session()->get('user.business_id');
         //Get sum of totals before start date
