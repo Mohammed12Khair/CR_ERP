@@ -124,7 +124,7 @@ class SuperadminSubscriptionsController extends BaseController
                 ];
         } catch (\Exception $e) {
             DB::rollBack();
-
+            error_log($e);
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
             $output = ['success' => 0, 'msg' => __('messages.something_went_wrong') ];
