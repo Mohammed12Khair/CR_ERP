@@ -82,9 +82,9 @@ class BusinessController extends Controller
      */
     public function getRegister()
     {
-        if (!config('constants.allow_registration')) {
-            return redirect('/');
-        }
+        // if (!config('constants.allow_registration')) {
+            // return redirect('/');
+        // }
 
         $currencies = $this->businessUtil->allCurrencies();
         
@@ -117,9 +117,9 @@ class BusinessController extends Controller
      */
     public function postRegister(Request $request)
     {
-        if (!config('constants.allow_registration')) {
-            return redirect('/');
-        }
+        // if (!config('constants.allow_registration')) {
+            // return redirect('/');
+        // }
         
         try {
             $validator = $request->validate(

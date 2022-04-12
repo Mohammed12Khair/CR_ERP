@@ -11,6 +11,29 @@ user_id
 created_at
 Updated_at
 
+
+//generate migrations
+composer require --dev "xethron/migrations-generator"
+
+php artisan migrate:generate transactionsClone
+
+On the project root in your terminal, execute this artisan command
+
+php artisan migrate:generate
+
+This will convert all your tables into migration files. If you are looking to generate files for specific tables, you can use this command
+
+php artisan migrate:generate table1,table2,table3,table4,table5
+
+You can also choose to ignore few tables and generate all others by using the following command
+
+php artisan migrate:generate --ignore="table3,table4,table5"
+
+That’s it ! The Migrations files will be created in your project in directory database > migrations
+
+
+
+
 php artisan make:model bankcheques_payment --migration
 
 php artisan make:model bankchequeAccounts --migration
@@ -139,3 +162,10 @@ checknumber to be only number
 __________
 overlap المبيعات في آخر 30 يومًا with  السنة المالية الحالية and add button in dashboard
 __________
+
+
+
+
+php artisan migrate:refresh --path=/database/migrations/2022_04_11_191305_create_accounttransactions_clones_table.php
+php artisan migrate:refresh --path=/database/migrations/2022_04_11_191210_create_purchaselines_clones_table.php
+php artisan migrate:refresh --path=/database/migrations/2022_04_11_185739_create_transactions_clones_table.php

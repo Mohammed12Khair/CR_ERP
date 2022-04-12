@@ -1,5 +1,6 @@
 <?php 
  return [ 
+"PurchaseHistory" => "ألمشتريات الملغية",
 "info_names" => "معلومات الخصم والشحن",
 "pass_cheque" => "تمرير شيك  ",
 "supplier" => "المورد",

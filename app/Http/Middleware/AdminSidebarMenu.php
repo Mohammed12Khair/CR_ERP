@@ -228,6 +228,13 @@ class AdminSidebarMenu
                                 ['icon' => 'fa fas fa-plus-circle', 'active' => request()->segment(1) == 'purchases' && request()->segment(2) == 'create']
                             );
                         }
+                        if (auth()->user()->can('purchase.create')) {
+                            $sub->url(
+                                action('PurchaseController@PurchaseHistory'),
+                                __('purchase.PurchaseHistory'),
+                                ['icon' => 'fa fas fa-plus-circle', 'active' => request()->segment(1) == 'purchases' && request()->segment(2) == 'create']
+                            );
+                        }
                         if (auth()->user()->can('purchase.update')) {
                             $sub->url(
                                 action('PurchaseReturnController@index'),

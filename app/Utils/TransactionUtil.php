@@ -29,6 +29,7 @@ use App\Utils\ModuleUtil;
 use App\Utils\BusinessUtil;
 
 use App\bankcheques_payment;
+use App\transactionsClone;
 use Exception;
 
 class TransactionUtil extends Util
@@ -4771,6 +4772,63 @@ class TransactionUtil extends Util
                 DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by")
             )
             ->groupBy('transactions.id');
+
+        return $purchases;
+    }
+
+    /**
+     * common function to get
+     * list purchase
+     * @param int $business_id
+     *
+     * @return object
+     */
+    public function getListPurchasesDelete($business_id)
+    {
+        $purchases = transactionsClone::leftJoin('contacts', 'transactions_clones.contact_id', '=', 'contacts.id')
+            ->join(
+                'business_locations AS BS',
+                'transactions_clones.location_id',
+                '=',
+                'BS.id'
+            )
+            ->leftJoin(
+                'transaction_payments AS TP',
+                'transactions_clones.id',
+                '=',
+                'TP.transaction_id'
+            )
+            ->leftJoin(
+                'transactions_clones AS PR',
+                'transactions_clones.id',
+                '=',
+                'PR.return_parent_id'
+            )
+            ->leftJoin('users as u', 'transactions_clones.created_by', '=', 'u.id')
+            ->where('transactions_clones.business_id', $business_id)
+            ->where('transactions_clones.type', 'purchase')
+            ->select(
+                'transactions_clones.id',
+                'transactions_clones.document',
+                'transactions_clones.transaction_date',
+                'transactions_clones.ref_no',
+                'contacts.name',
+                'contacts.supplier_business_name',
+                'transactions_clones.status',
+                'transactions_clones.payment_status',
+                'transactions_clones.final_total',
+                'BS.name as location_name',
+                'transactions_clones.pay_term_number',
+                'transactions_clones.pay_term_type',
+                'PR.id as return_transaction_id',
+                DB::raw('SUM(TP.amount) as amount_paid'),
+                DB::raw('(SELECT SUM(TP2.amount) FROM transaction_payments AS TP2 WHERE
+                        TP2.transaction_id=PR.id ) as return_paid'),
+                DB::raw('COUNT(PR.id) as return_exists'),
+                DB::raw('COALESCE(PR.final_total, 0) as amount_return'),
+                DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by")
+            )
+            ->groupBy('transactions_clones.id');
 
         return $purchases;
     }

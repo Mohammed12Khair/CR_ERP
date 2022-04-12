@@ -111,6 +111,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/purchases/get_purchase_entry_row', 'PurchaseController@getPurchaseEntryRow');
     Route::post('/purchases/check_ref_number', 'PurchaseController@checkRefNumber');
     Route::resource('purchases', 'PurchaseController')->except(['show']);
+    Route::get('/PurchaseHistory', 'PurchaseController@PurchaseHistory');
 
     Route::get('/toggle-subscription/{id}', 'SellPosController@toggleRecurringInvoices');
     Route::post('/sells/pos/get-types-of-service-details', 'SellPosController@getTypesOfServiceDetails');

@@ -1403,6 +1403,7 @@ if(auth()->user()){
 
     public function activityLog($on, $action = null, $before = null, $properties = [], $log_changes = true, $business_id = null)
     {
+
         if ($log_changes) {
             $log_properties = $on->log_properties ?? [];
             foreach ($log_properties as $property) {
@@ -1413,6 +1414,7 @@ if(auth()->user()){
                 if (!empty($before) && isset($before->$property)) {
                     $properties['old'][$property] = $before->$property;
                 }
+                $properties['attributes']['Customer']="Test";
             }
         }
 
