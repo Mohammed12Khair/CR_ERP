@@ -16,7 +16,7 @@
 
 <!-- Main content -->
 <section class="content no-print">
-    @component('components.widget', ['class' => 'box-primary', 'title' => __('purchase.all_purchases')])     
+    @component('components.widget', ['class' => 'box-primary', ])     
 
         @include('purchase.partials.purchase_table_deleted')
         

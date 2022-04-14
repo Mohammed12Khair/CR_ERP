@@ -626,6 +626,12 @@ class TransactionUtil extends Util
             TransactionSellLine::whereIn('so_line_id', $transaction_line_ids)
                 ->update(['so_line_id' => null]);
 
+
+            // Khair Add history 13-Apr
+            error_log("Save To transaction_sell_linesClone");
+            error_log($transaction_line_ids);
+            DB::statement("INSERT INTO transaction_sell_linesClone  SELECT * FROM transaction_sell_lines WHERE id=:id", ["id" => $transaction_line_ids]);
+
             TransactionSellLine::whereIn('id', $transaction_line_ids)
                 ->delete();
         }
@@ -670,7 +676,7 @@ class TransactionUtil extends Util
         error_log("_______________");
         error_log($payment['account_id']);
         error_log("_______________");
-        
+
         $payments_formatted = [];
         $edit_ids = [0];
         $account_transactions = [];
@@ -3253,6 +3259,9 @@ class TransactionUtil extends Util
                     $sell_purchase_ids[] = $row['id'];
                 }
 
+                // Khair Deelte 13-Apr
+                DB::statement("INSERT INTO transaction_sell_lines_purchase_linesClone SELECT * FROM transaction_sell_lines_purchase_lines WHERE id=:id", ["id" => $sell_purchase_ids]);
+
                 //Delete the lines.
                 TransactionSellLinesPurchaseLines::whereIn('id', $sell_purchase_ids)
                     ->delete();
@@ -4653,6 +4662,8 @@ class TransactionUtil extends Util
             ->with(['sell_lines', 'payment_lines'])
             ->first();
 
+
+
         if (!empty($transaction)) {
             $log_properities = [
                 'id' => $transaction->id,
@@ -4672,6 +4683,8 @@ class TransactionUtil extends Util
                     $this->updateSalesOrderStatus($sales_order_ids);
                 }
 
+
+                DB::statement("INSERT INTO transactions_clones SELECT * FROM transactions WHERE id=:id", ["id" => $transaction_id]);
                 $transaction->delete();
             } else {
                 $business = Business::findOrFail($business_id);
@@ -4700,9 +4713,17 @@ class TransactionUtil extends Util
                     $this->updateSalesOrderStatus($sales_order_ids);
                 }
 
-                //Delete Cash register transactions
-                $transaction->cash_register_payments()->delete();
 
+                // backup account transactions::Khair 11-Apr
+                DB::statement("INSERT INTO accounttransactions_clones  SELECT * FROM account_transactions  WHERE transaction_id=:transaction_id", ["transaction_id" => $id]);
+
+
+                //Delete Cash register transactions
+                error_log("____");
+                error_log($transaction->cash_register_payments());
+                error_log("____");
+                $transaction->cash_register_payments()->delete();
+                DB::statement("INSERT INTO transactions_clones SELECT * FROM transactions WHERE id=:id", ["id" => $transaction_id]);
                 $transaction->delete();
 
                 foreach ($transaction_payments as $payment) {
@@ -4806,9 +4827,11 @@ class TransactionUtil extends Util
             )
             ->leftJoin('users as u', 'transactions_clones.created_by', '=', 'u.id')
             ->where('transactions_clones.business_id', $business_id)
-            ->where('transactions_clones.type', 'purchase')
+          //Khair to show 13-Apr
+           //  ->where('transactions_clones.type', 'purchase')
             ->select(
                 'transactions_clones.id',
+                'transactions_clones.type',
                 'transactions_clones.document',
                 'transactions_clones.transaction_date',
                 'transactions_clones.ref_no',
@@ -4930,10 +4953,107 @@ class TransactionUtil extends Util
 
         return $sells;
     }
+    /**
+     * common function to get
+     * list sell
+     * @param int $business_id
+     *
+     * @return object
+     */
+    public function getListSellsDelete($business_id, $sale_type = 'sell')
+    {
+        $sells = transactionsClone::leftJoin('contacts', 'transactions_clones.contact_id', '=', 'contacts.id')
+            // ->leftJoin('transaction_payments as tp', 'transactions_clones.id', '=', 'tp.transaction_id')
+            ->leftJoin('transaction_sell_lines as tsl', function ($join) {
+                $join->on('transactions_clones.id', '=', 'tsl.transaction_id')
+                    ->whereNull('tsl.parent_sell_line_id');
+            })
+            ->leftJoin('users as u', 'transactions_clones.created_by', '=', 'u.id')
+            ->leftJoin('users as ss', 'transactions_clones.res_waiter_id', '=', 'ss.id')
+            ->leftJoin('res_tables as tables', 'transactions_clones.res_table_id', '=', 'tables.id')
+            ->join(
+                'business_locations AS bl',
+                'transactions_clones.location_id',
+                '=',
+                'bl.id'
+            )
+            ->leftJoin(
+                'transactions_clones AS SR',
+                'transactions_clones.id',
+                '=',
+                'SR.return_parent_id'
+            )
+            ->leftJoin(
+                'types_of_services AS tos',
+                'transactions_clones.types_of_service_id',
+                '=',
+                'tos.id'
+            )
+            ->where('transactions_clones.business_id', $business_id)
+            ->where('transactions_clones.type', $sale_type)
+            ->select(
+                'transactions_clones.id',
+                'transactions_clones.transaction_date',
+                'transactions_clones.type',
+                'transactions_clones.is_direct_sale',
+                'transactions_clones.invoice_no',
+                'transactions_clones.invoice_no as invoice_no_text',
+                'contacts.name',
+                'contacts.mobile',
+                'contacts.contact_id',
+                'contacts.supplier_business_name',
+                'transactions_clones.status',
+                'transactions_clones.payment_status',
+                'transactions_clones.final_total',
+                'transactions_clones.tax_amount',
+                'transactions_clones.discount_amount',
+                'transactions_clones.discount_type',
+                'transactions_clones.total_before_tax',
+                'transactions_clones.rp_redeemed',
+                'transactions_clones.rp_redeemed_amount',
+                'transactions_clones.rp_earned',
+                'transactions_clones.types_of_service_id',
+                'transactions_clones.shipping_status',
+                'transactions_clones.pay_term_number',
+                'transactions_clones.pay_term_type',
+                'transactions_clones.additional_notes',
+                'transactions_clones.staff_note',
+                'transactions_clones.shipping_details',
+                'transactions_clones.document',
+                'transactions_clones.shipping_custom_field_1',
+                'transactions_clones.shipping_custom_field_2',
+                'transactions_clones.shipping_custom_field_3',
+                'transactions_clones.shipping_custom_field_4',
+                'transactions_clones.shipping_custom_field_5',
+                DB::raw('DATE_FORMAT(transactions_clones.transaction_date, "%Y/%m/%d") as sale_date'),
+                DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by"),
+                DB::raw('(SELECT SUM(IF(TP.is_return = 1,-1*TP.amount,TP.amount)) FROM transaction_payments AS TP WHERE
+                        TP.transaction_id=transactions_clones.id) as total_paid'),
+                'bl.name as business_location',
+                DB::raw('COUNT(SR.id) as return_exists'),
+                DB::raw('(SELECT SUM(TP2.amount) FROM transaction_payments AS TP2 WHERE
+                        TP2.transaction_id=SR.id ) as return_paid'),
+                DB::raw('COALESCE(SR.final_total, 0) as amount_return'),
+                'SR.id as return_transaction_id',
+                'tos.name as types_of_service_name',
+                'transactions_clones.service_custom_field_1',
+                DB::raw('COUNT( DISTINCT tsl.id) as total_items'),
+                DB::raw("CONCAT(COALESCE(ss.surname, ''),' ',COALESCE(ss.first_name, ''),' ',COALESCE(ss.last_name,'')) as waiter"),
+                'tables.name as table_name',
+                DB::raw('SUM(tsl.quantity - tsl.so_quantity_invoiced) as so_qty_remaining'),
+                'transactions_clones.is_export'
+            );
+
+        if ($sale_type == 'sell') {
+            $sells->where('transactions_clones.status', 'final');
+        }
+
+        return $sells;
+    }
 
 
 
-      /**
+    /**
      * Function to get ledger details
      *
      */
@@ -4942,18 +5062,18 @@ class TransactionUtil extends Util
         $business_id = request()->session()->get('user.business_id');
         //Get sum of totals before start date
         $previous_transaction_sums = $this->__transactionQuery($contact_id, $start, $location_id)
-                ->select(
-                    DB::raw("SUM(IF(type = 'purchase', final_total, 0)) as total_purchase"),
-                    DB::raw("SUM(IF(type = 'sell' AND status = 'final', final_total, 0)) as total_invoice"),
-                    DB::raw("SUM(IF(type = 'sell_return', final_total, 0)) as total_sell_return"),
-                    DB::raw("SUM(IF(type = 'purchase_return', final_total, 0)) as total_purchase_return"),
-                    DB::raw("SUM(IF(type = 'opening_balance', final_total, 0)) as total_opening_balance")
-                )->first();
+            ->select(
+                DB::raw("SUM(IF(type = 'purchase', final_total, 0)) as total_purchase"),
+                DB::raw("SUM(IF(type = 'sell' AND status = 'final', final_total, 0)) as total_invoice"),
+                DB::raw("SUM(IF(type = 'sell_return', final_total, 0)) as total_sell_return"),
+                DB::raw("SUM(IF(type = 'purchase_return', final_total, 0)) as total_purchase_return"),
+                DB::raw("SUM(IF(type = 'opening_balance', final_total, 0)) as total_opening_balance")
+            )->first();
 
         //Get payment totals before start date
         $prev_payments = $this->__paymentQuery($contact_id, $start, $location_id)
-                            ->select('transaction_payments.*', 'bl.name as location_name', 't.type as transaction_type', 'is_advance')
-                                    ->get();
+            ->select('transaction_payments.*', 'bl.name as location_name', 't.type as transaction_type', 'is_advance')
+            ->get();
 
         $prev_total_invoice_paid = $prev_payments->where('transaction_type', 'sell')->where('is_return', 0)->sum('amount');
         $prev_total_ob_paid = $prev_payments->where('transaction_type', 'opening_balance')->where('is_return', 0)->sum('amount');
@@ -4965,15 +5085,16 @@ class TransactionUtil extends Util
         $prev_total_purchase_return_paid = $prev_payments->where('transaction_type', 'purchase_return')->sum('amount');
         //$prev_total_advance_payment = $prev_payments->where('is_advance', 1)->sum('amount');
         $prev_total_advance_payment = $this->__paymentQuery($contact_id, $start, $location_id)
-                                        ->select('bl.name as location_name', 
-                                                't.type as transaction_type', 
-                                                'is_advance',
-                                                'transaction_payments.id',
-                                                DB::raw('(transaction_payments.amount - COALESCE((SELECT SUM(amount) from transaction_payments as TP where TP.parent_id = transaction_payments.id), 0)) as amount')
-                                        )
-                                        ->where('is_advance', 1)
-                                        ->get()
-                                        ->sum('amount');
+            ->select(
+                'bl.name as location_name',
+                't.type as transaction_type',
+                'is_advance',
+                'transaction_payments.id',
+                DB::raw('(transaction_payments.amount - COALESCE((SELECT SUM(amount) from transaction_payments as TP where TP.parent_id = transaction_payments.id), 0)) as amount')
+            )
+            ->where('is_advance', 1)
+            ->get()
+            ->sum('amount');
 
         $total_prev_paid = $prev_total_invoice_paid + $prev_total_purchase_paid - $prev_total_sell_return_paid - $prev_total_purchase_return_paid + $prev_total_ob_paid + $prev_total_advance_payment;
 
@@ -4985,13 +5106,13 @@ class TransactionUtil extends Util
 
         //Get transaction totals between dates
         $transaction_query = $this->__transactionQuery($contact_id, $start, $end, $location_id)
-                            ->with(['location'])
-                            ->select('transactions.*');
+            ->with(['location'])
+            ->select('transactions.*');
 
         if ($format == 'format_2') {
             $transaction_query->leftjoin('transaction_payments as tp', 'tp.transaction_id', '=', 'transactions.id')
-                            ->addSelect(DB::raw('COALESCE(SUM(tp.amount), 0) as total_paid'))
-                            ->groupBy('transactions.id');
+                ->addSelect(DB::raw('COALESCE(SUM(tp.amount), 0) as total_paid'))
+                ->groupBy('transactions.id');
         }
 
         $transactions = $transaction_query->get();
@@ -5000,10 +5121,10 @@ class TransactionUtil extends Util
 
         $opening_balance = 0;
         $opening_balance_paid = 0;
-        
+
         foreach ($transactions as $transaction) {
 
-            if($transaction->type == 'opening_balance'){
+            if ($transaction->type == 'opening_balance') {
                 //Skip opening balance, it will be added in the end
                 $opening_balance += $transaction->final_total;
 
@@ -5041,8 +5162,8 @@ class TransactionUtil extends Util
         //Get payment totals between dates
         if ($format == 'format_1') {
             $payments = $this->__paymentQuery($contact_id, $start, $end, $location_id)
-                            ->select('transaction_payments.*', 'bl.name as location_name', 't.type as transaction_type', 't.ref_no', 't.invoice_no')
-                            ->get();
+                ->select('transaction_payments.*', 'bl.name as location_name', 't.type as transaction_type', 't.ref_no', 't.invoice_no')
+                ->get();
         } else {
             $payments = [];
         }
@@ -5051,7 +5172,7 @@ class TransactionUtil extends Util
 
         foreach ($payments as $payment) {
 
-            if($payment->transaction_type == 'opening_balance'){
+            if ($payment->transaction_type == 'opening_balance') {
                 $opening_balance_paid += $payment->amount;
             }
 
@@ -5063,15 +5184,15 @@ class TransactionUtil extends Util
             $ref_no = in_array($payment->transaction_type, ['sell', 'sell_return']) ?  $payment->invoice_no :  $payment->ref_no;
             $note = $payment->note;
             if (!empty($ref_no)) {
-                $note .='<small>' . __('account.payment_for') . ': ' . $ref_no . '</small>';
+                $note .= '<small>' . __('account.payment_for') . ': ' . $ref_no . '</small>';
             }
 
             if ($payment->is_advance == 1) {
-                $note .='<small>' . __('lang_v1.advance_payment') . '</small>';
+                $note .= '<small>' . __('lang_v1.advance_payment') . '</small>';
             }
 
             if ($payment->is_return == 1) {
-                $note .='<small>(' . __('lang_v1.change_return') . ')</small>';
+                $note .= '<small>(' . __('lang_v1.change_return') . ')</small>';
             }
 
             $ledger[] = [
@@ -5085,7 +5206,7 @@ class TransactionUtil extends Util
                 'payment_method_key' => $payment->method,
                 'debit' => in_array($payment->transaction_type, ['purchase', 'sell_return']) || ($payment->is_advance == 1 && $contact->type == 'supplier') ? $payment->amount : '',
                 'credit' => (in_array($payment->transaction_type, ['sell', 'purchase_return', 'opening_balance']) || ($payment->is_advance == 1 && in_array($contact->type, ['customer', 'both']))) && $payment->is_return == 0 ? $payment->amount : '',
-                'others' =>  $note 
+                'others' =>  $note
             ];
         }
 
@@ -5125,7 +5246,7 @@ class TransactionUtil extends Util
             $ledger = array_merge([[
                 'date' => $start,
                 'ref_no' => '',
-                'type' => __('lang_v1.opening_balance') ,
+                'type' => __('lang_v1.opening_balance'),
                 'location' => '',
                 'payment_status' => '',
                 'total' => '',
@@ -5136,12 +5257,12 @@ class TransactionUtil extends Util
                 'final_total' => abs($total_opening_bal),
                 'total_due' => 0,
                 'due_date' => null
-            ]], $ledger) ;
+            ]], $ledger);
         }
-        
+
 
         $bal = 0;
-        foreach($ledger as $key => $val) {
+        foreach ($ledger as $key => $val) {
             $credit = !empty($val['credit']) ? $val['credit'] : 0;
             $debit = !empty($val['debit']) ? $val['debit'] : 0;
 
@@ -5175,7 +5296,7 @@ class TransactionUtil extends Util
         return $output;
     }
 
-    
+
     /**
      * Function to get ledger details
      *

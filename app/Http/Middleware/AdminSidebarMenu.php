@@ -228,13 +228,7 @@ class AdminSidebarMenu
                                 ['icon' => 'fa fas fa-plus-circle', 'active' => request()->segment(1) == 'purchases' && request()->segment(2) == 'create']
                             );
                         }
-                        if (auth()->user()->can('purchase.create')) {
-                            $sub->url(
-                                action('PurchaseController@PurchaseHistory'),
-                                __('purchase.PurchaseHistory'),
-                                ['icon' => 'fa fas fa-plus-circle', 'active' => request()->segment(1) == 'purchases' && request()->segment(2) == 'create']
-                            );
-                        }
+                
                         if (auth()->user()->can('purchase.update')) {
                             $sub->url(
                                 action('PurchaseReturnController@index'),
@@ -703,6 +697,12 @@ class AdminSidebarMenu
             if (auth()->user()->can('backup')) {
                 $menu->url(action('BackUpController@index'), __('lang_v1.backup'), ['icon' => 'fa fas fa-hdd', 'active' => request()->segment(1) == 'backup'])->order(60);
             }
+            //Backup menu
+            if (auth()->user()->can('backup')) {
+                $menu->url(action('PurchaseController@PurchaseHistory'), __('purchase.PurchaseHistory'), ['icon' => 'fa fas fa-hdd', 'active' => request()->segment(1) == 'create'])->order(61);
+            }
+
+     
 
             //Modules menu
             if (auth()->user()->can('manage_modules')) {

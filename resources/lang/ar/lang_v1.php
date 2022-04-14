@@ -158,6 +158,7 @@ return [
 "bank_transfer" => "تحويل مصرفي",
 "other" => "آخر",
 "payment" => "موردين",
+"sell" => "مبيعات",
 "total_items" => "مجموع العناصر",
 "total_paying" => "المدفوع",
 "balance" => "الرصيد",

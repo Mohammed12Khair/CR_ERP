@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\AccountTransaction;
+use App\accounttransactionsClone;
 use App\bankcheques_payment;
 use App\Business;
 use App\BusinessLocation;
@@ -10,6 +12,7 @@ use App\Contact;
 use App\CustomerGroup;
 use App\Product;
 use App\PurchaseLine;
+use App\purchaselinesClone;
 use App\TaxRate;
 use App\Transaction;
 use App\User;
@@ -114,20 +117,20 @@ class PurchaseController extends Controller
                     $html = '<div class="btn-group">
                             <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
                                 data-toggle="dropdown" aria-expanded="false"><img src="img/gearload.png" width="30"><span class="caret"></span><span class="sr-only">Toggle Dropdown
-                                </span>
+                             </span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-left" role="menu">';
                     if (auth()->user()->can("purchase.view")) {
-                      //  $html .= '<li><a href="#" data-href="' . action('PurchaseController@show', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
+                        $html .= '<li><a href="#" data-href="' . action('PurchaseController@showhistory', [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-eye" aria-hidden="true"></i>' . __("messages.view") . '</a></li>';
                     }
                     if (auth()->user()->can("purchase.view")) {
-                     //   $html .= '<li><a href="#" class="print-invoice" data-href="' . action('PurchaseController@printInvoice', [$row->id]) . '"><i class="fas fa-print" aria-hidden="true"></i>' . __("messages.print") . '</a></li>';
+                        //    $html .= '<li><a href="#" class="print-invoice" data-href="' . action('PurchaseController@printInvoice', [$row->id]) . '"><i class="fas fa-print" aria-hidden="true"></i>' . __("messages.print") . '</a></li>';
                     }
                     if (auth()->user()->can("purchase.update")) {
-                    //    $html .= '<li><a href="' . action('PurchaseController@edit', [$row->id]) . '"><i class="fas fa-edit"></i>' . __("messages.edit") . '</a></li>';
+                        //    $html .= '<li><a href="' . action('PurchaseController@edit', [$row->id]) . '"><i class="fas fa-edit"></i>' . __("messages.edit") . '</a></li>';
                     }
                     if (auth()->user()->can("purchase.delete")) {
-                    //    $html .= '<li><a href="' . action('PurchaseController@destroy', [$row->id]) . '" class="delete-purchase"><i class="fas fa-trash"></i>' . __("messages.delete") . '</a></li>';
+                        //    $html .= '<li><a href="' . action('PurchaseController@destroy', [$row->id]) . '" class="delete-purchase"><i class="fas fa-trash"></i>' . __("messages.delete") . '</a></li>';
                     }
 
                     // $html .= '<li><a href="' . action('LabelsController@show') . '?purchase_id=' . $row->id . '" data-toggle="tooltip" title="' . __('lang_v1.label_help') . '"><i class="fas fa-barcode"></i>' . __('barcode.labels') . '</a></li>';
@@ -143,10 +146,10 @@ class PurchaseController extends Controller
                     if (auth()->user()->can("purchase.create")) {
                         $html .= '<li class="divider"></li>';
                         if ($row->payment_status != 'paid' && auth()->user()->can("purchase.payments")) {
-                           // $html .= '<li><a href="' . action('TransactionPaymentController@addPayment', [$row->id]) . '" class="add_payment_modal"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("purchase.add_payment") . '</a></li>';
+                            // $html .= '<li><a href="' . action('TransactionPaymentController@addPayment', [$row->id]) . '" class="add_payment_modal"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("purchase.add_payment") . '</a></li>';
                         }
                         //$html .= '<li><a href="' . action('TransactionPaymentController@show', [$row->id]) .
-                         //   '" class="view_payment_modal"><i class="fas fa-money-bill-alt" aria-hidden="true" ></i>' . __("purchase.view_payments") . '</a></li>';
+                        //   '" class="view_payment_modal"><i class="fas fa-money-bill-alt" aria-hidden="true" ></i>' . __("purchase.view_payments") . '</a></li>';
                     }
 
                     if (auth()->user()->can("purchase.update")) {
@@ -187,21 +190,24 @@ class PurchaseController extends Controller
                 ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
                 ->editColumn('name', '@if(!empty($supplier_business_name)) {{$supplier_business_name}}, <br> @endif {{$name}}')
                 ->editColumn(
-                    'status',
-                    '<a href="#" @if(auth()->user()->can("purchase.update") || auth()->user()->can("purchase.update_status")) class="update_status no-print" data-purchase_id="{{$id}}" data-status="{{$status}}" @endif><span class="label @transaction_status($status) status-label" data-status-name="{{__(\'lang_v1.\' . $status)}}" data-orig-value="{{$status}}">{{__(\'lang_v1.\' . $status)}}
-                        </span></a>'
+                    'status',function($row){
+                        return '<span style="font-weight:bold;">'  . __('lang_v1.' . $row->status) . '</span>';
+                        
+                    }
+                    // '<a href="#" @if(auth()->user()->can("purchase.update") || auth()->user()->can("purchase.update_status")) class="  no-print" data-purchase_id="{{$id}}" data-status="{{$status}}" @endif><span class="label @transaction_status($status) status-label" data-status-name="{{__(\'lang_v1.\' . $status)}}" data-orig-value="{{$status}}">{{__(\'lang_v1.\' . $status)}}
+                    //     </span></a>'
                 )
                 ->editColumn(
                     'payment_status',
                     function ($row) {
-                        $payment_status = Transaction::getPaymentStatus($row);
-                        return (string) view('sell.partials.payment_status', ['payment_status' => $payment_status, 'id' => $row->id, 'for_purchase' => true]);
+                        return __('lang_v1.'.$row->type);
+                        // $payment_status = Transaction::getPaymentStatus($row);
+                        // return (string) view('sell.partials.payment_status', ['payment_status' => $payment_status, 'id' => $row->id, 'for_purchase' => true]);
                     }
                 )
                 ->addColumn('payment_due', function ($row) {
                     $due = $row->final_total - $row->amount_paid;
-                    $due_html = '<strong>' . __('lang_v1.purchase') . ':</strong> <span class="payment_due" data-orig-value="' . $due . '">' . $this->transactionUtil->num_f($due, true) . '</span>';
-
+                    $due_html = '</strong> <span class="payment_due" data-orig-value="' . $due . '">' . $this->transactionUtil->num_f($due, true) . '</span>';
 
                     if (!empty($row->return_exists)) {
                         $return_due = $row->amount_return - $row->return_paid;
@@ -212,7 +218,7 @@ class PurchaseController extends Controller
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can("purchase.view")) {
-                            return  action('PurchaseController@show', [$row->id]);
+                            return  action('PurchaseController@showhistory', [$row->id]);
                         } else {
                             return '';
                         }
@@ -793,6 +799,115 @@ class PurchaseController extends Controller
         }
 
         return redirect('purchases')->with('status', $output);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showhistory($id)
+    {
+        $business_id = request()->session()->get('user.business_id');
+        $purchase = transactionsClone::where('business_id', $business_id)
+            ->where('id', $id)->first();
+        // error_log($purchase);
+        $purchase_Table = '<div class="col-md-12"><h5>تفاصيل العملية</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <th>تاريخ</th>
+                                <th>الرقم المرجعي</th>
+                                <th>حاله الفاتوره</th>
+                                <th> الدفع</th>
+                                <th>ملاحظة</th>
+                            </tr>
+                            <tr class="text-center">
+                                <td>' . $purchase->transaction_date . '</td>
+                                <td>' . $purchase->ref_no . '</td>
+                                <td>' .  $purchase->payment_status  . '</td>
+                                <td>' .  $purchase->final_total   . '</td>
+                                <td>' .  $purchase->updated_at    . '</td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                </div>';
+
+
+        $accountpay_Table = '<div class="col-md-12"><h5>تفاصيل المدفوعات</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <th>' . __('account.account_name') . '</th>
+                            <th>' . __('lang_v1.total_paying') . '</th>
+                            <th>reff_no</th>
+                            <th>created_by</th>
+                            <th>note</th>
+                            <th>' . __('account.transaction_type') . '</th>
+                            <th>deleted_at</th>
+                        </tr>';
+        $accountpay = accounttransactionsClone::where('transaction_id', $id)->get();
+        foreach ($accountpay as $py) {
+            $accountpay_Table .= '<tr class="text-center">
+            <td>' . Account::where('id', $py->account_id)->first()->name . '</td>
+            <td>' . $py->amount . '</td>
+            <td>' . $py->reff_no  . '</td>
+            <td>' . User::where('id', $py->created_by)->first()->username   . '</td>
+            <td>' . $py->note     . '</td>
+            <td>' . $py->type     . '</td>
+            <td>' . $py->created_at    . '</td>
+        </tr>';
+        }
+
+        $accountpay_Table .= '</tbody>
+        </table>
+      </div>
+  </div>';
+
+
+
+        $purchase_line_Table = '<div class="col-md-12"><h5>تفاصيل المنتجات</h5>
+  <div class="table-responsive">
+      <table class="table table-striped">
+          <tbody>
+          <tr>
+              <th>' . __('product.name') . '</th>
+              <th>quantity </th>
+              <th>purchase_price </th>
+              <th>created_at </th>
+ 
+          </tr>';
+        $purchase_line = purchaselinesClone::where('transaction_id', $id)->get();
+        foreach ($purchase_line as $pyx) {
+            $purchase_line_Table .= '<tr class="text-center">
+    <td>' . Product::where('id', $pyx->product_id)->first()->name . '</td>
+    <td>' . $pyx->quantity  . '</td>
+    <td>' . $pyx->purchase_price   . '</td>
+    <td>' . $pyx->created_at      . '</td>
+</tr>';
+        }
+        $purchase_line_Table .= '</tbody>
+</table>
+</div>
+</div>';
+        $html = '<div class="modal-dialog modal-xl" role="document" >
+        <div class="modal-content" >
+          <div class="modal-footer" style="text-align:right!important;"><section class="content-header no-print">
+          <h1>ألمشتريات الملغية<small></small>
+          </h1>
+      </section>' . $purchase_Table . $accountpay_Table . $purchase_line_Table . '     
+            <button type="button" class="btn btn-primary no-print" aria-label="Print" 
+            onclick="$(this).closest(\'div.modal-content\').printThis();"><i class="fa fa-print"></i> ' . __('messages.print') . '
+            </button>
+            <button type="button" class="btn btn-default no-print" data-dismiss="modal"> ' . __('messages.close') . '</button>
+          </div>
+        </div>
+      </div>';
+        return  $html;
     }
 
     /**

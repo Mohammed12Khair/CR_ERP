@@ -505,7 +505,14 @@ class ExpenseController extends Controller
                     })
                     ->where('id', $id)
                     ->first();
+                // Khair Bakcup 13-Apr
+                DB::statement("INSERT INTO transactions_clones SELECT * FROM transactions WHERE id=:id", ["id" => $id]);
+
                 $expense->delete();
+
+                // Kahir backup 13-apr
+                DB::statement("INSERT INTO accounttransactions_clones  SELECT * FROM account_transactions  WHERE transaction_id=:transaction_id", ["transaction_id" => $id]);
+
 
                 //Delete account transactions
                 AccountTransaction::where('transaction_id', $expense->id)->delete();

@@ -15,7 +15,7 @@
         </tr>
     </thead>
     <tfoot>
-        <tr class="bg-gray font-17 text-center footer-total">
+        {{-- <tr class="bg-gray font-17 text-center footer-total">
             <td colspan="5"><strong>@lang('sale.total'):</strong></td>
             <td class="footer_status_count"></td>
             <td class="footer_payment_status_count"></td>
@@ -24,6 +24,6 @@
             @lang('lang_v1.purchase_return') - <span class="footer_total_purchase_return_due"></span>
             </small></td>
             <td></td>
-        </tr>
+        </tr> --}}
     </tfoot>
 </table>
