@@ -628,9 +628,10 @@ class TransactionUtil extends Util
 
 
             // Khair Add history 13-Apr
-            error_log("Save To transaction_sell_linesClone");
-            error_log($transaction_line_ids);
-            DB::statement("INSERT INTO transaction_sell_linesClone  SELECT * FROM transaction_sell_lines WHERE id=:id", ["id" => $transaction_line_ids]);
+            foreach ($transaction_line_ids as $transaction_line_id) {
+                error_log("Save To transaction_sell_linesClone id=" . $transaction_line_id);
+                DB::statement("INSERT INTO transaction_sell_lines_clones  SELECT * FROM transaction_sell_lines WHERE id=:id", ["id" => $transaction_line_id]);
+            }
 
             TransactionSellLine::whereIn('id', $transaction_line_ids)
                 ->delete();
@@ -4715,14 +4716,12 @@ class TransactionUtil extends Util
 
 
                 // backup account transactions::Khair 11-Apr
-                DB::statement("INSERT INTO accounttransactions_clones  SELECT * FROM account_transactions  WHERE transaction_id=:transaction_id", ["transaction_id" => $id]);
-
-
+                DB::statement("INSERT INTO accounttransactions_clones  SELECT * FROM account_transactions  WHERE transaction_id=:transaction_id", ["transaction_id" => $transaction_id]);
+                
                 //Delete Cash register transactions
-                error_log("____");
-                error_log($transaction->cash_register_payments());
-                error_log("____");
                 $transaction->cash_register_payments()->delete();
+
+
                 DB::statement("INSERT INTO transactions_clones SELECT * FROM transactions WHERE id=:id", ["id" => $transaction_id]);
                 $transaction->delete();
 
@@ -4827,8 +4826,8 @@ class TransactionUtil extends Util
             )
             ->leftJoin('users as u', 'transactions_clones.created_by', '=', 'u.id')
             ->where('transactions_clones.business_id', $business_id)
-          //Khair to show 13-Apr
-           //  ->where('transactions_clones.type', 'purchase')
+            //Khair to show 13-Apr
+            //  ->where('transactions_clones.type', 'purchase')
             ->select(
                 'transactions_clones.id',
                 'transactions_clones.type',

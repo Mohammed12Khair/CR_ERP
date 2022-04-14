@@ -12,7 +12,10 @@ created_at
 Updated_at
 
 
-//generate migrations
+//generate migrations 
+
+use test 
+
 composer require --dev "xethron/migrations-generator"
 
 php artisan migrate:generate transactionsClone
@@ -31,7 +34,7 @@ php artisan migrate:generate --ignore="table3,table4,table5"
 
 That’s it ! The Migrations files will be created in your project in directory database > migrations
 
-
+//generate migrations
 
 
 php artisan make:model bankcheques_payment --migration
@@ -169,10 +172,16 @@ __________
 php artisan migrate:refresh --path=/database/migrations/2022_04_11_191305_create_accounttransactions_clones_table.php
 php artisan migrate:refresh --path=/database/migrations/2022_04_11_191210_create_purchaselines_clones_table.php
 php artisan migrate:refresh --path=/database/migrations/2022_04_11_185739_create_transactions_clones_table.php
+php artisan migrate:refresh --path=/database/migrations/2022_04_14_145948_create_transaction_sell_lines_clones_table.php
 
 
 2021_11_15_214145_create_bankcheques_table
 
 ______REQ__13-APR 
 create table transaction_sell_linesClone as SELECT * FROM transaction_sell_lines where 1=3;
+php artisan migrate:generate transaction_sell_linesClone
 create table transaction_sell_lines_purchase_linesClone as select * from transaction_sell_lines_purchase_lines where 4=0;
+php artisan migrate:generate transaction_sell_linesClone
+
+
+php artisan make:model transaction_sell_linesClone --migration

@@ -27,6 +27,7 @@ use App\Product;
 use App\Media;
 use Illuminate\Auth\EloquentUserProvider;
 use Spatie\Activitylog\Models\Activity;
+use App\bankcheques_payment;
 
 class SellController extends Controller
 {
@@ -431,7 +432,7 @@ class SellController extends Controller
 
                                     <li><a href="' . action('SellReturnController@add', [$row->id]) . '"><i class="fas fa-undo"></i> ' . __("lang_v1.sell_return") . '</a></li>';
 
-                                   //  <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fas fa-eye"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
+                                    //  <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fas fa-eye"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
                                 }
                             }
 
@@ -503,6 +504,12 @@ class SellController extends Controller
                     return $return_due_html;
                 })
                 ->editColumn('invoice_no', function ($row) use ($is_crm) {
+                    // Edit cheque_indicator
+                    $cheque_indicator = '';
+                    $cheque = bankcheques_payment::where('transaction_id', $row->id);
+                    if ($cheque->count() != 0) {
+                        $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true">' . __('cheque.cheque') . '</i>';
+                    }
                     $invoice_no = $row->invoice_no;
                     if (!empty($row->woocommerce_order_id)) {
                         $invoice_no .= ' <i class="fab fa-wordpress text-primary no-print" title="' . __('lang_v1.synced_from_woocommerce') . '"></i>';
@@ -526,7 +533,7 @@ class SellController extends Controller
                         $invoice_no .= ' &nbsp;<small class="label bg-yellow label-round no-print" title="' . __('crm::lang.order_request') . '"><i class="fas fa-tasks"></i></small>';
                     }
 
-                    return $invoice_no;
+                    return $invoice_no . '   <strong style="color:brown;">' .  $cheque_indicator . '</strong>';
                 })
                 ->editColumn('shipping_status', function ($row) use ($shipping_statuses) {
                     $status_color = !empty($this->shipping_status_colors[$row->shipping_status]) ? $this->shipping_status_colors[$row->shipping_status] : 'bg-gray';
@@ -976,7 +983,7 @@ class SellController extends Controller
 
                                     <li><a href="' . action('SellReturnController@add', [$row->id]) . '"><i class="fas fa-undo"></i> ' . __("lang_v1.sell_return") . '</a></li>';
 
-                                   //  <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fas fa-eye"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
+                                    //  <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fas fa-eye"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
                                 }
                             }
 
@@ -2148,8 +2155,8 @@ class SellController extends Controller
         }
 
         $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
-        
-        if (!in_array('shipments', $enabled_modules)){
+
+        if (!in_array('shipments', $enabled_modules)) {
             abort(403, 'Unauthorized action.');
         }
 

@@ -10,11 +10,13 @@ use App\Business;
 use App\BusinessLocation;
 use App\Contact;
 use App\CustomerGroup;
+use App\ExpenseCategory;
 use App\Product;
 use App\PurchaseLine;
 use App\purchaselinesClone;
 use App\TaxRate;
 use App\Transaction;
+use App\transaction_sell_linesClone;
 use App\User;
 use App\Utils\BusinessUtil;
 
@@ -190,9 +192,9 @@ class PurchaseController extends Controller
                 ->editColumn('transaction_date', '{{@format_datetime($transaction_date)}}')
                 ->editColumn('name', '@if(!empty($supplier_business_name)) {{$supplier_business_name}}, <br> @endif {{$name}}')
                 ->editColumn(
-                    'status',function($row){
+                    'status',
+                    function ($row) {
                         return '<span style="font-weight:bold;">'  . __('lang_v1.' . $row->status) . '</span>';
-                        
                     }
                     // '<a href="#" @if(auth()->user()->can("purchase.update") || auth()->user()->can("purchase.update_status")) class="  no-print" data-purchase_id="{{$id}}" data-status="{{$status}}" @endif><span class="label @transaction_status($status) status-label" data-status-name="{{__(\'lang_v1.\' . $status)}}" data-orig-value="{{$status}}">{{__(\'lang_v1.\' . $status)}}
                     //     </span></a>'
@@ -200,7 +202,7 @@ class PurchaseController extends Controller
                 ->editColumn(
                     'payment_status',
                     function ($row) {
-                        return __('lang_v1.'.$row->type);
+                        return __('lang_v1.' . $row->type);
                         // $payment_status = Transaction::getPaymentStatus($row);
                         // return (string) view('sell.partials.payment_status', ['payment_status' => $payment_status, 'id' => $row->id, 'for_purchase' => true]);
                     }
@@ -521,13 +523,13 @@ class PurchaseController extends Controller
                 })
                 ->removeColumn('id')
                 ->editColumn('ref_no', function ($row) {
-                    // Edit
+                    // Edit cheque_indicator
                     $cheque_indicator = '';
                     $cheque = bankcheques_payment::where('transaction_id', $row->id);
                     if ($cheque->count() != 0) {
-                        $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true"></i>';
+                        $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true">' . __('cheque.cheque') . '</i>';
                     }
-                    return !empty($row->return_exists) ? $row->ref_no . ' <small class="label bg-red label-round no-print" title="' . __('lang_v1.some_qty_returned') . '"><i class="fas fa-undo"></i></small>' : $row->ref_no . '  <strong style="color:brown;">' .  $cheque_indicator . '</strong>';
+                    return !empty($row->return_exists) ? $row->ref_no . ' <small class="label bg-red label-round no-print" title="' . __('lang_v1.some_qty_returned') . '"><i class="fas fa-undo"></i></small>' : $row->ref_no . '  <strong style="color:brown;"> ' .  $cheque_indicator . '</strong>';
                 })
                 ->editColumn(
                     'final_total',
@@ -821,6 +823,7 @@ class PurchaseController extends Controller
                                 <th>تاريخ</th>
                                 <th>الرقم المرجعي</th>
                                 <th>حاله الفاتوره</th>
+                                <th>حاله  </th>
                                 <th> الدفع</th>
                                 <th>ملاحظة</th>
                             </tr>
@@ -828,6 +831,7 @@ class PurchaseController extends Controller
                                 <td>' . $purchase->transaction_date . '</td>
                                 <td>' . $purchase->ref_no . '</td>
                                 <td>' .  $purchase->payment_status  . '</td>
+                                <td>' .  $purchase->type  . '  ' . ExpenseCategory::where('id', $purchase->expense_category_id)->first()->name .  '</td>
                                 <td>' .  $purchase->final_total   . '</td>
                                 <td>' .  $purchase->updated_at    . '</td>
                             </tr>
@@ -877,16 +881,25 @@ class PurchaseController extends Controller
           <tr>
               <th>' . __('product.name') . '</th>
               <th>quantity </th>
-              <th>purchase_price </th>
+              <th>price </th>
               <th>created_at </th>
  
           </tr>';
-        $purchase_line = purchaselinesClone::where('transaction_id', $id)->get();
+        if ($purchase->type == 'sell') {
+            error_log("Sells _____________");
+            $purchase_line = transaction_sell_linesClone::where('transaction_id', $id)->get();
+            //   $purchase_line = DB::select( DB::raw("select * from transaction_sell_linesClone where transaction_id=:id",["id"=>$id]));
+        } elseif ($purchase->type == 'purchase') {
+            error_log("Purchase _____________");
+            // $purchase_line = transaction_sell_linesClone
+            $purchase_line = purchaselinesClone::where('transaction_id', $id)->get();
+        }
+        // $purchase_line = purchaselinesClone::where('transaction_id', $id)->get();
         foreach ($purchase_line as $pyx) {
             $purchase_line_Table .= '<tr class="text-center">
     <td>' . Product::where('id', $pyx->product_id)->first()->name . '</td>
     <td>' . $pyx->quantity  . '</td>
-    <td>' . $pyx->purchase_price   . '</td>
+    <td>' . $pyx->purchase_price   .  $pyx->unit_price . '</td>
     <td>' . $pyx->created_at      . '</td>
 </tr>';
         }

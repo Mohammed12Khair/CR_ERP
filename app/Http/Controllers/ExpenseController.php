@@ -18,6 +18,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
 use App\Contact;
 use App\Utils\CashRegisterUtil;
+use App\bankcheques_payment;
 
 class ExpenseController extends Controller
 {
@@ -239,6 +240,12 @@ class ExpenseController extends Controller
                     return $details;
                 })
                 ->editColumn('ref_no', function ($row) {
+                    $cheque_indicator = '';
+                    $cheque = bankcheques_payment::where('transaction_id', $row->id);
+                    if ($cheque->count() != 0) {
+                        $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true">' . __('cheque.cheque') . '</i>';
+                    }
+
                     $ref_no = $row->ref_no;
                     if (!empty($row->is_recurring)) {
                         $ref_no .= ' &nbsp;<small class="label bg-red label-round no-print" title="' . __('lang_v1.recurring_expense') . '"><i class="fas fa-recycle"></i></small>';
@@ -252,7 +259,7 @@ class ExpenseController extends Controller
                         $ref_no .= ' &nbsp;<small class="label bg-gray">' . __('lang_v1.refund') . '</small>';
                     }
 
-                    return $ref_no;
+                    return $ref_no . '  <strong style="color:brown;"> ' .  $cheque_indicator . '</strong>';
                 })
                 ->rawColumns(['final_total', 'action', 'payment_status', 'payment_due', 'ref_no', 'recur_details'])
                 ->make(true);
