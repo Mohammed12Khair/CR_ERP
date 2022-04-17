@@ -716,10 +716,11 @@ class TransactionPaymentController extends Controller
 
         try {
             DB::beginTransaction();
-
+            
             $this->transactionUtil->payContact($request);
-
+            
             DB::commit();
+
             $output = [
                 'success' => true,
                 'msg' => __('purchase.payment_added_success')

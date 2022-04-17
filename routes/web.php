@@ -254,6 +254,21 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     //Printers...
     Route::resource('printers', 'PrinterController');
 
+    Route::resource('BusinessPartner', 'BusinessPartnerController');
+    Route::get('BusinessPartner/showEdit/{id}', 'BusinessPartnerController@showEdit');
+    Route::get('BusinessPartner/getCredit/{id}', 'BusinessPartnerController@getCredit');
+    Route::get('BusinessPartner/getDebit/{id}', 'BusinessPartnerController@getDebit');
+    Route::post('BusinessPartner/UpdatePartner', 'BusinessPartnerController@UpdatePartner');
+    Route::post('BusinessPartner/DeletePartner', 'BusinessPartnerController@DeletePartner');
+    Route::get('BusinessPartner/Transactions/{id}', 'BusinessPartnerController@Transactions');
+    Route::post('BusinessPartner/DeletePartner', 'BusinessPartnerController@DeletePartner');
+
+
+    Route::resource('BusinessPartnerTransaction', 'BusinessPartnerTransactionController');
+    Route::get('BusinessPartnerTransaction/createTransaction/{owner}', 'BusinessPartnerTransactionController@createTransaction');
+
+
+
     Route::get('/stock-adjustments/remove-expired-stock/{purchase_line_id}', 'StockAdjustmentController@removeExpiredStock');
     Route::post('/stock-adjustments/get_product_row', 'StockAdjustmentController@getProductRow');
     Route::resource('stock-adjustments', 'StockAdjustmentController');
