@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BusinessPartnerTransactions;
 use Illuminate\Http\Request;
 
 class BusinessPartnerTransactionController extends Controller
@@ -27,10 +28,36 @@ class BusinessPartnerTransactionController extends Controller
     }
 
 
-    public function createTransaction($owner){
-        $owner_id=$owner;
+    public function createTransaction(Request $request)
+    {
 
-        return view('business_partner.transaction.create')->with('owner',$owner_id);
+        error_log($request->input('owner'));
+        error_log($request->input('amount'));
+        error_log($request->input('note'));
+        error_log($request->input('type'));
+        $business_id = request()->session()->get('user.business_id');
+        try {
+            $BusinessPartnerTransaction = new BusinessPartnerTransactions();
+            $BusinessPartnerTransaction['owner'] = $request->input('owner');
+            $BusinessPartnerTransaction['amount'] = $request->input('amount');
+            $BusinessPartnerTransaction['note'] = $request->input('note');
+            $BusinessPartnerTransaction['type'] = $request->input('type');
+            $BusinessPartnerTransaction['business_id'] =  $business_id;
+            $BusinessPartnerTransaction['created_by'] = $request->user()->id;
+            $BusinessPartnerTransaction->save();
+            //::where('id', $request->input('id'))->delete();
+            $output = [
+                'success' => True,
+                'msg' => 'Done'
+            ];
+        } catch (Exception $e) {
+            $output = [
+                'success' => False,
+                'msg' => ''
+            ];
+        }
+
+        return $output;
     }
 
     /**

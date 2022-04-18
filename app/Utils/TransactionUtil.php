@@ -29,7 +29,9 @@ use App\Utils\ModuleUtil;
 use App\Utils\BusinessUtil;
 
 use App\bankcheques_payment;
+use App\BusinessPartnerPayments;
 use App\transactionsClone;
+use Error;
 use Exception;
 
 class TransactionUtil extends Util
@@ -4717,7 +4719,7 @@ class TransactionUtil extends Util
 
                 // backup account transactions::Khair 11-Apr
                 DB::statement("INSERT INTO accounttransactions_clones  SELECT * FROM account_transactions  WHERE transaction_id=:transaction_id", ["transaction_id" => $transaction_id]);
-                
+
                 //Delete Cash register transactions
                 $transaction->cash_register_payments()->delete();
 
@@ -5997,6 +5999,120 @@ class TransactionUtil extends Util
         }
         $contact->save();
     }
+
+    public function payContact_partner($request, $format_data = true)
+    {
+        //   $contact_id = $request->input('contact_id');
+        $business_id = auth()->user()->business_id;
+        $inputs = $request->only([
+            'amount', 'method', 'note', 'card_number', 'card_holder_name',
+            'card_transaction_number', 'card_type', 'card_month', 'card_year', 'card_security',
+            'cheque_number', 'bank_account_number', 'parent_id'
+        ]);
+
+        $payment_types = $this->payment_types();
+
+        if (!array_key_exists($inputs['method'], $payment_types)) {
+            throw new \Exception("Payment method not found");
+        }
+        $inputs['paid_on'] = $request->input('paid_on', \Carbon::now()->toDateTimeString());
+        if ($format_data) {
+            $inputs['paid_on'] = $this->uf_date($inputs['paid_on'], true);
+            $inputs['amount'] = $this->num_uf($inputs['amount']);
+        }
+
+
+        $inputs['created_by'] = auth()->user()->id;
+        $inputs['payment_for'] = "contact_id";
+        $inputs['business_id'] = $business_id;
+        $inputs['is_advance'] = 1;
+
+        for ($i = 1; $i < 8; $i++) {
+            if ($inputs['method'] == 'custom_pay_' . $i) {
+                $inputs['transaction_no'] =  $request->input("transaction_no_{$i}");
+            }
+        }
+
+        // $contact = Contact::where('business_id', $business_id)
+        //     ->findOrFail($contact_id);
+
+        // $due_payment_type = $request->input('due_payment_type');
+        // if (empty($due_payment_type)) {
+        //     $due_payment_type = $contact->type == 'supplier' ? 'purchase' : 'sell';
+        // }
+
+        // $prefix_type = '';
+        // if ($contact->type == 'customer') {
+        //     $prefix_type = 'sell_payment';
+        // } else if ($contact->type == 'supplier') {
+        //     $prefix_type = 'purchase_payment';
+        // }
+
+        $due_payment_type = $request->input('due_payment_type');
+        if ($due_payment_type == "purchase") {
+            $prefix_type = 'purchase_payment';
+        } elseif ($due_payment_type == "sell") {
+            $prefix_type = 'sell_payment';
+        }
+        // $due_payment_type = 'purchase';
+        // $prefix_type = 'purchase_payment';
+
+
+        // $prefix_type = 'sell_payment';
+        // $due_payment_type = 'sell';
+
+
+        $ref_count = $this->setAndGetReferenceCount($prefix_type, $business_id);
+        //Generate reference number
+        $payment_ref_no = $this->generateReferenceNumber($prefix_type, $ref_count, $business_id);
+
+        $inputs['payment_ref_no'] = $payment_ref_no;
+
+        if (!empty($request->input('account_id'))) {
+            $inputs['account_id'] = $request->input('account_id');
+        }
+
+        //Upload documents if added
+        $inputs['document'] = $this->uploadFile($request, 'document', 'documents');
+
+        $parent_payment = TransactionPayment::create($inputs);
+
+        $inputs['transaction_type'] = $due_payment_type;
+        event(new TransactionPaymentAdded($parent_payment, $inputs));
+
+        error_log($parent_payment);
+        error_log($parent_payment->id);
+        //error_log($inputs['contact_id']);
+
+        try {
+            $business_partner_paymet = new BusinessPartnerPayments();
+            $business_partner_paymet['amount'] = $inputs['amount'];
+            $business_partner_paymet['transaction_id'] = $parent_payment->id;
+            $business_partner_paymet['owner'] = $inputs['parent_id'];
+            $business_partner_paymet['account_id'] = $request->input('payment_orginal_id');
+            $business_partner_paymet['business_id'] = $business_id;
+            $business_partner_paymet['created_by'] = auth()->user()->id;
+            $business_partner_paymet->save();
+            error_log("Done");
+        } catch (Exception $e) {
+            error_log("Failed ");
+            error_log($e);
+        }
+
+
+
+
+
+
+        //Distribute above payment among unpaid transactions
+        $excess_amount = $this->payAtOnce($parent_payment, $due_payment_type);
+        //Update excess amount
+        // if (!empty($excess_amount)) {
+        //     $this->updateContactBalance($contact, $excess_amount);
+        // }
+        return $parent_payment;
+    }
+
 
     public function payContact($request, $format_data = true)
     {

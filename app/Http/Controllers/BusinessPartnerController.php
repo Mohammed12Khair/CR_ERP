@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BusinessPartner;
+use App\BusinessPartnerPayments;
 use App\BusinessPartnerTransactions;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -19,14 +20,11 @@ class BusinessPartnerController extends Controller
      */
     public function index()
     {
-        //
-
         //        $business_id = request()->session()->get('user.business_id');
-
-        $business_partners = BusinessPartner::all();
+        $business_partners = BusinessPartner::where("is_active", 0);
         //return $business_partners;
         if (request()->ajax()) {
-            $business_partners = BusinessPartner::all(); //where('business_id', $business_id);
+            $business_partners = BusinessPartner::where("is_active", 0); //where('business_id', $business_id);
             return Datatables::of($business_partners)
                 ->editColumn('action', function ($row) {
                     $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-danger btn-sm" >View</a>';
@@ -94,8 +92,6 @@ class BusinessPartnerController extends Controller
             $business_partner_save['address'] = $address;
             $business_partner_save['created_by'] = $request->user()->id;
             $business_partner_save->save();
-
-
             // ::create('id', $ID)->update($Data);
             $output = [
                 'success' => True,
@@ -119,7 +115,7 @@ class BusinessPartnerController extends Controller
     public function show($id)
     {
         //
-        $business_partners = BusinessPartner::where('id', $id)->first();
+        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->first();
         return view('business_partner.show')->with('business_partners', $business_partners);
         // return "this is show";
     }
@@ -133,14 +129,14 @@ class BusinessPartnerController extends Controller
     public function showEdit($id)
     {
         //
-        $business_partners = BusinessPartner::where('id', $id)->first();
+        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->first();
         return view('business_partner.edit')->with('business_partners', $business_partners);
         // return "this is show";
     }
 
     public function Transactions($id)
     {
-        $business_partners = BusinessPartner::where('id', $id)->first();
+        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->first();
         return view('business_partner.transactions')->with('business_partners', $business_partners);
     }
 
@@ -150,19 +146,35 @@ class BusinessPartnerController extends Controller
         //return  $credit;
         //return $business_partners;
         if (request()->ajax()) {
-            $credit = BusinessPartnerTransactions::where('owner', $id)
+            $credit = BusinessPartnerTransactions::where('owner', $id)->where('is_active', 0)
                 ->where('type', 'credit')->get(); //where('business_id', $business_id);
             return Datatables::of($credit)
                 ->editColumn('action', function ($row) {
-                    $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-danger btn-sm" >View</a>';
-                    $delete_btn .= '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-danger btn-sm" >edit</a>';
-                    $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >Delete</button>';
-                    $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >transactions</a>';
-                    //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
+                    $payment_made = BusinessPartnerPayments::where('account_id', $row->id)->where('is_active', 0)->get();
+                    $paymet_view = 0;
+                    foreach ($payment_made as $line) {
+                        $paymet_view += $line->amount;
+                    }
+
+                    $max = $row->amount - $paymet_view;
+
+                    $delete_btn = '<a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->owner]) . '?type=sell&payment_id=' . $row->id . '&max=' . $max . '" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>  قبض من المتسلف</a><br>';
+                    // $delete_btn = '<a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->id]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true">' . __("lang_v1.pay") . 'debit</a>';
+                    // $delete_btn = '<a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay") . '</a></li>';
+                    // $delete_btn .= '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-danger btn-sm" >edit</a>';
+                    // $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >Delete</button>';
+                    // $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >transactions</a>';
+                    // //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
                     return $delete_btn; //. $edit_btn;
                 })
                 ->addColumn('amount', function ($row) {
-                    return $row->amount;
+                    //account_id
+                    $payment_made = BusinessPartnerPayments::where('account_id', $row->id)->where('is_active', 0)->get();
+                    $paymet_view = 0;
+                    foreach ($payment_made as $line) {
+                        $paymet_view += $line->amount;
+                    }
+                    return $row->amount . '(' . $paymet_view  . ')';
                 })
                 ->addColumn('name', function ($row) {
                     return $row->name;
@@ -189,15 +201,17 @@ class BusinessPartnerController extends Controller
         //return  $credit;
         //return $business_partners;
         if (request()->ajax()) {
-            $credit = BusinessPartnerTransactions::where('owner', $id)
+            $credit = BusinessPartnerTransactions::where('owner', $id)->where('is_active', 0)
                 ->where('type', 'debit')->get(); //where('business_id', $business_id);
             return Datatables::of($credit)
                 ->editColumn('action', function ($row) {
-                    $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-danger btn-sm" >View</a>';
-                    $delete_btn .= '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-danger btn-sm" >edit</a>';
-                    $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >Delete</button>';
-                    $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >transactions</a>';
-                    //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
+                    $delete_btn = '<a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->owner]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"><i>دفع لصاخب عهده</a>';
+
+                    //   $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-danger btn-sm" >View</a>';
+                    // $delete_btn = '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-danger btn-sm" >edit</a>';
+                    // $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >Delete</button>';
+                    // $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >transactions</a>';
+                    // //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
                     return $delete_btn; //. $edit_btn;
                 })
                 ->addColumn('amount', function ($row) {
@@ -231,7 +245,7 @@ class BusinessPartnerController extends Controller
             $mobile = $request->input('mobile');
             $address = $request->input('address');
             $Data = array('name' =>  $name, 'mobile' =>  $mobile, 'address' => $address);
-            BusinessPartner::where('id', $ID)->update($Data);
+            BusinessPartner::where('id', $ID)->where('is_active', 0)->update($Data);
             $output = [
                 'success' => True,
                 'msg' => ''
@@ -257,7 +271,7 @@ class BusinessPartnerController extends Controller
 
             $id = $request->input('id');
             error_log($id);
-            BusinessPartner::where('id', $request->input('id'))->delete();
+            BusinessPartner::where('id', $request->input('id'))->update(["is_active" => 1]);
 
             $output = [
                 'success' => True,
@@ -271,20 +285,5 @@ class BusinessPartnerController extends Controller
         }
 
         return $output;
-        // try {
-
-        //     BusinessPartner::where('id', $id)->delete();
-        //     $output = [
-        //         'success' => True,
-        //         'msg' => ''
-        //     ];
-        // } catch (Exception $e) {
-        //     $output = [
-        //         'success' => False,
-        //         'msg' => ''
-        //     ];
-        // }
-        // return redirect()->back()->with('status', $output);
-
     }
 }

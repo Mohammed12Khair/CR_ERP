@@ -265,9 +265,9 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
 
     Route::resource('BusinessPartnerTransaction', 'BusinessPartnerTransactionController');
-    Route::get('BusinessPartnerTransaction/createTransaction/{owner}', 'BusinessPartnerTransactionController@createTransaction');
-
-
+    Route::post('BusinessPartnerTransaction/createTransaction', 'BusinessPartnerTransactionController@createTransaction');
+    Route::get('/payments/pay-contact-due2/{contact_id}', 'TransactionPaymentController@getPayContactDue_Partner');
+    Route::post('/payments/pay-contact-due2', 'TransactionPaymentController@postPayContactDue_partner');
 
     Route::get('/stock-adjustments/remove-expired-stock/{purchase_line_id}', 'StockAdjustmentController@removeExpiredStock');
     Route::post('/stock-adjustments/get_product_row', 'StockAdjustmentController@getProductRow');

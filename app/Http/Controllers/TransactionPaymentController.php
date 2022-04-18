@@ -701,6 +701,36 @@ class TransactionPaymentController extends Controller
                 ->with(compact('contact_details', 'payment_types', 'payment_line', 'due_payment_type', 'ob_due', 'amount_formated', 'accounts'));
         }
     }
+    /**
+     * Shows contact's payment due modal
+     *
+     * @param  int  $contact_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getPayContactDue_Partner($contact_id)
+    {
+        if (!auth()->user()->can('purchase.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            $business_id = request()->session()->get('user.business_id');
+
+            $due_payment_type = request()->input('type');
+            $payment_id = request()->input('payment_id');
+            $max = request()->input('max');
+            $payment_line = new TransactionPayment();
+            $amount_formated = $this->transactionUtil->num_f($payment_line->amount);
+            $payment_line->method = 'cash';
+            $payment_line->paid_on = \Carbon::now()->toDateTimeString();
+            $payment_types = $this->transactionUtil->payment_types(null, false, $business_id);
+            //Accounts
+            $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
+            $parent_id = $contact_id;
+            return view('transaction_payment.pay_partner_due_modal')
+                ->with(compact('max', 'payment_id', 'payment_types', 'payment_line', 'due_payment_type', 'ob_due', 'amount_formated', 'accounts', 'parent_id'));
+        }
+    }
 
     /**
      * Adds Payments for Contact due
@@ -710,15 +740,52 @@ class TransactionPaymentController extends Controller
      */
     public function postPayContactDue(Request  $request)
     {
-        if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
-            abort(403, 'Unauthorized action.');
-        }
+        error_log("this is call");
+        // if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
+        //     abort(403, 'Unauthorized action.');
+        // }
 
         try {
             DB::beginTransaction();
-            
+
             $this->transactionUtil->payContact($request);
-            
+
+            DB::commit();
+
+            $output = [
+                'success' => true,
+                'msg' => __('purchase.payment_added_success')
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => false,
+                'msg' => "File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage()
+            ];
+        }
+
+        return redirect()->back()->with(['status' => $output]);
+    }
+    /**
+     * Adds Payments for Contact due
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postPayContactDue_partner(Request  $request)
+    {
+        error_log("this is call");
+        // if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+
+        try {
+            DB::beginTransaction();
+
+            $this->transactionUtil->payContact_partner($request);
+
             DB::commit();
 
             $output = [

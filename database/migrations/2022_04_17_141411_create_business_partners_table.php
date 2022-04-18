@@ -19,6 +19,7 @@ class CreateBusinessPartnersTable extends Migration
             $table->string('name');
             $table->string('mobile');
             $table->string('address')->nullable();
+            $table->integer('is_active')->default(0);
             $table->integer('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
