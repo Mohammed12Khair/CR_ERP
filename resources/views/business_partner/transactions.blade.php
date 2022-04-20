@@ -9,9 +9,9 @@
             <small>@lang( 'business.manage_your_business_locations' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
-                                                                                                                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                                                                                                                <li class="active">Here</li>
-                                                                                                            </ol> -->
+                                                                                                                        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                                                                                                                        <li class="active">Here</li>
+                                                                                                                    </ol> -->
 
     </section>
 
@@ -49,16 +49,21 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label id="note">note</label>
-                        <input class="form-control" id="note_pay" name="note" type="text">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
                         <label id="Type_pa">Type</label>
                         <select id="Type_pay" class="form-control">
                             <option value="credit">credit</option>
                             <option value="debit">debit</option>
+                        </select>
+                        {{-- <input class="form-control" id="amount" name="amount" type="number"> --}}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label id="Type_pa">Account</label>
+                        <select id="account_id" class="form-control">
+                            @foreach ($accounts as $account)
+                                <option value="{{ $account->id }}">{{ $account->name }}</option>
+                            @endforeach
                         </select>
                         {{-- <input class="form-control" id="amount" name="amount" type="number"> --}}
                     </div>
@@ -81,13 +86,13 @@
                             <table class="table table-bordered table-striped" id="Business_partner_Credit">
                                 <thead>
                                     <tr>
+                                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                                         <th>#</th>
-                                        <th>Note</th>
-                                        <th>mobile</th>
-                                        <th>address</th>
+                                        {{-- <th>Note</th> --}}
+                                        <th>Type</th>
+                                        <th>Open Amount</th>
                                         <th>created_by</th>
                                         <th>created_at</th>
-                                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                                     </tr>
                                 </thead>
                             </table>
@@ -109,13 +114,13 @@
                             <table class="table table-bordered table-striped" id="Business_partner_debit">
                                 <thead>
                                     <tr>
+                                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                                         <th>#</th>
                                         <th>Note</th>
                                         <th>mobile</th>
                                         <th>address</th>
                                         <th>created_by</th>
                                         <th>created_at</th>
-                                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                                     </tr>
                                 </thead>
                             </table>
@@ -132,6 +137,8 @@
     <div class="modal fade pay_contact_due_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
     </div>
 
+
+
 @endsection
 
 
@@ -147,11 +154,10 @@
             }, ],
             aaSorting: [1, 'asc'],
             columns: [{
+                    data: 'action',
+                    name: 'action'
+                }, {
                     data: 'id'
-                },
-                {
-                    data: 'note',
-                    name: 'note'
                 },
                 {
                     data: 'type',
@@ -168,10 +174,6 @@
                 {
                     data: 'created_at',
                     name: 'created_at'
-                },
-                {
-                    data: 'action',
-                    name: 'action'
                 },
             ],
         });
@@ -185,11 +187,10 @@
             }, ],
             aaSorting: [1, 'asc'],
             columns: [{
+                    data: 'action',
+                    name: 'action'
+                }, {
                     data: 'id'
-                },
-                {
-                    data: 'note',
-                    name: 'note'
                 },
                 {
                     data: 'type',
@@ -206,10 +207,6 @@
                 {
                     data: 'created_at',
                     name: 'created_at'
-                },
-                {
-                    data: 'action',
-                    name: 'action'
                 },
             ],
         });
@@ -225,7 +222,7 @@
                 if (willDelete) {
                     alert("OK");
                     alert($('#amount_pay').val());
-                    alert($('#note_pay').val());
+                    alert($('#account_id').val());
                     alert($('#Type_pay').val());
                     alert($('#Partner_id').val());
                     $.ajax({
@@ -237,7 +234,7 @@
                         // },
                         data: {
                             "amount": $('#amount_pay').val(),
-                            "note": $('#note_pay').val(),
+                            "account_id": $('#account_id').val(),
                             "type": $('#Type_pay').val(),
                             "owner": $('#Partner_id').val(),
                         },

@@ -6007,8 +6007,13 @@ class TransactionUtil extends Util
         $inputs = $request->only([
             'amount', 'method', 'note', 'card_number', 'card_holder_name',
             'card_transaction_number', 'card_type', 'card_month', 'card_year', 'card_security',
-            'cheque_number', 'bank_account_number', 'parent_id'
+            'cheque_number', 'bank_account_number'
         ]);
+
+        $JoinId = $request->input('account_transaction_id');
+        error_log("______________");
+        error_log($JoinId);
+        error_log("______________");
 
         $payment_types = $this->payment_types();
 
@@ -6033,34 +6038,12 @@ class TransactionUtil extends Util
             }
         }
 
-        // $contact = Contact::where('business_id', $business_id)
-        //     ->findOrFail($contact_id);
-
-        // $due_payment_type = $request->input('due_payment_type');
-        // if (empty($due_payment_type)) {
-        //     $due_payment_type = $contact->type == 'supplier' ? 'purchase' : 'sell';
-        // }
-
-        // $prefix_type = '';
-        // if ($contact->type == 'customer') {
-        //     $prefix_type = 'sell_payment';
-        // } else if ($contact->type == 'supplier') {
-        //     $prefix_type = 'purchase_payment';
-        // }
-
         $due_payment_type = $request->input('due_payment_type');
         if ($due_payment_type == "purchase") {
             $prefix_type = 'purchase_payment';
         } elseif ($due_payment_type == "sell") {
             $prefix_type = 'sell_payment';
         }
-        // $due_payment_type = 'purchase';
-        // $prefix_type = 'purchase_payment';
-
-
-        // $prefix_type = 'sell_payment';
-        // $due_payment_type = 'sell';
-
 
         $ref_count = $this->setAndGetReferenceCount($prefix_type, $business_id);
         //Generate reference number
@@ -6080,30 +6063,25 @@ class TransactionUtil extends Util
         $inputs['transaction_type'] = $due_payment_type;
         event(new TransactionPaymentAdded($parent_payment, $inputs));
 
-        error_log($parent_payment);
-        error_log($parent_payment->id);
-        //error_log($inputs['contact_id']);
 
-        try {
-            $business_partner_paymet = new BusinessPartnerPayments();
-            $business_partner_paymet['amount'] = $inputs['amount'];
-            $business_partner_paymet['transaction_id'] = $parent_payment->id;
-            $business_partner_paymet['owner'] = $inputs['parent_id'];
-            $business_partner_paymet['account_id'] = $request->input('payment_orginal_id');
-            $business_partner_paymet['business_id'] = $business_id;
-            $business_partner_paymet['created_by'] = auth()->user()->id;
-            $business_partner_paymet->save();
-            error_log("Done");
-        } catch (Exception $e) {
-            error_log("Failed ");
-            error_log($e);
-        }
-
-
-
-
-
-
+        $payment_data = AccountTransaction::where('transaction_payment_id', $parent_payment->id)->update(["note" => "BusinessPartner_" . $JoinId]);
+        // $payment_data = AccountTransaction::where('transaction_payment_id', $parent_payment->id)->update(["note"=>$request->input('')]);
+        // try {
+        //     $business_partner_paymet = new BusinessPartnerPayments();
+        //     $business_partner_paymet['amount'] = $inputs['amount'];
+        //     $business_partner_paymet['transaction_id'] = $parent_payment->id;
+        //     $business_partner_paymet['owner'] = $inputs['parent_id'];
+        //     $business_partner_paymet['business_transaction'] = $request->input('payment_orginal_id');
+        //     $business_partner_paymet['business_id'] = $business_id;
+        //     $business_partner_paymet['payment_id'] = $payment_data->id;
+        //     $business_partner_paymet['account'] = $payment_data->account_id;
+        //     $business_partner_paymet['created_by'] = auth()->user()->id;
+        //     $business_partner_paymet->save();
+        //     error_log("Done");
+        // } catch (Exception $e) {
+        //     error_log("Failed ");
+        //     error_log($e);
+        // }
         //Distribute above payment among unpaid transactions
         $excess_amount = $this->payAtOnce($parent_payment, $due_payment_type);
         //Update excess amount

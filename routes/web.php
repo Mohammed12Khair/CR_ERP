@@ -261,13 +261,19 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('BusinessPartner/UpdatePartner', 'BusinessPartnerController@UpdatePartner');
     Route::post('BusinessPartner/DeletePartner', 'BusinessPartnerController@DeletePartner');
     Route::get('BusinessPartner/Transactions/{id}', 'BusinessPartnerController@Transactions');
-    Route::post('BusinessPartner/DeletePartner', 'BusinessPartnerController@DeletePartner');
+
+
+    Route::get('BusinessPartner/showPayments/{TransactionId}', 'BusinessPartnerController@showPayments');
+
+    //test
+    Route::get('BusinessPartner/GetSomeData/{id}', 'BusinessPartnerController@GetSomeData');
 
 
     Route::resource('BusinessPartnerTransaction', 'BusinessPartnerTransactionController');
     Route::post('BusinessPartnerTransaction/createTransaction', 'BusinessPartnerTransactionController@createTransaction');
     Route::get('/payments/pay-contact-due2/{contact_id}', 'TransactionPaymentController@getPayContactDue_Partner');
     Route::post('/payments/pay-contact-due2', 'TransactionPaymentController@postPayContactDue_partner');
+    Route::post('/payments/destroy_partner_payment', 'TransactionPaymentController@destroy_partner_payment');
 
     Route::get('/stock-adjustments/remove-expired-stock/{purchase_line_id}', 'StockAdjustmentController@removeExpiredStock');
     Route::post('/stock-adjustments/get_product_row', 'StockAdjustmentController@getProductRow');

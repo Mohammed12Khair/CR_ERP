@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\AccountTransaction;
 use App\bankcheques_payment;
+use App\BusinessPartnerPayments;
 use App\Contact;
 
 use App\Events\TransactionPaymentAdded;
@@ -406,12 +408,114 @@ class TransactionPaymentController extends Controller
 
                 $output = [
                     'success' => false,
-                    'msg' => __('messages.something_went_wrong')
+                    'msg' => $e->getMessage()
+                    // 'msg' => __('messages.something_went_wrong')
                 ];
             }
 
             return $output;
         }
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy_partner_payment(request $request)
+    {
+
+        error_log($request->input('id'));
+        $ID = $request->input('id');
+        $parent_id = $request->input('parent_id');
+
+        try {
+            error_log(AccountTransaction::where('transaction_payment_id', $ID)->get());
+            error_log(TransactionPayment::where('id', $ID)->get());
+            TransactionPayment::where('id', $ID)->delete();
+            AccountTransaction::where('transaction_payment_id', $ID)->delete();
+            BusinessPartnerPayments::where('id', $parent_id)->update(['is_active' => 1]);
+
+            $output = [
+                'success' => true,
+                'msg' => __('messages.something_went_wrong')
+            ];
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $output = [
+                'success' => false,
+                //'msg' => $e->getMessage()
+                'msg' => __('messages.something_went_wrong')
+            ];
+        }
+
+
+        return $output;
+
+
+
+
+        // if (!auth()->user()->can('delete_purchase_payment') && !auth()->user()->can('delete_sell_payment') && !auth()->user()->can('all_expense.access') && !auth()->user()->can('view_own_expense')) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+        // error_log("Enter Ajax");
+        // if (request()->ajax()) {
+        //     error_log("Enter Ajax");
+        // try {
+
+        // $payment = TransactionPayment::findOrFail($id);
+        // $account_payment = AccountTransaction::where('transaction_payment_id', $payment->id);
+
+
+        // error_log($payment);
+        // DB::beginTransaction();
+        // $payment->delete();
+        // $account_payment->delete();
+
+
+        // if (!empty($payment->transaction_id)) {
+        //     TransactionPayment::deletePayment($payment);
+        // } else { //advance payment
+        //     $adjusted_payments = TransactionPayment::where(
+        //         'parent_id',
+        //         $payment->id
+        //     )
+        //         ->get();
+
+        // $total_adjusted_amount = $adjusted_payments->sum('amount');
+
+        //Get customer advance share from payment and deduct from advance balance
+        // $total_customer_advance = $payment->amount - $total_adjusted_amount;
+        // if ($total_customer_advance > 0) {
+        //     $this->transactionUtil->updateContactBalance($payment->payment_for, $total_customer_advance, 'deduct');
+        // }
+
+        //Delete all child payments
+        // foreach ($adjusted_payments as $adjusted_payment) {
+        //     //Make parent payment null as it will get deleted
+        //     $adjusted_payment->parent_id = null;
+        //     TransactionPayment::deletePayment($adjusted_payment);
+        // }
+
+        //Delete advance payment
+        //  TransactionPayment::deletePayment($payment);
+        // }
+        // DB::commit();
+        // $output = [
+        //     'success' => true,
+        //     'msg' => __('purchase.payment_deleted_success')
+        // ];
+        // } catch (\Exception $e) {
+        // DB::rollBack();
+
+        // \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+
+        // }
+
+
     }
 
     /**
@@ -707,7 +811,7 @@ class TransactionPaymentController extends Controller
      * @param  int  $contact_id
      * @return \Illuminate\Http\Response
      */
-    public function getPayContactDue_Partner($contact_id)
+    public function getPayContactDue_Partner($Transaction_ID)
     {
         if (!auth()->user()->can('purchase.create')) {
             abort(403, 'Unauthorized action.');
@@ -717,7 +821,6 @@ class TransactionPaymentController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $due_payment_type = request()->input('type');
-            $payment_id = request()->input('payment_id');
             $max = request()->input('max');
             $payment_line = new TransactionPayment();
             $amount_formated = $this->transactionUtil->num_f($payment_line->amount);
@@ -726,9 +829,10 @@ class TransactionPaymentController extends Controller
             $payment_types = $this->transactionUtil->payment_types(null, false, $business_id);
             //Accounts
             $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
-            $parent_id = $contact_id;
+            $account_transaction_id = $Transaction_ID;
+        
             return view('transaction_payment.pay_partner_due_modal')
-                ->with(compact('max', 'payment_id', 'payment_types', 'payment_line', 'due_payment_type', 'ob_due', 'amount_formated', 'accounts', 'parent_id'));
+                ->with(compact('max', 'payment_types', 'payment_line', 'due_payment_type','amount_formated', 'accounts', 'account_transaction_id'));
         }
     }
 

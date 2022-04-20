@@ -9,9 +9,9 @@
             <small>@lang( 'business.manage_your_business_locations' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
-                        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                        <li class="active">Here</li>
-                    </ol> -->
+                            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                            <li class="active">Here</li>
+                        </ol> -->
     </section>
 
     <!-- Main content -->
@@ -31,6 +31,18 @@
                     <div class="form-group col-md-3">
                         <label for="test">Address</label>
                         <input name="address" id="test" type="text" class="form-control">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="test">Balance</label>
+                        <select name="type" class="form-control">
+                            <option value="None">none</option>
+                            <option value="credit">credit</option>
+                            <option value="debit">debit</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="test">open_balance</label>
+                        <input name="open_balance" id="test" type="number" class="form-control" value="0">
                     </div>
                 </div>
                 <div class="row">

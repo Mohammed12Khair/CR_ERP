@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\BusinessPartnerTransactions;
 use Illuminate\Http\Request;
 
+use App\AccountTransaction;
+
 class BusinessPartnerTransactionController extends Controller
 {
     /**
@@ -30,27 +32,39 @@ class BusinessPartnerTransactionController extends Controller
 
     public function createTransaction(Request $request)
     {
-
-        error_log($request->input('owner'));
-        error_log($request->input('amount'));
-        error_log($request->input('note'));
-        error_log($request->input('type'));
         $business_id = request()->session()->get('user.business_id');
         try {
+            $data = [
+                'amount' => $request->input('amount'),
+                'account_id' => $request->input('account_id'),
+                'type' => $request->input('type'),
+                'created_by' => 1,
+                'sub_type' =>  null,
+                'operation_date' => \Carbon::now(),
+                'transaction_id' => null,
+                'transaction_payment_id' => null,
+                'note' => null,
+                'transfer_transaction_id' =>  null,
+            ];
+
+            $account_transaction = AccountTransaction::create($data);
+
             $BusinessPartnerTransaction = new BusinessPartnerTransactions();
             $BusinessPartnerTransaction['owner'] = $request->input('owner');
-            $BusinessPartnerTransaction['amount'] = $request->input('amount');
-            $BusinessPartnerTransaction['note'] = $request->input('note');
-            $BusinessPartnerTransaction['type'] = $request->input('type');
+            $BusinessPartnerTransaction['amount'] = $account_transaction->amount;
+            $BusinessPartnerTransaction['note'] = $account_transaction->note;
+            $BusinessPartnerTransaction['type'] = $account_transaction->type;
             $BusinessPartnerTransaction['business_id'] =  $business_id;
+            $BusinessPartnerTransaction['transaction_id'] =  $account_transaction->id;
             $BusinessPartnerTransaction['created_by'] = $request->user()->id;
             $BusinessPartnerTransaction->save();
-            //::where('id', $request->input('id'))->delete();
+
             $output = [
                 'success' => True,
                 'msg' => 'Done'
             ];
         } catch (Exception $e) {
+
             $output = [
                 'success' => False,
                 'msg' => ''

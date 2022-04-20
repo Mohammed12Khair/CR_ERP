@@ -17,9 +17,9 @@ class CreateBusinessPartnerTransactionsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('business_id')->unsigned();
             $table->integer('amount')->unsigned();
-            $table->string('name');
+            $table->string('transaction_id');
             $table->string('type');
-            $table->string('note');
+            $table->string('note')->nullable();
             $table->integer('owner')->unsigned();
             $table->integer('is_active')->default(0);
             $table->integer('created_by')->unsigned();
