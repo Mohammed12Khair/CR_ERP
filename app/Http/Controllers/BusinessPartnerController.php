@@ -203,7 +203,7 @@ class BusinessPartnerController extends Controller
             error_log($Account_Trasaction);
             return Datatables::of($Account_Trasaction)
                 ->editColumn('action', function ($row) {
-                    $payment_made = BusinessPartnerPayments::where('business_transaction', $row->id)->where('is_active', 0)->get();
+                    $payment_made = AccountTransaction::where('note', "BusinessPartner_" . $row->id)->get();
                     $paymet_view = 0;
                     foreach ($payment_made as $line) {
                         $paymet_view += $line->amount;
@@ -235,7 +235,7 @@ class BusinessPartnerController extends Controller
                     return $html; //. $edit_btn;
                 })
                 ->addColumn('amount', function ($row) {
-                    //business_transaction
+                    //business_transaction  
                     $key = "BusinessPartner_" . $row->id;
                     error_log("$key");
                     error_log($key);
@@ -355,34 +355,36 @@ class BusinessPartnerController extends Controller
     public function showPayments($TransactionId)
     {
 
-        $id = $TransactionId;
 
-        $BusinessPartnerPayments = BusinessPartnerPayments::where('business_transaction', $id)
-            ->where('is_active', 0)->get();
+        $TransactionId = $TransactionId;
+        $id = "BusinessPartner_" . $TransactionId;
+
+        error_log($id);
+        $Account = AccountTransaction::where('note', $id)->get();
+        error_log("Account");
+        error_log($Account);
+
         if (request()->ajax()) {
-            $BusinessPartnerPayments = BusinessPartnerPayments::where('business_transaction', $id)->where('is_active', 0)->get();
-            return Datatables::of($BusinessPartnerPayments)
+            $id = "BusinessPartner_" . $TransactionId;
+            $Account = AccountTransaction::where('note', $id)->get();
+            error_log("Account");
+            error_log($Account);
+            return Datatables::of($Account)
                 ->editColumn('action', function ($row) {
-                    //                      $delete_btn = '<a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->owner]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"><i>دفع لصاخب عهده</a>';
+                    //$delete_btn = '<a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->owner]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"><i>دفع لصاخب عهده</a>';
                     $delete_btn = '<a class="btn btn-xs btn-danger delete_payment" parent_id="' . $row->id . '" transaction_id="' . $row->transaction_id . '" data-href="' . action('TransactionPaymentController@destroy_partner_payment') . '">Delete</a>';
                     //   $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-danger btn-sm" >View</a>';
                     // $delete_btn = '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-danger btn-sm" >edit</a>';
                     // $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >Delete</button>';
                     // $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >transactions</a>';
                     // //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
-                    return $delete_btn; //. $edit_btn;
-                })
-                ->addColumn('account', function ($row) {
-                    return $row->account;
+                    return "delete_bt"; //. $edit_btn;
                 })
                 ->addColumn('account_id', function ($row) {
                     return $row->account_id;
                 })
                 ->addColumn('amount', function ($row) {
                     return $row->amount;
-                })
-                ->addColumn('id', function ($row) {
-                    return $row->id;
                 })
                 ->make(true);
         }

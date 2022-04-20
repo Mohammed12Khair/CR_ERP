@@ -21,9 +21,9 @@
             <small>@lang( 'cheque.manage_your_units' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                    <li class="active">Here</li>
-                </ol> -->
+                            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                            <li class="active">Here</li>
+                        </ol> -->
     </section>
 
     <!-- Main content -->
@@ -33,7 +33,7 @@
                 @slot('tool')
                     <div class="box-tools">
                         <!-- <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{ action('UnitController@create') }}" data-container=".unit_modal">
-                                                            <i class="fa fa-plus"></i> @lang( 'messages.add' )</button> -->
+                                                                                            <i class="fa fa-plus"></i> @lang( 'messages.add' )</button> -->
                     </div>
                 @endslot
             @endcan
@@ -79,14 +79,6 @@
                 searchable: false,
             }, ],
             columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'account',
-                    name: 'account'
-                },
-                {
                     data: 'account_id',
                     name: 'account_id'
                 },
