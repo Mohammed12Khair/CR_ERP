@@ -17,36 +17,6 @@ use Twilio\Rest\Preview\TrustedComms\BusinessPage;
 
 class BusinessPartnerController extends Controller
 {
-
-    public function GetSomeData($id)
-    {
-        $data = [
-            'amount' => 99999,
-            'account_id' => 1,
-            'type' => 'credit',
-            'created_by' => 1
-        ];
-
-        $transaction_data = [
-            'amount' => $data['amount'],
-            'account_id' => $data['account_id'],
-            'type' => $data['type'],
-            'sub_type' => !empty($data['sub_type']) ? $data['sub_type'] : null,
-            'operation_date' => !empty($data['operation_date']) ? $data['operation_date'] : \Carbon::now(),
-            'created_by' => $data['created_by'],
-            'transaction_id' => !empty($data['transaction_id']) ? $data['transaction_id'] : null,
-            'transaction_payment_id' => !empty($data['transaction_payment_id']) ? $data['transaction_payment_id'] : null,
-            'note' => !empty($data['note']) ? $data['note'] : null,
-            'transfer_transaction_id' => !empty($data['transfer_transaction_id']) ? $data['transfer_transaction_id'] : null,
-        ];
-
-        $account_transaction = AccountTransaction::create($transaction_data);
-
-        return $id;
-    }
-
-
-
     /**
      * Display a listing of the resource.
      *
@@ -54,17 +24,18 @@ class BusinessPartnerController extends Controller
      */
     public function index()
     {
-        //        $business_id = request()->session()->get('user.business_id');
-        $business_partners = BusinessPartner::where("is_active", 0);
+        $business_id = request()->session()->get('user.business_id');
+        $business_partners = BusinessPartner::where("is_active", 0)
+        ->where('business_id',$business_id);
         //return $business_partners;
         if (request()->ajax()) {
-            $business_partners = BusinessPartner::where("is_active", 0); //where('business_id', $business_id);
+            $business_partners = BusinessPartner::where("is_active", 0)->where('business_id',$business_id); //where('business_id', $business_id);
             return Datatables::of($business_partners)
                 ->editColumn('action', function ($row) {
-                    $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-danger btn-sm" >View</a>';
-                    $delete_btn .= '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-danger btn-sm" >edit</a>';
-                    $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >Delete</button>';
-                    $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >transactions</a>';
+                    $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-primary btn-sm" >'. __('business_partner.view').'</a>';
+                    $delete_btn .= '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-warning btn-sm" >'. __('business_partner.edit').'</a>';
+                    $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >'. __('business_partner.delete').'</button>';
+                    $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >'. __('business_partner.transactions').'</a>';
                     //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
                     return $delete_btn; //. $edit_btn;
                 })
@@ -114,6 +85,8 @@ class BusinessPartnerController extends Controller
      */
     public function store(Request $request)
     {
+        $business_id = request()->session()->get('user.business_id');
+      
         try {
             // $ID = $request->input('id');
             $name = $request->input('name');
@@ -126,6 +99,7 @@ class BusinessPartnerController extends Controller
             $business_partner_save['name'] = $name;
             $business_partner_save['mobile'] = $mobile;
             $business_partner_save['address'] = $address;
+            $business_partner_save['business_id'] = $business_id;
             $business_partner_save['type'] = $type;
             $business_partner_save['open_balance'] = $open_balance;
             $business_partner_save['created_by'] = $request->user()->id;
@@ -153,7 +127,9 @@ class BusinessPartnerController extends Controller
     public function show($id)
     {
         //
-        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->first();
+        
+        $business_id = request()->session()->get('user.business_id');
+        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id',$business_id)->first();
         return view('business_partner.show')->with('business_partners', $business_partners);
         // return "this is show";
     }
@@ -167,7 +143,9 @@ class BusinessPartnerController extends Controller
     public function showEdit($id)
     {
         //
-        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->first();
+        
+        $business_id = request()->session()->get('user.business_id');
+        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id',$business_id)->first();
         return view('business_partner.edit')->with('business_partners', $business_partners);
         // return "this is show";
     }
@@ -181,10 +159,10 @@ class BusinessPartnerController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         // Get Open balance
-        $business_partner = BusinessPartner::where('id', $id)->first();
+        $business_partner = BusinessPartner::where('id', $id)->where('business_id',$business_id)->first();
 
         // Get Payments 
-        $business_pyments = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)->get();
+        $business_pyments = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)->where('business_id',$business_id)->get();
 
         $PymentId = [];
         foreach ($business_pyments as $business_pyment) {
@@ -216,11 +194,8 @@ class BusinessPartnerController extends Controller
         }
 
         $final_amount = $credit - $debit;
-
-        error_log("__________");
-        error_log($final_amount);
         //$accounts = $this->moduleUtil->accountsDropdown($business_id, true, false, true);
-        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->first();
+        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id',$business_id)->first();
         return view('business_partner.transactions')->with('business_partners', $business_partners)->with('accounts', $accounts)
         ->with('final_amount',$final_amount);
     }
@@ -230,6 +205,7 @@ class BusinessPartnerController extends Controller
     public function DeleteTransaction(Request $request)
     {
 
+        $business_id = request()->session()->get('user.business_id');
         try {
             $payment_id = $request->input('payment_id');
             // $AccountTransactionX = AccountTransaction::where('id', $payment_id)->get(); //->delete();
@@ -373,10 +349,11 @@ class BusinessPartnerController extends Controller
     }
     public function Business_partner_details($id)
     {
-        $credit = BusinessPartnerPayments::where('owner', $id)->get();
+        $business_id = request()->session()->get('user.business_id');
+        $credit = BusinessPartnerPayments::where('owner', $id)->where('business_id',$business_id)->get();
         if (request()->ajax()) {
             $credit_ids = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)
-                ->get();
+            ->where('business_id',$business_id)->get();
             $ids = [];
             foreach ($credit_ids as $credit_id) {
                 array_push($ids, $credit_id->payment_id);

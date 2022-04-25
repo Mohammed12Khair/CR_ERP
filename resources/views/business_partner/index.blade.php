@@ -1,12 +1,12 @@
 @extends('layouts.app')
-@section('title', __('business.business_partner'))
+@section('title', __('business_partner.business_partner'))
 
 @section('content')
 
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>@lang( 'business.business_partner' )
-            <small>@lang( 'business.business_partner' )</small>
+        <h1>@lang( 'business_partner.business_partner_all' )
+            <small>@lang( 'business_partner.business_partner' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
                                     <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
@@ -16,7 +16,7 @@
 
     <!-- Main content -->
     <section class="content">
-        @component('components.widget', ['class' => 'box-primary', 'title' => __('business.all_your_business_locations')])
+        @component('components.widget', ['class' => 'box-primary', 'title' => __('business_partner.business_partner_all')])
             @slot('tool')
                 <div class="box-tools">
                     <a class="btn btn-primary" href="{{ action('BusinessPartnerController@create') }}">
@@ -30,11 +30,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>name</th>
-                            <th>mobile</th>
-                            <th>address</th>
-                            <th>created_by</th>
-                            <th>created_at</th>
+                            <th>@lang('business_partner.name')</th>
+                            <th>@lang('business_partner.mobile')</th>
+                            <th>@lang('business_partner.address')</th>
+                            <th>@lang('business_partner.created_by')</th>
+                            <th>@lang('business_partner.created_at')</th>
                             <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                         </tr>
                     </thead>

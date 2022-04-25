@@ -93,14 +93,21 @@ class AdminSidebarMenu
                                 ['icon' => 'fa fas fa-download', 'active' => request()->segment(1) == 'contacts' && request()->segment(2) == 'import']
                             );
                         }
-
-                        if (!empty(env('GOOGLE_MAP_API_KEY'))) {
+                        if (in_array('import_contacts', $enabled_modules) && (auth()->user()->can('supplier.create') || auth()->user()->can('customer.create'))) {
                             $sub->url(
-                                action('ContactController@contactMap'),
-                                __('lang_v1.map'),
-                                ['icon' => 'fa fas fa-map-marker-alt', 'active' => request()->segment(1) == 'contacts' && request()->segment(2) == 'map']
+                                action('BusinessPartnerController@index'),
+                                __('business_partner.business_partner'),
+                                ['icon' => 'fa fas fa-download', 'active' => request()->segment(1) == 'contacts' && request()->segment(2) == 'import']
                             );
                         }
+
+                        // if (!empty(env('GOOGLE_MAP_API_KEY'))) {
+                        //     $sub->url(
+                        //         action('ContactController@contactMap'),
+                        //         __('lang_v1.map'),
+                        //         ['icon' => 'fa fas fa-map-marker-alt', 'active' => request()->segment(1) == 'contacts' && request()->segment(2) == 'map']
+                        //     );
+                        // }
                     },
                     ['icon' => 'fa fas fa-address-book', 'id' => "tour_step4"]
                 )->order(15);

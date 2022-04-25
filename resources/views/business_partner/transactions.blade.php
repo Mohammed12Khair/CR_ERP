@@ -1,12 +1,12 @@
 @extends('layouts.app')
-@section('title', __('business.business_locations'))
+@section('title', __('business_partner.transactions'))
 
 @section('content')
 
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>@lang( 'business.business_locations' )
-            <small>@lang( 'business.manage_your_business_locations' )</small>
+        <h1>@lang( 'business_partner.transactions' )
+            <small>@lang( 'business_partner.transactions' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
                                                                                                                                                 <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
@@ -17,24 +17,26 @@
 
     <!-- Main content -->
     <section class="content">
-        @component('components.filters', ['class' => 'box-primary', 'title' => __('business.all_your_business_locations') ])
+        @component('components.filters', ['class' => 'box-primary', 'title' => __('business_partner.transaction') ])
             <form action="{{ action('BusinessPartnerController@UpdatePartner') }}" method="post"> @csrf
                 <input id="Partner_id" name="id" type="text" value="{{ $business_partners->id }}" link="{{ action('BusinessPartnerController@GetPaymentsData') }}" hidden>
                 <div class="row">
                     <div class="form-group col-md-3">
-                        <label for="test">name</label>
+                        <label for="test">@lang('business_partner.name')</label>
                         <input name="name" id="test" type="text" class="form-control" value="{{ $business_partners->name }}">
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="test">Mobile</label>
+                        <label for="test">@lang('business_partner.mobile')</label>
                         <input name="mobile" id="test" type="text" class="form-control" value="{{ $business_partners->mobile }}">
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="test">Address</label>
+                        <label for="test">@lang('business_partner.address')</label>
                         <input name="address" id="test" type="text" class="form-control" value="{{ $business_partners->address }}">
                     </div>
                     <div class="form-group col-md-3">
-                        <h4>{{ $final_amount }}</h4>
+                        <label for="test">@lang('business_partner.balance')</label>
+                        <input name="address" id="test" type="text" class="form-control" value="{{ $final_amount }}" readonly>
+                  
                     </div>
                 </div>
                 <div class="row">
@@ -47,25 +49,25 @@
         @component('components.widget', ['class' => 'box-primary'])
             <div>
                 <div class="btn btn-info">
-                    <a href="{{ action('TransactionPaymentController@getPayContactDue_Partner', [0]) }}?owner={{ $business_partners->id }}&partner_id={{ $business_partners->id }}" class="pay_sale_due" style="color: aliceblue;"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>ADD</a>
+                    <a href="{{ action('TransactionPaymentController@getPayContactDue_Partner', [0]) }}?owner={{ $business_partners->id }}&partner_id={{ $business_partners->id }}" class="pay_sale_due" style="color: aliceblue;"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>@lang('business_partner.add')</a>
                     
                 </div>
-                <h3 style="float: left;">{{ $final_amount }}</h3>
+            
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="Business_partner_details">
+                        <table class="table table-bordered table-striped" id="Business_partner_details" style="text-align:center;">
                             <thead>
                                 <tr>
                                     <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                                     <th>#</th>
                                     {{-- <th>Note</th> --}}
-                                    <th>account</th>
-                                    <th>method</th>
-                                    <th>Type</th>
-                                    <th>debit</th>
-                                    <th>credit</th>
-                                    <th>created_by</th>
-                                    <th>created_at</th>
+                                    <th>@lang('business_partner.account')</th>
+                                    <th>@lang('business_partner.method')</th>
+                                    <th>@lang('business_partner.type')</th>
+                                    <th>@lang('business_partner.debit')</th>
+                                    <th>@lang('business_partner.credit')</th>
+                                    <th>@lang('business_partner.created_by')</th>
+                                    <th>@lang('business_partner.created_at')</th>
                                 </tr>
                             </thead>
                         </table>
