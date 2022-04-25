@@ -1,12 +1,12 @@
 @extends('layouts.app')
-@section('title', __('business.business_locations'))
+@section('title', __('business.business_partner'))
 
 @section('content')
 
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>@lang( 'business.business_locations' )
-            <small>@lang( 'business.manage_your_business_locations' )</small>
+        <h1>@lang( 'business.business_partner' )
+            <small>@lang( 'business.business_partner' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
                                     <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>

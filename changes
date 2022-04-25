@@ -191,3 +191,24 @@ php artisan make:controller BusinessPartnerController --resource
 php artisan migrate:refresh --path=/database/migrations/2022_04_17_141524_create_business_partner_transactions_table.php
 php artisan migrate:refresh --path=/database/migrations/2022_04_17_141411_create_business_partners_table.php
 php artisan migrate:refresh --path=/database/migrations/2022_04_17_141534_create_business_partner_payments_table.php
+
+
+21-apr_____
+اضافه اجمال الديون من التقريبر بعد فرز العملاء والموردين 
+http://127.0.0.1:8000/reports/customer-supplier
+
+الي
+http://127.0.0.1:8000/account/balance-sheet
+ال
+مستحقات العميل:
+مستحقات المورد:
+
+المشكله في انو الرصيد الافتتاحي لايحسب فب الميزانيه
+
+___الالتزامات
+الالتزامات  تتحول الي الخصوم
+
+
+تغير البوب للدفع
+
+تغير الجاش بورد في نفي اللنقطه

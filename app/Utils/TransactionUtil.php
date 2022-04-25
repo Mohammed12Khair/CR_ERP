@@ -6010,10 +6010,7 @@ class TransactionUtil extends Util
             'cheque_number', 'bank_account_number'
         ]);
 
-        $JoinId = $request->input('account_transaction_id');
-        error_log("______________");
-        error_log($JoinId);
-        error_log("______________");
+        // $JoinId = $request->input('account_transaction_id');
 
         $payment_types = $this->payment_types();
 
@@ -6041,8 +6038,10 @@ class TransactionUtil extends Util
         $due_payment_type = $request->input('due_payment_type');
         if ($due_payment_type == "purchase") {
             $prefix_type = 'purchase_payment';
+            $type = 'debit';
         } elseif ($due_payment_type == "sell") {
             $prefix_type = 'sell_payment';
+            $type = 'credit';
         }
 
         $ref_count = $this->setAndGetReferenceCount($prefix_type, $business_id);
@@ -6064,7 +6063,24 @@ class TransactionUtil extends Util
         event(new TransactionPaymentAdded($parent_payment, $inputs));
 
 
-        $payment_data = AccountTransaction::where('transaction_payment_id', $parent_payment->id)->update(["note" => "BusinessPartner_" . $JoinId]);
+        AccountTransaction::where('transaction_payment_id', $parent_payment->id)
+            ->update([
+                "note" => $request->input('note'),
+                "type" => $type,
+            ]);
+        $payment_data = AccountTransaction::where('transaction_payment_id', $parent_payment->id)->first();
+
+        $business_partner_transaction = new BusinessPartnerPayments();
+        $business_partner_transaction['business_id'] = $business_id;
+        $business_partner_transaction['amount'] = $inputs['amount'];
+        $business_partner_transaction['account'] =  $payment_data->account_id;
+        $business_partner_transaction['note'] = $request->input('note');
+        $business_partner_transaction['owner'] = $request->input('owner');
+        $business_partner_transaction['payment_id'] = $payment_data->id;
+        $business_partner_transaction['transaction_id'] = $parent_payment->id;
+        $business_partner_transaction['created_by'] = auth()->user()->id;
+
+        $business_partner_transaction->save();
         // $payment_data = AccountTransaction::where('transaction_payment_id', $parent_payment->id)->update(["note"=>$request->input('')]);
         // try {
         //     $business_partner_paymet = new BusinessPartnerPayments();

@@ -18,12 +18,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>@lang( 'cheque.units' )
+            <input id="Tx" value="{{ $TransactionId }}">
             <small>@lang( 'cheque.manage_your_units' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
-                            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                            <li class="active">Here</li>
-                        </ol> -->
+                                            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                                            <li class="active">Here</li>
+                                        </ol> -->
     </section>
 
     <!-- Main content -->
@@ -33,7 +34,7 @@
                 @slot('tool')
                     <div class="box-tools">
                         <!-- <button type="button" class="btn btn-block btn-primary btn-modal" data-href="{{ action('UnitController@create') }}" data-container=".unit_modal">
-                                                                                            <i class="fa fa-plus"></i> @lang( 'messages.add' )</button> -->
+                                                                                                                                                            <i class="fa fa-plus"></i> @lang( 'messages.add' )</button> -->
                     </div>
                 @endslot
             @endcan
@@ -45,11 +46,24 @@
                                 <th>@lang( 'cheque.payment_id' )</th>
                                 <th>@lang( 'cheque.amount' )</th>
                                 <th>@lang( 'cheque.account_id' )</th>
+
+                                <th>Account</th>
                                 <th>@lang( 'cheque.created_at' )</th>
                                 <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
                             </tr>
                         </thead>
                         <tbody style="text-align: center;">
+                            @foreach ($Account as $Account_data)
+                                <tr>
+                                    <td>{{ $Account_data->id }}</td>
+                                    <td>{{ $Account_data->amount }}</td>
+                                    <td>{{ $Account_data->account_id }}</td>
+                                    <td>{{ $Account_data->created_by }}</td>
+                                    <td>{{ $Account_data->created_at }}</td>
+                                    <td><a class="btn btn-xs btn-danger delete_payment" parent_id="{{ $Account_data->id }}" transaction_id="{{ $Account_data->transaction_payment_id }}" data-href="{{ action('TransactionPaymentController@destroy_partner_payment') }}">Delete</a>
+                                    </td>
+                                </tr>
+                            @endforeach
 
                         </tbody>
 
@@ -66,33 +80,6 @@
 
 @endsection
 @section('javascript')
-    <script>
-        // Start : CRUD for cheques 
-        //cheques table
-        var BusinessPartnerPayment_table = $('#BusinessPartnerPayment_table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: 'BusinessPartner/showPayments/' + {{ $TransactionId }},
-            columnDefs: [{
-                // targets: 3,
-                orderable: false,
-                searchable: false,
-            }, ],
-            columns: [{
-                    data: 'account_id',
-                    name: 'account_id'
-                },
-                {
-                    data: 'amount',
-                    name: 'amount'
-                },
-                {
-                    data: 'action',
-                    name: 'action'
-                }
-            ],
-        });
-    </script>
     <script>
         $(document).on('click', '.delete_payment', function(e) {
             swal({
@@ -115,7 +102,7 @@
                             BusinessPartnerPayment_table.ajax.reload();
                             if (result.success === true) {
                                 toastr.success(result.msg);
-
+                                window.location = window.location;
                             } else {
                                 toastr.error(result.msg);
                             }
@@ -124,6 +111,39 @@
                     });
                 }
             });
+        });
+
+
+
+
+        BusinessPartnerPayment_table = $('#BusinessPartnerPayment_xtable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: base_path + 'BusinessPartner/showPayments/' + $("#Tx").val(),
+            columnDefs: [{
+                orderable: false,
+                searchable: false,
+            }, ],
+            aaSorting: [1, 'desc'],
+            columns: [{
+                    data: 'action',
+                    name: 'action'
+                }
+                    data: 'id'
+                },
+                {
+                    data: 'amount',
+                    name: 'amount'
+                },
+                {
+                    data: 'created_by',
+                    name: 'created_by'
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at'
+                },
+            ],
         });
     </script>
 @endsection

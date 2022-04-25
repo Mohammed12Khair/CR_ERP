@@ -9,17 +9,17 @@
             <small>@lang( 'business.manage_your_business_locations' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
-                                                                                                                                                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                                                                                                                                                <li class="active">Here</li>
-                                                                                                                                            </ol> -->
+                                                                                                                                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                                                                                                                                <li class="active">Here</li>
+                                                                                                                            </ol> -->
 
     </section>
 
     <!-- Main content -->
     <section class="content">
-        @component('components.filters', ['class' => 'box-primary', 'title' => __('business.all_your_business_locations') ])
+        @component('components.widget', ['class' => 'box-primary', 'title' => __('business.all_your_business_locations')])
             <form action="{{ action('BusinessPartnerController@UpdatePartner') }}" method="post"> @csrf
-                <input id="Partner_id" name="id" type="text" value="{{ $business_partners->id }}" link="{{ action('BusinessPartnerController@GetPaymentsData') }}" hidden>
+                <input id="Partner_id" name="id" type="text" value="{{ $business_partners->id }}" link="{{action('BusinessPartnerController@GetPaymentsData')}}"  hidden>
                 <div class="row">
                     <div class="form-group col-md-3">
                         <label for="test">name</label>
@@ -33,9 +33,6 @@
                         <label for="test">Address</label>
                         <input name="address" id="test" type="text" class="form-control" value="{{ $business_partners->address }}">
                     </div>
-                    <div class="form-group col-md-3">
-                        <h4>{{ $final_amount }}</h4>
-                    </div>
                 </div>
                 <div class="row">
                     {{-- <button name="action" value="update" type="submit" class="btn btn-primary btn-sm">Save</button> --}}
@@ -43,40 +40,107 @@
 
             </form>
         @endcomponent
-
-        @component('components.widget', ['class' => 'box-primary'])
-            <div>
-                <div class="btn btn-info">
-                    <a href="{{ action('TransactionPaymentController@getPayContactDue_Partner', [0]) }}?owner={{ $business_partners->id }}&partner_id={{ $business_partners->id }}" class="pay_sale_due" style="color: aliceblue;"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>ADD</a>
-                    
+        @component('components.filters', ['title' => __('report.filters')])
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label id="amount">Amount</label>
+                        <input class="form-control" id="amount_pay" name="amount" type="number">
+                    </div>
                 </div>
-                <h3 style="float: left;">{{ $final_amount }}</h3>
-                <div class="box-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="Business_partner_details">
-                            <thead>
-                                <tr>
-                                    <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
-                                    <th>#</th>
-                                    {{-- <th>Note</th> --}}
-                                    <th>account</th>
-                                    <th>method</th>
-                                    <th>Type</th>
-                                    <th>debit</th>
-                                    <th>credit</th>
-                                    <th>created_by</th>
-                                    <th>created_at</th>
-                                </tr>
-                            </thead>
-                        </table>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label id="Type_pa">Type</label>
+                        <select id="Type_pay" class="form-control">
+                            <option value="credit">credit</option>
+                            <option value="debit">debit</option>
+                        </select>
+                        {{-- <input class="form-control" id="amount" name="amount" type="number"> --}}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label id="Type_pa">Account</label>
+                        <select id="account_id" class="form-control">
+                            @foreach ($accounts as $account)
+                                <option value="{{ $account->id }}">{{ $account->name }}</option>
+                            @endforeach
+                        </select>
+                        {{-- <input class="form-control" id="amount" name="amount" type="number"> --}}
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <button class="btn btn-sm  Add_transaction" link="{{ action('BusinessPartnerTransactionController@createTransaction') }}">Save</button>
+            </div>
         @endcomponent
+
+        <div class="row">
+
+            <div class="col-sm-6">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">السلفيات</h3>
+                        <strong id="debit_amount" style="float: left;color:rgb(0, 255, 13);">999</strong>
+                    </div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="Business_partner_Credit">
+                                <thead>
+                                    <tr>
+                                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
+                                        <th>#</th>
+                                        {{-- <th>Note</th> --}}
+                                        <th>Type</th>
+                                        <th>Open Amount</th>
+                                        <th>created_by</th>
+                                        <th>created_at</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+            <div class="col-sm-6">
+
+                <div class="box box-primary">
+                    <div class="box-header">
+
+                        <h3 class="box-title">
+                            العهد</h3>
+                        <strong id="credit_amount" style="float: left;color:red;">999</strong>
+                    </div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="Business_partner_debit">
+                                <thead>
+                                    <tr>
+                                        <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
+                                        <th>#</th>
+                                        {{-- <th>Note</th> --}}
+                                        <th>Type</th>
+                                        <th>Open Amount</th>
+                                        <th>created_by</th>
+                                        <th>created_at</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
     </section>
+    <!-- /.content -->
+
 
     <div class="modal fade pay_contact_due_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
     </div>
+
+
 
 @endsection
 
@@ -117,28 +181,20 @@
         });
 
 
-        Business_partner_details = $('#Business_partner_details').DataTable({
+        Business_partner_Credit = $('#Business_partner_Credit').DataTable({
             processing: true,
             serverSide: true,
-            ajax: base_path + '/BusinessPartner/Business_partner_details/' + $('#Partner_id').val(),
+            ajax: base_path + '/BusinessPartner/getCredit/' + $('#Partner_id').val(),
             columnDefs: [{
                 orderable: false,
                 searchable: false,
             }, ],
-            aaSorting: [1, 'asc'],
+            aaSorting: [1, 'desc'],
             columns: [{
                     data: 'action',
                     name: 'action'
                 }, {
                     data: 'id'
-                },
-                {
-                    data: 'account',
-                    name: 'account'
-                },
-                {
-                    data: 'method',
-                    name: 'method'
                 },
                 {
                     data: 'type',
@@ -147,9 +203,6 @@
                 {
                     data: 'amount',
                     name: 'amount'
-                }, {
-                    data: 'amount_less',
-                    name: 'amount_less'
                 },
                 {
                     data: 'created_by',

@@ -6,6 +6,8 @@ use App\BusinessPartnerTransactions;
 use Illuminate\Http\Request;
 
 use App\AccountTransaction;
+use App\Business;
+use App\BusinessPartner;
 
 class BusinessPartnerTransactionController extends Controller
 {
@@ -32,6 +34,10 @@ class BusinessPartnerTransactionController extends Controller
 
     public function createTransaction(Request $request)
     {
+
+
+        $Owner_Name=BusinessPartner::where('id',$request->input('owner'))->first();
+        
         $business_id = request()->session()->get('user.business_id');
         try {
             $data = [
@@ -43,7 +49,7 @@ class BusinessPartnerTransactionController extends Controller
                 'operation_date' => \Carbon::now(),
                 'transaction_id' => null,
                 'transaction_payment_id' => null,
-                'note' => null,
+                'note' => "BusinessPartner " . $Owner_Name->name . "(" . $Owner_Name->id . ")   " . $request->input('type'),
                 'transfer_transaction_id' =>  null,
             ];
 

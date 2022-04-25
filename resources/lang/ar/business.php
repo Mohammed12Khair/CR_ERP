@@ -1,5 +1,6 @@
 <?php 
  return [
+"business_partner" => "السلف و العهد",
 "register_and_get_started_in_minutes" => "سجل وابدأ في دقائق",
 "business_name" => "اسم النشاط",
 "start_date" => "تاريخ البدء",

@@ -820,8 +820,8 @@ class TransactionPaymentController extends Controller
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
 
-            $due_payment_type = request()->input('type');
-            $max = request()->input('max');
+            // $due_payment_type = request()->input('due_payment_type');
+            $owner = request()->input('owner');
             $payment_line = new TransactionPayment();
             $amount_formated = $this->transactionUtil->num_f($payment_line->amount);
             $payment_line->method = 'cash';
@@ -832,7 +832,7 @@ class TransactionPaymentController extends Controller
             $account_transaction_id = $Transaction_ID;
         
             return view('transaction_payment.pay_partner_due_modal')
-                ->with(compact('max', 'payment_types', 'payment_line', 'due_payment_type','amount_formated', 'accounts', 'account_transaction_id'));
+                ->with(compact('owner','payment_types', 'payment_line','amount_formated', 'accounts', 'account_transaction_id'));
         }
     }
 
@@ -880,11 +880,8 @@ class TransactionPaymentController extends Controller
      */
     public function postPayContactDue_partner(Request  $request)
     {
-        error_log("this is call");
-        // if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
 
+        error_log($request);
         try {
             DB::beginTransaction();
 

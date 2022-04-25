@@ -258,9 +258,14 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('BusinessPartner/showEdit/{id}', 'BusinessPartnerController@showEdit');
     Route::get('BusinessPartner/getCredit/{id}', 'BusinessPartnerController@getCredit');
     Route::get('BusinessPartner/getDebit/{id}', 'BusinessPartnerController@getDebit');
+    Route::get('BusinessPartner/Business_partner_details/{id}', 'BusinessPartnerController@Business_partner_details');
     Route::post('BusinessPartner/UpdatePartner', 'BusinessPartnerController@UpdatePartner');
     Route::post('BusinessPartner/DeletePartner', 'BusinessPartnerController@DeletePartner');
     Route::get('BusinessPartner/Transactions/{id}', 'BusinessPartnerController@Transactions');
+    
+    
+    Route::post('BusinessPartner/DeleteTransaction', 'BusinessPartnerController@DeleteTransaction');
+    Route::post('BusinessPartner/GetPaymentsData', 'BusinessPartnerController@GetPaymentsData');
 
 
     Route::get('BusinessPartner/showPayments/{TransactionId}', 'BusinessPartnerController@showPayments');

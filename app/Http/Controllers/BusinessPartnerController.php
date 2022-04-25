@@ -7,6 +7,7 @@ use App\AccountTransaction;
 use App\BusinessPartner;
 use App\BusinessPartnerPayments;
 use App\BusinessPartnerTransactions;
+use App\TransactionPayment;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -179,28 +180,86 @@ class BusinessPartnerController extends Controller
         $accounts = Account::all();
 
         $business_id = request()->session()->get('user.business_id');
+        // Get Open balance
+        $business_partner = BusinessPartner::where('id', $id)->first();
+
+        // Get Payments 
+        $business_pyments = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)->get();
+
+        $PymentId = [];
+        foreach ($business_pyments as $business_pyment) {
+            array_push($PymentId, $business_pyment->payment_id);
+        }
+
+        // Get Payment frmo account transactions
+        $account_transactions = AccountTransaction::whereIn('id', $PymentId)->get();
+
+        // loop and calcualte balance
+        $credit = 0;
+        $debit = 0;
+        foreach ($account_transactions as $account_transaction) {
+            if ($account_transaction->type == "credit") {
+                $credit += $account_transaction->amount;
+            }
+            if ($account_transaction->type == "debit") {
+                $debit += $account_transaction->amount;
+            }
+        }
+
+        // MAtch with open balance
+        if ($business_partner->type == "credit") {
+            $credit += $business_partner->open_balance;
+        }
+        // MAtch with open balance
+        if ($business_partner->type == "debit") {
+            $debit += $business_partner->open_balance;
+        }
+
+        $final_amount = $credit - $debit;
+
+        error_log("__________");
+        error_log($final_amount);
         //$accounts = $this->moduleUtil->accountsDropdown($business_id, true, false, true);
         $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->first();
-        return view('business_partner.transactions')->with('business_partners', $business_partners)->with('accounts', $accounts);
+        return view('business_partner.transactions')->with('business_partners', $business_partners)->with('accounts', $accounts)
+        ->with('final_amount',$final_amount);
+    }
+
+
+
+    public function DeleteTransaction(Request $request)
+    {
+
+        try {
+            $payment_id = $request->input('payment_id');
+            // $AccountTransactionX = AccountTransaction::where('id', $payment_id)->get(); //->delete();
+            AccountTransaction::where('id', $payment_id)->delete();
+            // $BusinessPartnerTransactionsDataْْX = BusinessPartnerTransactions::where('transaction_id', $payment_id)->get(); //update(['is_active' => 1]);
+            BusinessPartnerTransactions::where('transaction_id', $payment_id)->update(['is_active' => 1]);
+            $output = [
+                'success' => True,
+                'msg' => 'Done'
+            ];
+        } catch (Exception $e) {
+            $output = [
+                'success' => false,
+                'msg' => 'Failed'
+            ];
+        }
+        return $output;
     }
 
     public function getCredit($id)
     {
         $credit = BusinessPartnerTransactions::where('owner', $id)->get();
-        //return  $credit;
-        //return $business_partners;
         if (request()->ajax()) {
             $credit_ids = BusinessPartnerTransactions::where('owner', $id)->where('is_active', 0)
-                ->where('type', 'credit')->get(); //where('business_id', $business_id);
-
-            error_log($credit_ids);
+                ->where('type', 'debit')->get(); //where('business_id', $business_id);
             $ids = [];
             foreach ($credit_ids as $credit_id) {
                 array_push($ids, $credit_id->transaction_id);
-                error_log($credit_id->transaction_id);
             }
             $Account_Trasaction = AccountTransaction::whereIn('id', $ids)->get();
-            error_log($Account_Trasaction);
             return Datatables::of($Account_Trasaction)
                 ->editColumn('action', function ($row) {
                     $payment_made = AccountTransaction::where('note', "BusinessPartner_" . $row->id)->get();
@@ -221,24 +280,16 @@ class BusinessPartnerController extends Controller
                     <ul class="dropdown-menu dropdown-menu-left" role="menu">';
 
                     $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->id]) . '?type=sell&max=' . $max . '" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>  قبض من المتسلف</a></li>';
-                    $html .= '<li><a href="' . action('BusinessPartnerController@showPayments', [$row->id]) . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>المتسلف</a></li>';
-
+                    $html .= '<li><a href="' . action('BusinessPartnerController@showPayments', [$row->id]) . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>ShowPayments</a></li>';
+                    if ($max == $row->amount) {
+                        $html .= '<li><a payment_id="' . $row->id . '" class="delete_transaction" link="' . action('BusinessPartnerController@DeleteTransaction') . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>Delete</a></li>';
+                    }
                     $html .= "</a></li>";
-
-                    // $btn = '<a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->owner]) . '?type=sell&payment_id=' . $row->id . '&max=' . $max . '" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>  قبض من المتسلف</a>';
-                    //$btn .= '<a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->id]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true">' . __("lang_v1.pay") . 'debit</a>';
-                    // $delete_btn = '<a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay") . '</a></li>';
-                    // $delete_btn .= '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-danger btn-sm" >edit</a>';
-                    // $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >Delete</button>';
-                    // $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >transactions</a>';
-                    // //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
-                    return $html; //. $edit_btn;
+                    return $html;
                 })
                 ->addColumn('amount', function ($row) {
                     //business_transaction  
                     $key = "BusinessPartner_" . $row->id;
-                    error_log("$key");
-                    error_log($key);
                     $payment_made = AccountTransaction::where('note', $key)->get();
                     $paymet_view = 0;
                     foreach ($payment_made as $line) {
@@ -262,33 +313,126 @@ class BusinessPartnerController extends Controller
     public function getDebit($id)
     {
         $credit = BusinessPartnerTransactions::where('owner', $id)->get();
-        //return  $credit;
-        //return $business_partners;
         if (request()->ajax()) {
-            $credit = BusinessPartnerTransactions::where('owner', $id)->where('is_active', 0)
-                ->where('type', 'debit')->get(); //where('business_id', $business_id);
-            return Datatables::of($credit)
+            $credit_ids = BusinessPartnerTransactions::where('owner', $id)->where('is_active', 0)
+                ->where('type', 'credit')->get(); //where('business_id', $business_id);
+            $ids = [];
+            foreach ($credit_ids as $credit_id) {
+                array_push($ids, $credit_id->transaction_id);
+            }
+            $Account_Trasaction = AccountTransaction::whereIn('id', $ids)->get();
+            return Datatables::of($Account_Trasaction)
                 ->editColumn('action', function ($row) {
-                    $delete_btn = '<a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->owner]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"><i>دفع لصاخب عهده</a>';
+                    $payment_made = AccountTransaction::where('note', "BusinessPartner_" . $row->id)->get();
+                    $paymet_view = 0;
+                    foreach ($payment_made as $line) {
+                        $paymet_view += $line->amount;
+                    }
 
-                    //   $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-danger btn-sm" >View</a>';
-                    // $delete_btn = '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-danger btn-sm" >edit</a>';
-                    // $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >Delete</button>';
-                    // $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >transactions</a>';
-                    // //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
-                    return $delete_btn; //. $edit_btn;
+                    $max = $row->amount - $paymet_view;
+
+                    $html = '<div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
+                        data-toggle="dropdown" aria-expanded="false">' .
+                        __("messages.actions") .
+                        '<span class="caret"></span><span class="sr-only">Toggle Dropdown
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-left" role="menu">';
+
+                    $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->id]) . '?type=purchase&max=' . $max . '" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>  قبض من المتسلف</a></li>';
+                    $html .= '<li><a href="' . action('BusinessPartnerController@showPayments', [$row->id]) . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>ShowPayments</a></li>';
+                    if ($max == $row->amount) {
+                        $html .= '<li><a payment_id="' . $row->id . '" class="delete_transaction" link="' . action('BusinessPartnerController@DeleteTransaction') . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>Delete</a></li>';
+                    }
+                    $html .= "</a></li>";
+                    return $html;
                 })
                 ->addColumn('amount', function ($row) {
-                    return $row->amount;
-                })
-                ->addColumn('name', function ($row) {
-                    return $row->name;
+                    //business_transaction  
+                    $key = "BusinessPartner_" . $row->id;
+                    $payment_made = AccountTransaction::where('note', $key)->get();
+                    $paymet_view = 0;
+                    foreach ($payment_made as $line) {
+                        $paymet_view += $line->amount;
+                    }
+                    return $row->amount . '(' . $paymet_view  . ')';
                 })
                 ->addColumn('type', function ($row) {
                     return $row->type;
                 })
-                ->addColumn('note', function ($row) {
-                    return $row->note;
+                ->addColumn('created_by', function ($row) {
+                    $UserName = User::where('id', $row->created_by)->first()->username;
+                    return $UserName;
+                })
+                ->addColumn('created_at', function ($row) {
+                    return $row->created_at;
+                })
+                ->make(true);
+        }
+    }
+    public function Business_partner_details($id)
+    {
+        $credit = BusinessPartnerPayments::where('owner', $id)->get();
+        if (request()->ajax()) {
+            $credit_ids = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)
+                ->get();
+            $ids = [];
+            foreach ($credit_ids as $credit_id) {
+                array_push($ids, $credit_id->payment_id);
+            }
+            $Account_Trasaction = AccountTransaction::whereIn('id', $ids)->get();
+
+           // error_log($Account_Trasaction);
+            return Datatables::of($Account_Trasaction)
+                ->editColumn('action', function ($row) {
+                    // $payment_made = AccountTransaction::where('note', "BusinessPartner_" . $row->id)->get();
+                    // $paymet_view = 0;
+                    // foreach ($payment_made as $line) {
+                    //     $paymet_view += $line->amount;
+                    // }
+
+                    // $max = $row->amount - $paymet_view;
+
+                    $html = '<div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
+                        data-toggle="dropdown" aria-expanded="false">' .
+                        __("messages.actions") .
+                        '<span class="caret"></span><span class="sr-only">Toggle Dropdown
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-left" role="menu">';
+
+                    // $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->id]) . '?type=purchase&max=' . $max . '" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>  قبض من المتسلف</a></li>';
+                    // $html .= '<li><a href="' . action('BusinessPartnerController@showPayments', [$row->id]) . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>ShowPayments</a></li>';
+                    // if ($max == $row->amount) {
+                    //     $html .= '<li><a payment_id="' . $row->id . '" class="delete_transaction" link="' . action('BusinessPartnerController@DeleteTransaction') . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>Delete</a></li>';
+                    // }
+                    $html .= "</ul>";
+                    return $html;
+                })
+                ->addColumn('account', function ($row) {
+
+                    return Account::where('id', $row->account_id)->first()->name;
+                })
+                ->addColumn('method', function ($row) {
+                    $transaction = TransactionPayment::where('id', $row->transaction_payment_id)->first();
+                    return __('lang_v1.' . $transaction->method);
+                })
+                ->addColumn('amount', function ($row) {
+                    if ($row->type == "debit") {
+                        return $row->amount;
+                    }
+                    return '';
+                })
+                ->addColumn('amount_less', function ($row) {
+                    if ($row->type == "credit") {
+                        return $row->amount;
+                    }
+                    return '';
+                })
+                ->addColumn('type', function ($row) {
+                    return $row->type;
                 })
                 ->addColumn('created_by', function ($row) {
                     $UserName = User::where('id', $row->created_by)->first()->username;
@@ -354,42 +498,42 @@ class BusinessPartnerController extends Controller
 
     public function showPayments($TransactionId)
     {
-
-
-        $TransactionId = $TransactionId;
+        $TransactionIdValue = $TransactionId;
         $id = "BusinessPartner_" . $TransactionId;
-
-        error_log($id);
         $Account = AccountTransaction::where('note', $id)->get();
-        error_log("Account");
-        error_log($Account);
-
         if (request()->ajax()) {
+            error_log("Is Ajax");
+            $TransactionIdValue = $TransactionId;
             $id = "BusinessPartner_" . $TransactionId;
             $Account = AccountTransaction::where('note', $id)->get();
-            error_log("Account");
-            error_log($Account);
+
             return Datatables::of($Account)
                 ->editColumn('action', function ($row) {
-                    //$delete_btn = '<a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->owner]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"><i>دفع لصاخب عهده</a>';
-                    $delete_btn = '<a class="btn btn-xs btn-danger delete_payment" parent_id="' . $row->id . '" transaction_id="' . $row->transaction_id . '" data-href="' . action('TransactionPaymentController@destroy_partner_payment') . '">Delete</a>';
-                    //   $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-danger btn-sm" >View</a>';
-                    // $delete_btn = '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-danger btn-sm" >edit</a>';
-                    // $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >Delete</button>';
-                    // $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >transactions</a>';
-                    // //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
-                    return "delete_bt"; //. $edit_btn;
-                })
-                ->addColumn('account_id', function ($row) {
-                    return $row->account_id;
+                    return "html";
                 })
                 ->addColumn('amount', function ($row) {
                     return $row->amount;
                 })
+                ->addColumn('created_by', function ($row) {
+                    $UserName = User::where('id', $row->created_by)->first()->username;
+                    return $UserName;
+                })
+                ->addColumn('created_at', function ($row) {
+                    return $row->created_at;
+                })
                 ->make(true);
         }
+        return view('business_partner.payments')->with('TransactionId', $TransactionIdValue)
+            ->with('Account', $Account);
+    }
 
+    public function GetPaymentsData(Request $request)
+    {
 
-        return view('business_partner.payments')->with('TransactionId', $TransactionId);
+        // $owner = $request->input('owner');
+        // $OpenAmount=BusinessPartner::where('id',$owner)->first();
+        // $transaction=BusinessPartner
+
+        // return $output;
     }
 }
