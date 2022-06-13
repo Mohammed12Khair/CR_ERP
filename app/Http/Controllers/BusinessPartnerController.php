@@ -26,16 +26,16 @@ class BusinessPartnerController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         $business_partners = BusinessPartner::where("is_active", 0)
-        ->where('business_id',$business_id);
+            ->where('business_id', $business_id);
         //return $business_partners;
         if (request()->ajax()) {
-            $business_partners = BusinessPartner::where("is_active", 0)->where('business_id',$business_id); //where('business_id', $business_id);
+            $business_partners = BusinessPartner::where("is_active", 0)->where('business_id', $business_id); //where('business_id', $business_id);
             return Datatables::of($business_partners)
                 ->editColumn('action', function ($row) {
-                    $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-primary btn-sm" >'. __('business_partner.view').'</a>';
-                    $delete_btn .= '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-warning btn-sm" >'. __('business_partner.edit').'</a>';
-                    $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >'. __('business_partner.delete').'</button>';
-                    $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >'. __('business_partner.transactions').'</a>';
+                    $delete_btn = '<a href="' . action('BusinessPartnerController@show', [$row->id]) . '" class="btn btn-primary btn-sm" >' . __('business_partner.view') . '</a>';
+                    $delete_btn .= '<a href="' . action('BusinessPartnerController@showEdit', [$row->id]) . '" class="btn btn-warning btn-sm" >' . __('business_partner.edit') . '</a>';
+                    $delete_btn .= '<button row="' . $row->id . '" href="' . action('BusinessPartnerController@DeletePartner') . '" class="btn btn-danger btn-sm delete_partner" >' . __('business_partner.delete') . '</button>';
+                    $delete_btn .= '<a href="' . action('BusinessPartnerController@Transactions', [$row->id]) . '" class="btn btn-info btn-sm" >' . __('business_partner.transactions') . '</a>';
                     //  $edit_btn='<a href="' . action('BusinessPartnerController@edit',[$row->id]) . '" class="btn btn-info btn-sm" >edit</a>';
                     return $delete_btn; //. $edit_btn;
                 })
@@ -50,6 +50,45 @@ class BusinessPartnerController extends Controller
                 })
                 ->addColumn('address', function ($row) {
                     return $row->address;
+                })
+                ->addColumn('balance', function ($row) {
+                    // Get Open balance
+                    $business_partner = BusinessPartner::where('id', $row->id)->first();
+
+                    // Get Payments 
+                    $business_pyments = BusinessPartnerPayments::where('owner',  $row->id)->where('is_active', 0)->get();
+
+                    $PymentId = [];
+                    foreach ($business_pyments as $business_pyment) {
+                        array_push($PymentId, $business_pyment->payment_id);
+                    }
+
+                    // Get Payment frmo account transactions
+                    $account_transactions = AccountTransaction::whereIn('id', $PymentId)->get();
+
+                    // loop and calcualte balance
+                    $credit = 0;
+                    $debit = 0;
+                    foreach ($account_transactions as $account_transaction) {
+                        if ($account_transaction->type == "credit") {
+                            $credit += $account_transaction->amount;
+                        }
+                        if ($account_transaction->type == "debit") {
+                            $debit += $account_transaction->amount;
+                        }
+                    }
+
+                    // MAtch with open balance
+                    if ($business_partner->type == "credit") {
+                        $credit += $business_partner->open_balance;
+                    }
+                    // MAtch with open balance
+                    if ($business_partner->type == "debit") {
+                        $debit += $business_partner->open_balance;
+                    }
+
+                    $final_amount = $credit - $debit;
+                    return $final_amount;
                 })
                 ->addColumn('created_by', function ($row) {
                     $UserName = User::where('id', $row->created_by)->first()->username;
@@ -86,7 +125,7 @@ class BusinessPartnerController extends Controller
     public function store(Request $request)
     {
         $business_id = request()->session()->get('user.business_id');
-      
+
         try {
             // $ID = $request->input('id');
             $name = $request->input('name');
@@ -127,9 +166,9 @@ class BusinessPartnerController extends Controller
     public function show($id)
     {
         //
-        
+
         $business_id = request()->session()->get('user.business_id');
-        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id',$business_id)->first();
+        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id', $business_id)->first();
         return view('business_partner.show')->with('business_partners', $business_partners);
         // return "this is show";
     }
@@ -143,9 +182,9 @@ class BusinessPartnerController extends Controller
     public function showEdit($id)
     {
         //
-        
+
         $business_id = request()->session()->get('user.business_id');
-        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id',$business_id)->first();
+        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id', $business_id)->first();
         return view('business_partner.edit')->with('business_partners', $business_partners);
         // return "this is show";
     }
@@ -158,11 +197,12 @@ class BusinessPartnerController extends Controller
         $accounts = Account::all();
 
         $business_id = request()->session()->get('user.business_id');
+
         // Get Open balance
-        $business_partner = BusinessPartner::where('id', $id)->where('business_id',$business_id)->first();
+        $business_partner = BusinessPartner::where('id', $id)->where('business_id', $business_id)->first();
 
         // Get Payments 
-        $business_pyments = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)->where('business_id',$business_id)->get();
+        $business_pyments = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)->where('business_id', $business_id)->get();
 
         $PymentId = [];
         foreach ($business_pyments as $business_pyment) {
@@ -195,9 +235,9 @@ class BusinessPartnerController extends Controller
 
         $final_amount = $credit - $debit;
         //$accounts = $this->moduleUtil->accountsDropdown($business_id, true, false, true);
-        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id',$business_id)->first();
+        $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id', $business_id)->first();
         return view('business_partner.transactions')->with('business_partners', $business_partners)->with('accounts', $accounts)
-        ->with('final_amount',$final_amount);
+            ->with('final_amount', $final_amount);
     }
 
 
@@ -207,19 +247,71 @@ class BusinessPartnerController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         try {
+
+
+
+
             $payment_id = $request->input('payment_id');
+            $id = $request->input('owner');
             // $AccountTransactionX = AccountTransaction::where('id', $payment_id)->get(); //->delete();
             AccountTransaction::where('id', $payment_id)->delete();
             // $BusinessPartnerTransactionsDataْْX = BusinessPartnerTransactions::where('transaction_id', $payment_id)->get(); //update(['is_active' => 1]);
-            BusinessPartnerTransactions::where('transaction_id', $payment_id)->update(['is_active' => 1]);
+            BusinessPartnerPayments::where('payment_id', $payment_id)->update(['is_active' => 1]);
+            $tx = BusinessPartnerPayments::where('payment_id', $payment_id)->first();
+            TransactionPayment::where('id', $tx->transaction_id)->delete();
+
+
+            // Get Open balance
+            $business_partner = BusinessPartner::where('id', $id)->where('business_id', $business_id)->first();
+
+            // Get Payments 
+            $business_pyments = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)->where('business_id', $business_id)->get();
+
+            $PymentId = [];
+            foreach ($business_pyments as $business_pyment) {
+                array_push($PymentId, $business_pyment->payment_id);
+            }
+
+            // Get Payment frmo account transactions
+            $account_transactions = AccountTransaction::whereIn('id', $PymentId)->get();
+
+            // loop and calcualte balance
+            $credit = 0;
+            $debit = 0;
+            if (!is_null($account_transactions)) {
+                foreach ($account_transactions as $account_transaction) {
+                    if ($account_transaction->type == "credit") {
+                        $credit += $account_transaction->amount;
+                    }
+                    if ($account_transaction->type == "debit") {
+                        $debit += $account_transaction->amount;
+                    }
+                }
+            }
+
+            // MAtch with open balance
+            if (!is_null($business_partner->type)) {
+                if ($business_partner->type == "credit") {
+                    $credit += $business_partner->open_balance;
+                }
+                // MAtch with open balance
+                if ($business_partner->type == "debit") {
+                    $debit += $business_partner->open_balance;
+                }
+            }
+
+            $final_amount = $credit - $debit;
+
             $output = [
                 'success' => True,
-                'msg' => 'Done'
+                'msg' => 'Done',
+                'final_amount' => $final_amount
             ];
         } catch (Exception $e) {
             $output = [
                 'success' => false,
-                'msg' => 'Failed'
+                'msg' => $e->getMessage(),
+                'final_amount' => "Error"
             ];
         }
         return $output;
@@ -247,13 +339,13 @@ class BusinessPartnerController extends Controller
                     $max = $row->amount - $paymet_view;
 
                     $html = '<div class="btn-group">
-                    <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
-                        data-toggle="dropdown" aria-expanded="false">' .
+                        <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
+                            data-toggle="dropdown" aria-expanded="false">' .
                         __("messages.actions") .
                         '<span class="caret"></span><span class="sr-only">Toggle Dropdown
-                        </span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-left" role="menu">';
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-left" role="menu">';
 
                     $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->id]) . '?type=sell&max=' . $max . '" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>  قبض من المتسلف</a></li>';
                     $html .= '<li><a href="' . action('BusinessPartnerController@showPayments', [$row->id]) . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>ShowPayments</a></li>';
@@ -308,13 +400,13 @@ class BusinessPartnerController extends Controller
                     $max = $row->amount - $paymet_view;
 
                     $html = '<div class="btn-group">
-                    <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
-                        data-toggle="dropdown" aria-expanded="false">' .
+                        <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
+                            data-toggle="dropdown" aria-expanded="false">' .
                         __("messages.actions") .
                         '<span class="caret"></span><span class="sr-only">Toggle Dropdown
-                        </span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-left" role="menu">';
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-left" role="menu">';
 
                     $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->id]) . '?type=purchase&max=' . $max . '" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>  قبض من المتسلف</a></li>';
                     $html .= '<li><a href="' . action('BusinessPartnerController@showPayments', [$row->id]) . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>ShowPayments</a></li>';
@@ -350,17 +442,19 @@ class BusinessPartnerController extends Controller
     public function Business_partner_details($id)
     {
         $business_id = request()->session()->get('user.business_id');
-        $credit = BusinessPartnerPayments::where('owner', $id)->where('business_id',$business_id)->get();
+        $credit = BusinessPartnerPayments::where('owner', $id)->where('business_id', $business_id)->get();
         if (request()->ajax()) {
+            
+
             $credit_ids = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)
-            ->where('business_id',$business_id)->get();
+                ->where('business_id', $business_id)->get();
             $ids = [];
             foreach ($credit_ids as $credit_id) {
                 array_push($ids, $credit_id->payment_id);
             }
             $Account_Trasaction = AccountTransaction::whereIn('id', $ids)->get();
 
-           // error_log($Account_Trasaction);
+            // error_log($Account_Trasaction);
             return Datatables::of($Account_Trasaction)
                 ->editColumn('action', function ($row) {
                     // $payment_made = AccountTransaction::where('note', "BusinessPartner_" . $row->id)->get();
@@ -383,7 +477,7 @@ class BusinessPartnerController extends Controller
                     // $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue_Partner', [$row->id]) . '?type=purchase&max=' . $max . '" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>  قبض من المتسلف</a></li>';
                     // $html .= '<li><a href="' . action('BusinessPartnerController@showPayments', [$row->id]) . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>ShowPayments</a></li>';
                     // if ($max == $row->amount) {
-                    //     $html .= '<li><a payment_id="' . $row->id . '" class="delete_transaction" link="' . action('BusinessPartnerController@DeleteTransaction') . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>Delete</a></li>';
+                    $html .= '<li><a payment_id="' . $row->id . '" class="delete_transaction" link="' . action('BusinessPartnerController@DeleteTransaction') . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>Delete</a></li>';
                     // }
                     $html .= "</ul>";
                     return $html;
@@ -407,6 +501,22 @@ class BusinessPartnerController extends Controller
                         return $row->amount;
                     }
                     return '';
+                })
+                ->addColumn('balance', function ($row) use ($ids) {
+                    $sum=AccountTransaction::whereIn('id', $ids)->
+                    where('id','<=',$row->id)->get();
+                    error_log("Data");
+                    $balance=0;
+                    foreach($sum as $line){
+                        error_log($line->type);
+                        error_log($line->amount);
+                        if($line->type == "debit"){
+                            $balance-=$line->amount;
+                        }else{
+                            $balance+=$line->amount;
+                        }
+                    }                  
+                    return $balance;
                 })
                 ->addColumn('type', function ($row) {
                     return $row->type;
@@ -453,10 +563,26 @@ class BusinessPartnerController extends Controller
     public function DeletePartner(request $request)
     {
         try {
-
             $id = $request->input('id');
             error_log($id);
-            BusinessPartner::where('id', $request->input('id'))->update(["is_active" => 1]);
+
+            $Partener_Trnasactions = BusinessPartnerPayments::where('owner',  $id)->get();
+            error_log($Partener_Trnasactions);
+            //     return [   'success' => True,
+            //     'msg' => $Partener_Trnasactions
+            // ];
+
+            foreach ($Partener_Trnasactions as $Partener_Trnasaction) {
+
+                // error_log(AccountTransaction::where('id', $Partener_Trnasaction->payment_id)->first());
+                AccountTransaction::where('id', $Partener_Trnasaction->payment_id)->delete();
+                // error_log(TransactionPayment::where('id', $Partener_Trnasaction->transaction_id)->first());
+                TransactionPayment::where('id', $Partener_Trnasaction->transaction_id)->delete();
+                // error_log(BusinessPartnerPayments::where('id', $Partener_Trnasaction->transaction_id)->first());
+                BusinessPartnerPayments::where('id', $Partener_Trnasaction->id)->update(["is_active" => 1]);
+            }
+            BusinessPartner::where('id',  $id)->update(["is_active" => 1]);
+
 
             $output = [
                 'success' => True,
@@ -465,7 +591,7 @@ class BusinessPartnerController extends Controller
         } catch (Exception $e) {
             $output = [
                 'success' => False,
-                'msg' => ''
+                'msg' => $e->getMessage()
             ];
         }
 

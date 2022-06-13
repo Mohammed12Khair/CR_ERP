@@ -9,16 +9,43 @@
             <small>@lang( 'business_partner.transactions' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
-                                                                                                                                                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                                                                                                                                                <li class="active">Here</li>
-                                                                                                                                            </ol> -->
+                                                                                                                                                            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                                                                                                                                                            <li class="active">Here</li>
+                                                                                                                                                        </ol> -->
 
     </section>
 
     <!-- Main content -->
     <section class="content">
-        @component('components.filters', ['class' => 'box-primary', 'title' => __('business_partner.transaction') ])
-            <form action="{{ action('BusinessPartnerController@UpdatePartner') }}" method="post"> @csrf
+        @component('components.filters', ['class' => 'box-primary', 'title' => __('business_partner.transaction')])
+            <div class="row">
+                <div class="col-md-3">
+                    <table class="table table-sm">
+                        <tr>
+                            <td>@lang('business_partner.name')</td>
+                            <td>{{ $business_partners->name }}</td>
+                        </tr>
+                        <tr>
+                            <td>@lang('business_partner.mobile')</td>
+                            <td>{{ $business_partners->mobile }}</td>
+                        </tr>
+                        <tr>
+                            <td>@lang('business_partner.address')</td>
+                            <td>{{ $business_partners->address }}</td>
+                        </tr>
+                        <tr>
+                            <td>@lang('business_partner.balance')</td>
+                            <td>    <input name="address" id="balance" type="text" class="form-control" value="{{ $final_amount }}" readonly></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-md-3">
+                  
+                </div>
+            </div>
+
+            <form action="{{ action('BusinessPartnerController@UpdatePartner') }}" method="post" style="display: none;"> @csrf
                 <input id="Partner_id" name="id" type="text" value="{{ $business_partners->id }}" link="{{ action('BusinessPartnerController@GetPaymentsData') }}" hidden>
                 <div class="row">
                     <div class="form-group col-md-3">
@@ -35,8 +62,8 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label for="test">@lang('business_partner.balance')</label>
-                        <input name="address" id="test" type="text" class="form-control" value="{{ $final_amount }}" readonly>
-                  
+                    
+
                     </div>
                 </div>
                 <div class="row">
@@ -50,9 +77,9 @@
             <div>
                 <div class="btn btn-info">
                     <a href="{{ action('TransactionPaymentController@getPayContactDue_Partner', [0]) }}?owner={{ $business_partners->id }}&partner_id={{ $business_partners->id }}" class="pay_sale_due" style="color: aliceblue;"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>@lang('business_partner.add')</a>
-                    
+
                 </div>
-            
+
                 <div class="box-body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped" id="Business_partner_details" style="text-align:center;">
@@ -66,6 +93,7 @@
                                     <th>@lang('business_partner.type')</th>
                                     <th>@lang('business_partner.debit')</th>
                                     <th>@lang('business_partner.credit')</th>
+                                    <th>@lang('business_partner.balance')</th>
                                     <th>@lang('business_partner.created_by')</th>
                                     <th>@lang('business_partner.created_at')</th>
                                 </tr>
@@ -93,7 +121,6 @@
                 dangerMode: true,
             }).then(willDelete => {
                 if (willDelete) {
-                    alert("OK");
                     $.ajax({
                         method: 'POST',
                         url: $(this).attr('link'),
@@ -103,17 +130,20 @@
                         // },
                         data: {
                             "payment_id": $(this).attr('payment_id'),
+                            "owner": $('#Partner_id').val(),
                         },
                         success: function(result) {
                             toastr.success(result.msg);
                             toastr.error(result.msg);
 
-                            Business_partner_debit.ajax.reload();
-                            Business_partner_Credit.ajax.reload();
+                            $('#balance').val(result.final_amount);
+
+                            Business_partner_details.ajax.reload();
+                            // Business_partner_Credit.ajax.reload();
                         },
                     });
                 } else {
-                    alert("Nok");
+                    //    alert("Nok");
                 }
             });
         });
@@ -152,6 +182,10 @@
                 }, {
                     data: 'amount_less',
                     name: 'amount_less'
+                },
+                {
+                    data: 'balance',
+                    name: 'balance'
                 },
                 {
                     data: 'created_by',

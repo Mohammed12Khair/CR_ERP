@@ -9,9 +9,9 @@
             <small>@lang( 'business_partner.business_partner' )</small>
         </h1>
         <!-- <ol class="breadcrumb">
-                                    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                                    <li class="active">Here</li>
-                                </ol> -->
+                                                                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                                                                <li class="active">Here</li>
+                                                            </ol> -->
     </section>
 
     <!-- Main content -->
@@ -26,13 +26,14 @@
                 </div>
             @endslot
             <div class="table-responsive">
-                <table class="table table-bordered table-striped" id="Business_partners">
+                <table class="table table-bordered table-striped" style="text-align: center;" id="Business_partners">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>@lang('business_partner.name')</th>
                             <th>@lang('business_partner.mobile')</th>
                             <th>@lang('business_partner.address')</th>
+                            <th>@lang('business_partner.balance')</th>
                             <th>@lang('business_partner.created_by')</th>
                             <th>@lang('business_partner.created_at')</th>
                             <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
@@ -51,9 +52,9 @@
     <!-- /.content -->
 
 @endsection
-
-
 @section('javascript')
+
+
     <script>
         $(document).on('click', '.delete_partner', function() {
             swal({
@@ -90,10 +91,56 @@
             });
         });
 
-
-
-
         Business_partners = $('#Business_partners').DataTable({
+            dom: '<"row margin-bottom-20 text-center"<"col-sm-2"l><"col-sm-7"B><"col-sm-3"f> r>tip',
+            buttons: [
+                // {
+                //     extend: 'copy',
+                //     text: '<i class="fa fa-files-o" aria-hidden="true"></i> ' + LANG.copy,
+                //     className: 'btn-sm',
+                //     exportOptions: {
+                //         columns: ':visible',
+                //     },
+                //     footer: true,
+                // },
+                // {
+                //     extend: 'csv',
+                //     text: '<i class="fa fa-file-csv" aria-hidden="true"></i> ' + LANG.export_to_csv,
+                //     className: 'btn-sm',
+                //     exportOptions: {
+                //         columns: ':visible',
+                //     },
+                //     footer: true,
+                // },
+                // {
+                //     extend: 'excel',
+                //     text: '<i class="fa fa-file-excel" aria-hidden="true"></i> ' + LANG.export_to_excel,
+                //     className: 'btn-sm',
+                //     exportOptions: {
+                //         columns: ':visible',
+                //     },
+                //     footer: true,
+                // }, 
+                {
+                    extend: 'print',
+                    text: '<i class="fa fa-print" aria-hidden="true"></i> ' + LANG.print,
+                    className: 'btn-sm',
+                    exportOptions: {
+                        columns: ':visible',
+                        stripHtml: true,
+                    },
+                    footer: true,
+                    customize: function(win) {
+                        if ($('.print_table_part').length > 0) {
+                            $($('.print_table_part').html()).insertBefore($(win.document.body).find('table'));
+                        }
+                        if ($(win.document.body).find('table.hide-footer').length) {
+                            $(win.document.body).find('table.hide-footer tfoot').remove();
+                        }
+                        __currency_convert_recursively($(win.document.body).find('table'));
+                    }
+                }
+            ],
             processing: true,
             serverSide: true,
             ajax: base_path + '/BusinessPartner',
@@ -118,6 +165,10 @@
                     name: 'address'
                 },
                 {
+                    data: 'balance',
+                    name: 'balance'
+                },
+                {
                     data: 'created_by',
                     name: 'created_by'
                 },
@@ -132,4 +183,5 @@
             ],
         });
     </script>
+
 @endsection
