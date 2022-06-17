@@ -397,6 +397,15 @@ class TransactionPaymentController extends Controller
                     TransactionPayment::deletePayment($payment);
                 }
                 DB::commit();
+
+                try{
+                    bankcheques_payment::where('payment_id',$payment->id)
+                    ->update(['status' => 'deleted']);
+
+                }catch(Exception $e){
+                    
+                    error_log("Error in delete payment cheuqe");
+                }
                 $output = [
                     'success' => true,
                     'msg' => __('purchase.payment_deleted_success')

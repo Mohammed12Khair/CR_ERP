@@ -353,7 +353,7 @@ class PurchaseController extends Controller
                 ->editColumn('ref_no', function ($row) {
                     // Edit
                     $cheque_indicator = '';
-                    $cheque = bankcheques_payment::where('transaction_id', $row->id);
+                    $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status','unset');
                     if ($cheque->count() != 0) {
                         $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true"></i>';
                     }
@@ -525,7 +525,7 @@ class PurchaseController extends Controller
                 ->editColumn('ref_no', function ($row) {
                     // Edit cheque_indicator
                     $cheque_indicator = '';
-                    $cheque = bankcheques_payment::where('transaction_id', $row->id);
+                    $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status','unset');
                     if ($cheque->count() != 0) {
                         $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true">' . __('cheque.cheque') . '</i>';
                     }

@@ -1391,6 +1391,7 @@ class SellPosController extends Controller
 
                 $output['success'] = false;
                 $output['msg'] = trans("messages.something_went_wrong");
+                // $output['msg'] = $e->getMessage();
             }
 
             return $output;

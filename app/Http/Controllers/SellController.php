@@ -506,7 +506,7 @@ class SellController extends Controller
                 ->editColumn('invoice_no', function ($row) use ($is_crm) {
                     // Edit cheque_indicator
                     $cheque_indicator = '';
-                    $cheque = bankcheques_payment::where('transaction_id', $row->id);
+                    $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status','unset');
                     if ($cheque->count() != 0) {
                         $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true">' . __('cheque.cheque') . '</i>';
                     }

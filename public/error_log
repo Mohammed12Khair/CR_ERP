@@ -1101,3 +1101,112 @@
 [05-Apr-2022 16:56:47 Africa/Cairo] Not In array
 [05-Apr-2022 16:56:47 Africa/Cairo] 13
 [05-Apr-2022 16:56:47 Africa/Cairo] Not In array
+[11-Apr-2022 22:06:10 Africa/Cairo] _______________
+[11-Apr-2022 22:06:10 Africa/Cairo] 
+[11-Apr-2022 22:06:10 Africa/Cairo] _______________
+[11-Apr-2022 22:58:05 Africa/Cairo] _______________
+[11-Apr-2022 22:58:05 Africa/Cairo] 
+[11-Apr-2022 22:58:05 Africa/Cairo] _______________
+[14-Apr-2022 14:29:26 Africa/Cairo] _______________
+[14-Apr-2022 14:29:26 Africa/Cairo] 
+[14-Apr-2022 14:29:26 Africa/Cairo] _______________
+[14-Apr-2022 18:36:42 Africa/Cairo] 0
+[14-Apr-2022 18:36:56 Africa/Cairo] 0
+[14-Apr-2022 18:37:43 Africa/Cairo] 0
+[14-Apr-2022 18:37:55 Africa/Cairo] 0
+[14-Apr-2022 22:13:20 Africa/Cairo] Save To transaction_sell_linesClone id=73
+[14-Apr-2022 22:14:02 Africa/Cairo] _______________
+[14-Apr-2022 22:14:02 Africa/Cairo] 
+[14-Apr-2022 22:14:02 Africa/Cairo] _______________
+[14-Apr-2022 22:14:21 Africa/Cairo] Save To transaction_sell_linesClone id=74
+[14-Apr-2022 22:14:35 Africa/Cairo] Save To transaction_sell_linesClone id=74
+[16-Apr-2022 00:13:58 Africa/Cairo] 0
+[21-Apr-2022 22:34:16 Africa/Cairo] this is call
+[26-Apr-2022 20:48:03 Africa/Cairo] POST /erpv2/public/payments/pay-contact-due2 HTTP/1.1
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Encoding:           gzip, deflate, br
+Accept-Language:           en-US,en;q=0.5
+Alt-Used:                  www.magnetickids.net
+Content-Length:            2882
+Content-Type:              multipart/form-data; boundary=---------------------------30099878552461538960692750454
+Cookie:                    cpsession=zekyxzmt%3agQy5MYAIjhYJeLsA%2c00982d5c798016374f3444b1c012396b; timezone=Africa/Johannesburg; XSRF-TOKEN=eyJpdiI6ImdwQ3RDYmQyZ2ZIY3RMMGNuNkIzS2c9PSIsInZhbHVlIjoidTNyS2hRRlFmeXRVdzFFK2tiVEpaaTdJZTV0QUN0dWIxNWl6aUp1bGEzclNMdzFqQ1hON3F1b1FySGdMSzY5VyIsIm1hYyI6IjkzYjU0ODYyZGZkN2FmZmMzYTY3ZjAxOWI0ZDU3OTQ1NzQ4ZmZiYTI2MjU2OGQ4NjA3NWU0MDIzOTVmNmEyNTAifQ%3D%3D; kaizengroup_erp_session=eyJpdiI6IllrQmxuMFpXbFdzVVJYb3dVdVo5Ymc9PSIsInZhbHVlIjoid0tydk9ZbWxPQlVLXC9lQXpzWlVHQjVMRGUxRHd5TWJcL0pUZmZFWElGalBFQk5lSXpPa0dNaXRPRzJvUXFvYzVlIiwibWFjIjoiYTZhM2E0MDcwZjk0N2Q4MDE4NWQzMTVjMzQxMDdlYWIwOGFlMzJhMWIyYzEwMjIxMzA3MGFkN2Q0NmI3ZjJmZiJ9
+Host:                      www.magnetickids.net
+Origin:                    https://www.magnetickids.net
+Priority:                  u=1
+Referer:                   https://www.magnetickids.net/erpv2/public/BusinessPartner/Transactions/1
+Sec-Fetch-Dest:            document
+Sec-Fetch-Mode:            navigate
+Sec-Fetch-Site:            same-origin
+Sec-Fetch-User:            ?1
+Upgrade-Insecure-Requests: 1
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0
+X-Https:                   1
+Cookie: cpsession=; timezone=; XSRF-TOKEN=P7d82ShRNlGpqvQJwKSCo4qVT6GJy6hzv8jILerN; kaizengroup_erp_session=3I7XwrJ3PbABHOjkUKrTnHEq4OYU7uqQqPIzmaKN
+
+
+[26-Apr-2022 23:20:11 Africa/Cairo] POST /erpv2/public/payments/pay-contact-due2 HTTP/1.1
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding:           gzip, deflate
+Accept-Language:           en-GB,en-US;q=0.9,en;q=0.8
+Connection:                keep-alive
+Content-Length:            2459
+Content-Type:              multipart/form-data; boundary=----WebKitFormBoundaryaQIlJ49wZvy10DLX
+Cookie:                    XSRF-TOKEN=eyJpdiI6InRTNlJEc1wvcU1STVBOeXMyaUlMWkJBPT0iLCJ2YWx1ZSI6ImNpQ1hCYlwvTVpUU2RlbUVYOUZxMmtGOTJFUWI0NncyalhydEtOaFlYMnBWQVwvNWlROUtPRHlmVU9RTnhqVlROZCIsIm1hYyI6ImE1ZDgzZGY3OGM1ZjA4YWNhM2I4OTQ1MTY0NDhkOWE5MzU2YjExNmI3YTE5NjBhYmUyZWQ2NTdjNjJiZTYxYzgifQ%3D%3D; kaizengroup_erp_session=eyJpdiI6Imc4VXBMNUFtSjJ6Q0I0cm5aVkMzd2c9PSIsInZhbHVlIjoiM2pjNitVOW9SeXhNRUhURTVrSWVpQnJlSVRHU0RtOStXS0haT3BLK0FRR3JHNEIxZFpFbDhGMHk2cVRTTHRlOSIsIm1hYyI6ImNiMjlkZGQyZWUxMTBhMmI1N2ZiN2Y1Y2UwYWIzZTNmYTg2NjU0NDk4NjU3MzJlZTc1MGNmNWEyNjdmNmM3NWIifQ%3D%3D
+Host:                      magnetickids.net
+Origin:                    http://magnetickids.net
+Referer:                   http://magnetickids.net/erpv2/public/BusinessPartner/Transactions/2
+Upgrade-Insecure-Requests: 1
+User-Agent:                Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/99.0.4844.59 Mobile/15E148 Safari/604.1
+Cookie: XSRF-TOKEN=D1BKXyzG2NgennXnSnOhAIoNzxrHmVHARbqMfVfq; kaizengroup_erp_session=YHjhniIFALpUQjYp1X21XdTpVMBqOlXTvv0wCr77
+
+
+[26-Apr-2022 23:20:52 Africa/Cairo] POST /erpv2/public/payments/pay-contact-due2 HTTP/1.1
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding:           gzip, deflate
+Accept-Language:           en-GB,en-US;q=0.9,en;q=0.8
+Connection:                keep-alive
+Content-Length:            2451
+Content-Type:              multipart/form-data; boundary=----WebKitFormBoundaryGGJiaBnPJvKlTyha
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlRNckJGcUxJYmRXenpIdmVaZUtuZGc9PSIsInZhbHVlIjoiUzl2cmo4OUliTTJRMGI4OHU0K1wvQUszK3Z2NnptS0hjazRqc1BmaDVuN1FQVVZJTGxaRUlRM3oxMVBsQmVpaE4iLCJtYWMiOiIxMjE0MTUxZWQwMDYyMTk5YWFlNDFhM2QzYzdkM2QzNzZhYjQxNGNhMTVhYzFjYjQxYzljMDJiMjNlZGU2NjllIn0%3D; kaizengroup_erp_session=eyJpdiI6IjZ3TE9SU0xqd29xN2daemJpM3FaMFE9PSIsInZhbHVlIjoiYkZuTEdsd1pTOExTOWJSZU42cmFiYUw4VkM3dDN2MFlNY2pGNkN4TnQ0Z1JXSTNUVHpINWxPd0RoR0pUUEdFaiIsIm1hYyI6IjlkZDJkNzdiZGU0OWVmMjhjOTY1Njk5YmE3N2VhMmMyMTBlNTM2ZWU1ZmVjYWFiYTA5NmI5MzAzYjZiM2E5MWYifQ%3D%3D
+Host:                      magnetickids.net
+Origin:                    http://magnetickids.net
+Referer:                   http://magnetickids.net/erpv2/public/BusinessPartner/Transactions/2
+Upgrade-Insecure-Requests: 1
+User-Agent:                Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/99.0.4844.59 Mobile/15E148 Safari/604.1
+Cookie: XSRF-TOKEN=D1BKXyzG2NgennXnSnOhAIoNzxrHmVHARbqMfVfq; kaizengroup_erp_session=YHjhniIFALpUQjYp1X21XdTpVMBqOlXTvv0wCr77
+
+
+[26-Apr-2022 23:21:27 Africa/Cairo] POST /erpv2/public/payments/pay-contact-due2 HTTP/1.1
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding:           gzip, deflate
+Accept-Language:           en-GB,en-US;q=0.9,en;q=0.8
+Connection:                keep-alive
+Content-Length:            2451
+Content-Type:              multipart/form-data; boundary=----WebKitFormBoundary6Q2otujZyfqf8Ljh
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkswNmNRVU92RWRzTFpwVWZRS2lvQ2c9PSIsInZhbHVlIjoiYWplOXB2aXdwQWVMSytVemZJRVlCQjIwZTBrdDJxV0tFRyszOWlyUmw2eFhET0lOQlZpUHFMbmVcLzlDXC90Uzl5IiwibWFjIjoiMDNiN2ZiN2I1YjUwZjk1ZGU2ZjVhYzRhNTc2NGQxMWE3NTRiMGJhMWVlMDRiMzMyYWEzZDJkYzI3ZGViYmI0YyJ9; kaizengroup_erp_session=eyJpdiI6InJrUFJHY1JWVzEwU0lhOW95cWUxWEE9PSIsInZhbHVlIjoiMFZxSk92K1lJT3Y3aWo0bjAzdmZvNFdEUVcwV2tlVFl6QkJrc0FvWFczS2d3SmZPRlNyUEUzQUtJakhwandwMiIsIm1hYyI6ImE3NTUwZjg3ZDZkM2EzOWE3OTc5YTA3ZDliYzdkMDY2ZmM5ZDg4MGZjNzU0MzNjODcwOWE3MzhmZWEyY2VlZDgifQ%3D%3D
+Host:                      magnetickids.net
+Origin:                    http://magnetickids.net
+Referer:                   http://magnetickids.net/erpv2/public/BusinessPartner/Transactions/2
+Upgrade-Insecure-Requests: 1
+User-Agent:                Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/99.0.4844.59 Mobile/15E148 Safari/604.1
+Cookie: XSRF-TOKEN=D1BKXyzG2NgennXnSnOhAIoNzxrHmVHARbqMfVfq; kaizengroup_erp_session=YHjhniIFALpUQjYp1X21XdTpVMBqOlXTvv0wCr77
+
+
+[26-Apr-2022 23:25:09 Africa/Cairo] 0
+[30-Apr-2022 16:06:51 Africa/Cairo] 2
+[14-Jun-2022 20:25:42 Africa/Cairo] 0
+[14-Jun-2022 20:26:00 Africa/Cairo] 0
+[14-Jun-2022 20:27:50 Africa/Cairo] this is call
+[14-Jun-2022 20:30:07 Africa/Cairo] 0
+[14-Jun-2022 20:30:11 Africa/Cairo] 0
+[14-Jun-2022 20:30:56 Africa/Cairo] 0
+[14-Jun-2022 20:30:58 Africa/Cairo] 0
+[14-Jun-2022 20:31:38 Africa/Cairo] 0
+[14-Jun-2022 20:32:33 Africa/Cairo] Save To transaction_sell_linesClone id=73
+[14-Jun-2022 20:32:44 Africa/Cairo] Save To transaction_sell_linesClone id=73
+[14-Jun-2022 20:40:24 Africa/Cairo] Save To transaction_sell_linesClone id=73
+[14-Jun-2022 20:41:14 Africa/Cairo] _______________
+[14-Jun-2022 20:41:14 Africa/Cairo] 
+[14-Jun-2022 20:41:14 Africa/Cairo] _______________
+[14-Jun-2022 20:41:33 Africa/Cairo] Save To transaction_sell_linesClone id=75
+[14-Jun-2022 20:41:37 Africa/Cairo] Save To transaction_sell_linesClone id=75
