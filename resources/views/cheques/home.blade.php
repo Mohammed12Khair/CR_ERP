@@ -38,37 +38,47 @@
           <table class="table table-bordered table-striped" id="" style="width: 100%;">
             <thead>
               <tr>
-                <th>@lang( 'contact.customer' )</th>
-                <th>@lang( 'sale.invoice_no' )</th>
-                <th>@lang( 'home.due_amount' )</th>
+                <th>رقم العملية</th>
+                <th>رقم الشيك</th>
+                <th>نوع العملية</th>
+                <th>  قيمة الشيك</th>
+                <th>تاريخ الاستحقاق</th>
                 <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
               </tr>
+              <tbody>
+                @foreach($cheque as $cheque_line)
+                <?php
+                $due=strtotime($cheque_line->cheque_date);
+                $system=strtotime(date("Y-m-d"));
+                if ( $system > $due){
+                  $status="Late";
+
+                  echo "<tr style='color:red'>";
+                }else{
+                  $status="Close";
+                  echo "<tr>";
+                }
+
+                ?>
+             
+                <td>{{$cheque_line->id}}</td>
+                <td>{{$cheque_line->cheque_number}}</td>
+                <td>{{$cheque_line->transaction_type}}</td>
+                <td>{{$cheque_line->amount}}</td>
+                <td>{{$cheque_line->cheque_date}}</td>
+                <td><button class="btn btn-sm"></button></td>
+              </tr>
+
+              @endforeach
+
+              </tbody>
             </thead>
           </table>
           @endcomponent
         </div>
         @endif
         @can('purchase.view')
-        <div class="col-sm-6">
-          @component('components.widget', ['class' => 'box-warning'])
-          @slot('icon')
-          <i class="fa fa-exclamation-triangle text-yellow" aria-hidden="true"></i>
-          @endslot
-          @slot('title')
-          {{-- {{ __('lang_v1.purchase_payment_dues') }} @show_tooltip(__('tooltip.payment_dues')) --}}
-          @endslot
-          <table class="table table-bordered table-striped" id="purchase_payment_dues_table" style="width: 100%;">
-            <thead>
-              <tr>
-                <th>@lang( 'purchase.supplier' )</th>
-                <th>@lang( 'purchase.ref_no' )</th>
-                <th>@lang( 'home.due_amount' )</th>
-                <th><img src="{{ asset('img/gear.gif') }}" width="25"></th>
-              </tr>
-            </thead>
-          </table>
-          @endcomponent
-        </div>
+    
         @endcan
       </div>
 

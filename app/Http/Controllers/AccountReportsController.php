@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Account;
 
+use App\BusinessPartner;
+use App\BusinessPartnerPayments;
 use App\AccountTransaction;
 use App\TransactionPayment;
 use App\Utils\TransactionUtil;
@@ -81,30 +83,30 @@ class AccountReportsController extends Controller
             );
 
             // Khair 25-apr
-            try{
-            $supplier_list = Contact::where('business_id', $business_id)->where('contact_status', 'active')
-            ->where('type','supplier')->get();
-            $supplier_ids = [];
-            foreach ($supplier_list as $supplier) {
-                array_push($supplier_ids, $supplier->id);
+            try {
+                $supplier_list = Contact::where('business_id', $business_id)->where('contact_status', 'active')
+                    ->where('type', 'supplier')->get();
+                $supplier_ids = [];
+                foreach ($supplier_list as $supplier) {
+                    array_push($supplier_ids, $supplier->id);
+                }
+
+
+                $all_transactions = Transaction::where('business_id', $business_id)->where('type', 'opening_balance')
+                    ->whereIn('contact_id', $supplier_ids)->get();
+
+                $sumOpen = 0;
+                foreach ($all_transactions as $all_transaction) {
+                    $sumOpen += $all_transaction->final_total;
+                }
+            } catch (Exception $e) {
+                error_log($e->getMessage());
             }
-
-
-            $all_transactions = Transaction::where('business_id', $business_id)->where('type', 'opening_balance')
-                ->whereIn('contact_id', $supplier_ids)->get();
-
-            $sumOpen = 0;
-            foreach ($all_transactions as $all_transaction) {
-                $sumOpen += $all_transaction->final_total;
-            }
-        }catch (Exception $e){
-            error_log($e->getMessage());
-        }
 
 
             $output = [
                 // 'supplier_due' => $purchase_details['purchase_due'],
-                'supplier_due' => $purchase_details['purchase_due'] + $sumOpen ,
+                'supplier_due' => $purchase_details['purchase_due'] + $sumOpen,
                 'customer_due' => $sell_details['invoice_due'] - $sell_return_details['total_sell_return_inc_tax'],
                 'account_balances' => $account_details,
                 'closing_stock' => $closing_stock,
@@ -124,6 +126,98 @@ class AccountReportsController extends Controller
      * @return Response
      */
     public function trialBalance()
+    {
+        if (!auth()->user()->can('account.access')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $business_id = session()->get('user.business_id');
+
+        if (request()->ajax()) {
+            $end_date = !empty(request()->input('end_date')) ? $this->transactionUtil->uf_date(request()->input('end_date')) : \Carbon::now()->format('Y-m-d');
+            $location_id = !empty(request()->input('location_id')) ? request()->input('location_id') : null;
+
+            $purchase_details = $this->transactionUtil->getPurchaseTotals(
+                $business_id,
+                null,
+                $end_date,
+                $location_id
+            );
+            $sell_details = $this->transactionUtil->getSellTotals(
+                $business_id,
+                null,
+                $end_date,
+                $location_id
+            );
+
+            $account_details = $this->getAccountBalance($business_id, $end_date, 'others', $location_id);
+
+            // $capital_account_details = $this->getAccountBalance($business_id, $end_date, 'capital');
+
+            $output = [
+                'supplier_due' => $purchase_details['purchase_due'],
+                'customer_due' => $sell_details['invoice_due'],
+                'account_balances' => $account_details,
+                'capital_account_details' => null
+            ];
+
+            return $output;
+        }
+
+        $business_locations = BusinessLocation::forDropdown($business_id, true);
+
+
+        $credit = 0;
+        $debit = 0;
+
+        // Add solaf and ohad
+        $business_partners = BusinessPartner::where("is_active", 0)->where('business_id', $business_id)->get(); //where('business_id', $business_id);
+        foreach ($business_partners as $row) {
+            // Get Payments 
+            $business_pyments = BusinessPartnerPayments::where('owner',  $row->id)->where('is_active', 0)->get();
+
+            $PymentId = [];
+            foreach ($business_pyments as $business_pyment) {
+                array_push($PymentId, $business_pyment->payment_id);
+            }
+
+            // Get Payment frmo account transactions
+            $account_transactions = AccountTransaction::whereIn('id', $PymentId)->get();
+
+            // loop and calcualte balance
+
+            foreach ($account_transactions as $account_transaction) {
+                if ($account_transaction->type == "credit") {
+                    $credit += $account_transaction->amount;
+                }
+                if ($account_transaction->type == "debit") {
+                    $debit += $account_transaction->amount;
+                }
+            }
+
+            // MAtch with open balance
+            if ($row->type == "credit") {
+                $credit += $row->open_balance;
+            }
+            // MAtch with open balance
+            if ($row->type == "debit") {
+                $debit += $row->open_balance;
+            }
+
+            $final_amount = $credit - $debit;
+        }
+
+    
+    
+
+        return view('account_reports.trial_balance')->with(compact('business_locations','credit','debit'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Response
+     */
+    public function trialBalance_old()
     {
         if (!auth()->user()->can('account.access')) {
             abort(403, 'Unauthorized action.');

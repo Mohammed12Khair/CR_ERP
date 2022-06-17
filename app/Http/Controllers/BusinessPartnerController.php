@@ -237,7 +237,7 @@ class BusinessPartnerController extends Controller
         //$accounts = $this->moduleUtil->accountsDropdown($business_id, true, false, true);
         $business_partners = BusinessPartner::where('id', $id)->where('is_active', 0)->where('business_id', $business_id)->first();
         return view('business_partner.transactions')->with('business_partners', $business_partners)->with('accounts', $accounts)
-            ->with('final_amount', $final_amount);
+            ->with('final_amount', $final_amount)->with('business_partner',$business_partner);
     }
 
 

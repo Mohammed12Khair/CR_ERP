@@ -97,14 +97,43 @@
                                     <th>@lang('business_partner.created_by')</th>
                                     <th>@lang('business_partner.created_at')</th>
                                 </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                              
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>رصيد افتتاحي</td>
+                                    <?php
+                                    if ($business_partner->type == "credit") {
+                                        echo "<td>" . $business_partner->open_balance . "</td>";
+                                    }else{
+                                        echo "<td></td>";
+                                    }
+                                    if ($business_partner->type == "debit") {
+                                        echo "<td>" . $business_partner->open_balance . "</td>";
+                                    }else{
+                                        echo "<td></td>";
+                                    }
+                                    ?>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>{{$business_partner->created_at}}</td>
+                                </tr>
                             </thead>
+                         
+                            <!-- business_partner -->
                         </table>
+                        <div class="box-footer">
+            <button type="button" class="btn btn-primary no-print pull-right"onclick="window.print()">
+          <i class="fa fa-print"></i> @lang('messages.print')</button>
+        </div>
                     </div>
                 </div>
+    
             </div>
         @endcomponent
     </section>
-
     <div class="modal fade pay_contact_due_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
     </div>
 

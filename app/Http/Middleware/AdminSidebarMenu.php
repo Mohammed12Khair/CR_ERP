@@ -483,11 +483,11 @@ class AdminSidebarMenu
                 $menu->dropdown(
                     __('lang_v1.payment_accounts_cheque'),
                     function ($sub) {
-                        // $sub->url(
-                        //     action('bankcheques@cheque_home'),
-                        //     __('lang_v1.cheque_home'),
-                        //     ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
-                        // );
+                        $sub->url(
+                            action('bankcheques@cheque_home'),
+                            __('lang_v1.cheque_home'),
+                            ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
+                        );
                         // $sub->url(
                         //     action('bankcheques@index'),
                         //     __('lang_v1.cheque_list'),
