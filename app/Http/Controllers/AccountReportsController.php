@@ -118,7 +118,48 @@ class AccountReportsController extends Controller
 
         $business_locations = BusinessLocation::forDropdown($business_id, true);
 
-        return view('account_reports.balance_sheet')->with(compact('business_locations'));
+        
+        $credit = 0;
+        $debit = 0;
+
+        // Add solaf and ohad
+        $business_partners = BusinessPartner::where("is_active", 0)->where('business_id', $business_id)->get(); //where('business_id', $business_id);
+        foreach ($business_partners as $row) {
+            // Get Payments 
+            $business_pyments = BusinessPartnerPayments::where('owner',  $row->id)->where('is_active', 0)->get();
+
+            $PymentId = [];
+            foreach ($business_pyments as $business_pyment) {
+                array_push($PymentId, $business_pyment->payment_id);
+            }
+
+            // Get Payment frmo account transactions
+            $account_transactions = AccountTransaction::whereIn('id', $PymentId)->get();
+
+            // loop and calcualte balance
+
+            foreach ($account_transactions as $account_transaction) {
+                if ($account_transaction->type == "credit") {
+                    $credit += $account_transaction->amount;
+                }
+                if ($account_transaction->type == "debit") {
+                    $debit += $account_transaction->amount;
+                }
+            }
+
+            // MAtch with open balance
+            if ($row->type == "credit") {
+                $credit += $row->open_balance;
+            }
+            // MAtch with open balance
+            if ($row->type == "debit") {
+                $debit += $row->open_balance;
+            }
+
+            $final_amount = $credit - $debit;
+        }
+
+        return view('account_reports.balance_sheet')->with(compact('business_locations','credit','debit'));
     }
 
     /**

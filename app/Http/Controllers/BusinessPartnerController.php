@@ -442,17 +442,33 @@ class BusinessPartnerController extends Controller
     public function Business_partner_details($id)
     {
         $business_id = request()->session()->get('user.business_id');
+        // $person=BusinessPartner::where('id', $id)->get();
+        // return $person->name;
+        
         $credit = BusinessPartnerPayments::where('owner', $id)->where('business_id', $business_id)->get();
         if (request()->ajax()) {
             
+            $person=BusinessPartner::where('id', $id)->first();
+            // $person="DAta";
 
             $credit_ids = BusinessPartnerPayments::where('owner', $id)->where('is_active', 0)
                 ->where('business_id', $business_id)->get();
+            $parameter=[];
             $ids = [];
             foreach ($credit_ids as $credit_id) {
                 array_push($ids, $credit_id->payment_id);
             }
             $Account_Trasaction = AccountTransaction::whereIn('id', $ids)->get();
+
+            if($person->type == "credit" ){
+                $offset=$person->open_balance;
+            }elseif($person->type == "debit"){
+                $offset=$person->open_balance*-1;
+            }else{
+                $offset=0;
+            }
+
+            $parameter=['ids'=>$ids,'offset'=>$offset];
 
             // error_log($Account_Trasaction);
             return Datatables::of($Account_Trasaction)
@@ -502,20 +518,22 @@ class BusinessPartnerController extends Controller
                     }
                     return '';
                 })
-                ->addColumn('balance', function ($row) use ($ids) {
-                    $sum=AccountTransaction::whereIn('id', $ids)->
+                ->addColumn('balance', function ($row) use ($parameter) {
+                    $sum=AccountTransaction::whereIn('id', $parameter['ids'])->
                     where('id','<=',$row->id)->get();
-                    error_log("Data");
+                    // error_log("Data");
                     $balance=0;
                     foreach($sum as $line){
-                        error_log($line->type);
-                        error_log($line->amount);
+                        // error_log($line->type);
+                        // error_log($line->amount);
                         if($line->type == "debit"){
                             $balance-=$line->amount;
                         }else{
                             $balance+=$line->amount;
                         }
-                    }                  
+                    }   
+
+                    $balance=$balance + $parameter['offset'];
                     return $balance;
                 })
                 ->addColumn('type', function ($row) {

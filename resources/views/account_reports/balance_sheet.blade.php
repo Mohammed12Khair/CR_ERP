@@ -12,15 +12,15 @@
 <!-- Main content -->
 <section class="content">
     <div class="row no-print">
-        <div class="col-sm-12">
+        <div class="col-sm-6">
             @component('components.filters', ['title' => __('report.filters')])
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="form-group">
                     {!! Form::label('bal_sheet_location_id',  __('purchase.business_location') . ':') !!}
                     {!! Form::select('bal_sheet_location_id', $business_locations, null, ['class' => 'form-control select2', 'style' => 'width:100%']); !!}
                 </div>
             </div>
-            <div class="col-sm-3 col-xs-6">
+            <div class="col-sm-6 col-xs-6">
                     <label for="end_date">@lang('messages.filter_by_date'):</label>
                     <div class="input-group">
                         <span class="input-group-addon">
@@ -31,6 +31,31 @@
             </div>
             @endcomponent
         </div>
+
+        <div class="col-sm-6">
+          @component('components.filters')
+          <div class="box-body">
+            <table class="table table-border-center-col no-border table-pl-12" >
+                <thead>
+                    <tr class="bg-gray">
+                        <th>عهد</th>
+                        <th>سلف</th>
+                        <th>مجموع</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{$credit}}</td>
+                        <td>{{$debit}}</td>
+                        <td>{{$credit - $debit}}</td>
+                    </tr>
+                </tbody>
+                <tbody id="account_balances_details"></tbody>
+            </table>
+        </div>
+            @endcomponent
+        </div>
+        
     </div>
     <br>
     <div class="box box-solid">
