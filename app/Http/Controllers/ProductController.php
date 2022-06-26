@@ -1305,6 +1305,7 @@ class ProductController extends Controller
 
         $common_settings = session()->get('business.common_settings');
         $warranties = Warranty::forDropdown($business_id);
+        // return 'asdasd';
 
         return view('product.partials.quick_add_product')
                 ->with(compact('categories', 'brands', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'product_name', 'locations', 'product_for', 'enable_expiry', 'enable_lot', 'module_form_parts', 'business_locations', 'common_settings', 'warranties'));

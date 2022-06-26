@@ -49,7 +49,10 @@ class CustomerGroupController extends Controller
 
                         @can("customer.delete")
                             <button data-href="{{action(\'CustomerGroupController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_customer_group_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
-                        @endcan'
+                        @endcan
+                   
+                        <a  href="{{action(\'ContactController@getCustomerByGroup\', [$id])}}" class="btn btn-xs btn-warning "><i class="fas fa-eye"></i> @lang("messages.view")</a>
+                    '
                     )
                     ->editColumn('selling_price_group', '@if($price_calculation_type=="selling_price_group") {{$selling_price_group}} @else -- @endif ')
                     ->editColumn('amount', '@if($price_calculation_type=="percentage") {{$amount}} @else -- @endif ')

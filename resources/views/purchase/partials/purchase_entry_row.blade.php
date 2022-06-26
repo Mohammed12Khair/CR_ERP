@@ -1,3 +1,4 @@
+
 @foreach( $variations as $variation)
     <tr @if(!empty($purchase_order_line)) data-purchase_order_id="{{$purchase_order_line->transaction_id}}" @endif>
         <td><span class="sr_number"></span></td>
@@ -118,6 +119,10 @@
             <span class="row_subtotal_after_tax display_currency">0</span>
             <input type="hidden" class="row_subtotal_after_tax_hidden" value=0>
         </td>
+        <!-- kahir 26-Jun -->
+        <td>
+            <input type="number" class="form-control  refund" value=0 min=0>
+        </td>
         <td class="@if(!session('business.enable_editing_product_from_purchase') || !empty($is_purchase_order)) hide @endif">
             {!! Form::text('purchases[' . $row_count . '][profit_percent]', number_format($variation->profit_percent, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), ['class' => 'form-control input-sm input_number profit_percent', 'required']); !!}
         </td>
@@ -184,3 +189,4 @@
 @endforeach
 
 <input type="hidden" id="row_count" value="{{ $row_count }}">
+

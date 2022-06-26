@@ -83,6 +83,15 @@
                                     </span>
                                 </td>
                                 </tr>
+                                <tr>
+                                    <th>عهد:</th>
+                                <td>
+                                    <input type="hidden" id="hidden_credit_due" class="liability">
+                                    <span class="remote-data" id="credit_due">
+                                        <i class="fas fa-sync fa-spin fa-fw"></i>
+                                    </span>
+                                </td>
+                                </tr>
                             </table>
                         </td>
                         <td>
@@ -93,6 +102,15 @@
                                         <td>
                                             <input type="hidden" id="hidden_customer_due" class="asset">
                                             <span class="remote-data" id="customer_due">
+                                                <i class="fas fa-sync fa-spin fa-fw"></i>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>سلف:</th>
+                                        <td>
+                                            <input type="hidden" id="hidden_debit_due" class="asset">
+                                            <span class="remote-data" id="debit_due">
                                                 <i class="fas fa-sync fa-spin fa-fw"></i>
                                             </span>
                                         </td>
@@ -203,6 +221,10 @@
             success: function(result){
                 $('span#supplier_due').text(__currency_trans_from_en(result.supplier_due, true));
                 __write_number($('input#hidden_supplier_due'), result.supplier_due);
+                $('span#credit_due').text(__currency_trans_from_en(result.credit_due, true));
+                __write_number($('input#hidden_credit_due'), result.credit_due);
+                $('span#debit_due').text(__currency_trans_from_en(result.debit_due, true));
+                __write_number($('input#hidden_debit_due'), result.debit_due);
 
                 $('span#customer_due').text(__currency_trans_from_en(result.customer_due, true));
                 __write_number($('input#hidden_customer_due'), result.customer_due);

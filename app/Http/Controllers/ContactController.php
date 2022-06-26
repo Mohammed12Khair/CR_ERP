@@ -1557,4 +1557,18 @@ class ContactController extends Controller
             return $output;
         }
     }
+
+
+
+
+
+
+    public function getCustomerByGroup($customer_group_id){
+
+        $business_id = request()->session()->get('user.business_id');
+        $contact=Contact::where('business_id',$business_id)
+        ->where('customer_group_id',$customer_group_id)->get();
+
+        return view('contact.index2')->with('contact',$contact)->with('type','supplier');
+    }
 }

@@ -670,7 +670,7 @@ class PurchaseController extends Controller
                 return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
             }
 
-            $transaction_data = $request->only(['ref_no', 'status', 'contact_id', 'transaction_date', 'total_before_tax', 'location_id', 'discount_type', 'discount_amount', 'tax_id', 'tax_amount', 'shipping_details', 'shipping_charges', 'final_total', 'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type', 'purchase_order_ids']);
+            $transaction_data = $request->only(['ref_no', 'status', 'contact_id', 'transaction_date', 'total_before_tax', 'location_id', 'discount_type', 'discount_amount', 'tax_id', 'tax_amount', 'shipping_details', 'shipping_charges', 'final_total', 'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type', 'purchase_order_ids','refund_total']);
 
             $exchange_rate = $transaction_data['exchange_rate'];
 
@@ -785,6 +785,9 @@ class PurchaseController extends Controller
             $this->transactionUtil->activityLog($transaction, 'added');
 
             DB::commit();
+
+            return $transaction->id . "  "  .  $transaction_data['refund_total'];
+
 
             $output = [
                 'success' => 1,
@@ -1446,6 +1449,7 @@ class PurchaseController extends Controller
     public function getProducts()
     {
         if (request()->ajax()) {
+            // return 'asdasd';
             $term = request()->term;
 
             $check_enable_stock = true;
