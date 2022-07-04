@@ -70,6 +70,11 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/contacts/customers', 'ContactController@getCustomers');
     Route::resource('contacts', 'ContactController');
 
+
+    Route::get('/refund/{id}', 'RefundController@index');
+    Route::get('/updateBalanceAdd/{id}', 'RefundController@updateBalanceAdd');
+    Route::get('/updateBalanceRemove/{id}', 'RefundController@updateBalanceRemove');
+
     Route::get('contacts_details/{customer_group_id}', 'ContactController@getCustomerByGroup');
 
     Route::get('taxonomies-ajax-index-page', 'TaxonomyController@getTaxonomyIndexPage');

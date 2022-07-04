@@ -174,7 +174,7 @@
                 @endforeach
             @endif
             {{-- <div class="clearfix"></div> --}}
-            <div class="col-sm-8" style="display: none;">
+            <div class="col-sm-8" >
               <div class="form-group">
                 {!! Form::label('product_description', __('lang_v1.product_description') . ':') !!}
                   {!! Form::textarea('product_description', $product->product_description, ['class' => 'form-control']); !!}

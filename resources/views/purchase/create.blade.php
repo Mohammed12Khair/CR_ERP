@@ -817,16 +817,53 @@ $custom_labels = json_decode(session('business.custom_labels'), true);
 
 	var refund_enable = true;
 
-	// Refund Change
+	// Refund & purchase_quantityChange
+	$(document).on('change', '.purchase_quantity', function(e) {
+		// alert($(this).val());
+		var total = 0;
+		var quant = [];
+		var price = [];
+		$('.refund').each(function(i, obj) {
+			price.push(parseFloat($(this).val()));
+			// total = total + parseFloat($(this).val());
+			//test
+		});
+		$('.purchase_quantity').each(function(i, obj) {
+			quant.push(parseFloat($(this).val()));
+			// total = total + parseFloat($(this).val());
+			//test
+		});
+		for (let i = 0; i < price.length; i++) {
+			total = parseFloat(price[i] * quant[i]);
+		}
+		$('.refund_total').val(total);
+	});
+
+	// Refund & purchase_quantityChange
 	$(document).on('change', '.refund', function(e) {
 		// alert($(this).val());
 		var total = 0;
+		var quant = [];
+		var price = [];
 		$('.refund').each(function(i, obj) {
-			total = total + parseFloat($(this).val());
+			price.push(parseFloat($(this).val()));
+			// total = total + parseFloat($(this).val());
 			//test
 		});
+		$('.purchase_quantity').each(function(i, obj) {
+			quant.push(parseFloat($(this).val()));
+			// total = total + parseFloat($(this).val());
+			//test
+		});
+		for (let i = 0; i < price.length; i++) {
+			total = parseFloat(price[i] * quant[i]);
+		}
 		$('.refund_total').val(total);
 	});
+
+
+
+
 	// Refund Change
 	$(document).on('click', '#refund_enable', function(e) {
 		if (refund_enable) {

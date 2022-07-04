@@ -14,6 +14,7 @@ use App\ExpenseCategory;
 use App\Product;
 use App\PurchaseLine;
 use App\purchaselinesClone;
+use App\RefundTable;
 use App\TaxRate;
 use App\Transaction;
 use App\transaction_sell_linesClone;
@@ -183,6 +184,7 @@ class PurchaseController extends Controller
                     if ($cheque->count() != 0) {
                         $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true"></i>';
                     }
+
                     return !empty($row->return_exists) ? $row->ref_no . ' <small class="label bg-red label-round no-print" title="' . __('lang_v1.some_qty_returned') . '"><i class="fas fa-undo"></i></small>' : $row->ref_no . '  <strong style="color:brown;">' .  $cheque_indicator . '</strong>';
                 })
                 ->editColumn(
@@ -353,11 +355,22 @@ class PurchaseController extends Controller
                 ->editColumn('ref_no', function ($row) {
                     // Edit
                     $cheque_indicator = '';
-                    $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status','unset');
+                    $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status', 'unset');
                     if ($cheque->count() != 0) {
                         $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true"></i>';
                     }
-                    return !empty($row->return_exists) ? $row->ref_no . ' <small class="label bg-red label-round no-print" title="' . __('lang_v1.some_qty_returned') . '"><i class="fas fa-undo"></i></small>' : $row->ref_no . '  <strong style="color:brown;">' .  $cheque_indicator . '</strong>';
+
+                    $refund_indicator = '';
+                    $refund = RefundTable::where('transaction_id', $row->id)->where('status', 0);
+                    if ($refund->count() != 0) {
+                        $refund_indicator = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
+                        <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
+                        <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z"/>
+                        <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z"/>
+                      </svg>';
+                    }
+                    return !empty($row->return_exists) ? $row->ref_no . ' <small class="label bg-red label-round no-print" title="' . __('lang_v1.some_qty_returned') . '"><i class="fas fa-undo"></i></small>' : $row->ref_no . '  <strong style="color:brown;">' .  $cheque_indicator . '<br>' . $refund_indicator . '</strong>';
                 })
                 ->editColumn(
                     'final_total',
@@ -525,7 +538,7 @@ class PurchaseController extends Controller
                 ->editColumn('ref_no', function ($row) {
                     // Edit cheque_indicator
                     $cheque_indicator = '';
-                    $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status','unset');
+                    $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status', 'unset');
                     if ($cheque->count() != 0) {
                         $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true">' . __('cheque.cheque') . '</i>';
                     }
@@ -670,10 +683,13 @@ class PurchaseController extends Controller
                 return $this->moduleUtil->expiredResponse(action('PurchaseController@index'));
             }
 
-            $transaction_data = $request->only(['ref_no', 'status', 'contact_id', 'transaction_date', 'total_before_tax', 'location_id', 'discount_type', 'discount_amount', 'tax_id', 'tax_amount', 'shipping_details', 'shipping_charges', 'final_total', 'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type', 'purchase_order_ids','refund_total']);
+            $transaction_data = $request->only(['ref_no', 'status', 'contact_id', 'transaction_date', 'total_before_tax', 'location_id', 'discount_type', 'discount_amount', 'tax_id', 'tax_amount', 'shipping_details', 'shipping_charges', 'final_total', 'additional_notes', 'exchange_rate', 'pay_term_number', 'pay_term_type', 'purchase_order_ids']);
+            $refund_total = $request->get('refund_total');
 
             $exchange_rate = $transaction_data['exchange_rate'];
 
+
+            // Khair
             //Reverse exchange rate and save it.
             //$transaction_data['exchange_rate'] = $transaction_data['exchange_rate'];
 
@@ -786,8 +802,15 @@ class PurchaseController extends Controller
 
             DB::commit();
 
-            return $transaction->id . "  "  .  $transaction_data['refund_total'];
-
+            // Add refund 
+            if ($refund_total > 0) {
+                $AddRefund = new RefundTable();
+                $AddRefund->transaction_id = $transaction->id;
+                $AddRefund->contact_id = $transaction_data['contact_id'];
+                $AddRefund->refund_total = $refund_total;
+                $AddRefund->business_id = $business_id;
+                $AddRefund->save();
+            }
 
             $output = [
                 'success' => 1,
@@ -800,6 +823,7 @@ class PurchaseController extends Controller
             $output = [
                 'success' => 0,
                 'msg' => __('messages.something_went_wrong')
+                // 'msg' => $e->getMessage()
             ];
         }
 
@@ -814,9 +838,19 @@ class PurchaseController extends Controller
      */
     public function showhistory($id)
     {
+
+        // return $id;
         $business_id = request()->session()->get('user.business_id');
         $purchase = transactionsClone::where('business_id', $business_id)
             ->where('id', $id)->first();
+
+        try {
+            $nameExp = ExpenseCategory::where('id', $purchase->expense_category_id)->first()->name;
+        } catch (Exception $e) {
+            $nameExp = "";
+        }
+
+        // return  $purchase->type;
         // error_log($purchase);
         $purchase_Table = '<div class="col-md-12"><h5>تفاصيل العملية</h5>
                     <div class="table-responsive">
@@ -834,7 +868,7 @@ class PurchaseController extends Controller
                                 <td>' . $purchase->transaction_date . '</td>
                                 <td>' . $purchase->ref_no . '</td>
                                 <td>' .  $purchase->payment_status  . '</td>
-                                <td>' .  $purchase->type  . '  ' . ExpenseCategory::where('id', $purchase->expense_category_id)->first()->name .  '</td>
+                                <td>' .  $purchase->type  . ' ' . $nameExp  .  '</td>
                                 <td>' .  $purchase->final_total   . '</td>
                                 <td>' .  $purchase->updated_at    . '</td>
                             </tr>
@@ -886,7 +920,6 @@ class PurchaseController extends Controller
               <th>quantity </th>
               <th>price </th>
               <th>created_at </th>
- 
           </tr>';
         if ($purchase->type == 'sell') {
             error_log("Sells _____________");
@@ -996,8 +1029,10 @@ class PurchaseController extends Controller
 
         $statuses = $this->productUtil->orderStatuses();
 
+        $refund = RefundTable::where('transaction_id', $id)->first();
+
         return view('purchase.show')
-            ->with(compact('taxes', 'purchase', 'payment_methods', 'purchase_taxes', 'activities', 'statuses', 'purchase_order_nos', 'purchase_order_dates'));
+            ->with(compact('taxes', 'purchase', 'payment_methods', 'purchase_taxes', 'activities', 'statuses', 'purchase_order_nos', 'purchase_order_dates', 'refund'));
     }
 
     /**
@@ -1280,6 +1315,16 @@ class PurchaseController extends Controller
             if (request()->ajax()) {
                 $business_id = request()->session()->get('user.business_id');
 
+                // Khair add restrinction for delete 
+                $refund = RefundTable::where('transaction_id', $id)->where('status', 1)->where('business_id', $business_id)->exists();
+                if ($refund) {
+                    $output = [
+                        'success' => false,
+                        'msg' => __('messages.refund_purchase')
+                    ];
+                    return $output;
+                }
+
                 //Check if return exist then not allowed
                 if ($this->transactionUtil->isReturnExist($id)) {
                     $output = [
@@ -1371,6 +1416,10 @@ class PurchaseController extends Controller
 
 
                 DB::commit();
+
+
+                $refund = RefundTable::where('transaction_id', $id)->where('business_id', $business_id)
+                    ->update(["status" => 3]);
 
                 $output = [
                     'success' => true,

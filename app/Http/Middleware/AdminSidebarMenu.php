@@ -563,6 +563,11 @@ class AdminSidebarMenu
                             );
                         }
 
+                                //Backup menu
+            
+                $sub->url(action('PurchaseController@PurchaseHistory'), __('purchase.PurchaseHistory'), ['icon' => 'fa fas fa-hdd', 'active' => request()->segment(1) == 'create'])->order(61);
+            
+
                         if (auth()->user()->can('tax_report.view')) {
                             $sub->url(
                                 action('ReportController@getTaxReport'),
@@ -704,10 +709,9 @@ class AdminSidebarMenu
             if (auth()->user()->can('backup')) {
                 $menu->url(action('BackUpController@index'), __('lang_v1.backup'), ['icon' => 'fa fas fa-hdd', 'active' => request()->segment(1) == 'backup'])->order(60);
             }
-            //Backup menu
-            if (auth()->user()->can('backup')) {
-                $menu->url(action('PurchaseController@PurchaseHistory'), __('purchase.PurchaseHistory'), ['icon' => 'fa fas fa-hdd', 'active' => request()->segment(1) == 'create'])->order(61);
-            }
+
+
+    
 
      
 

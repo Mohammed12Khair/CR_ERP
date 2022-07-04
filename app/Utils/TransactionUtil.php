@@ -4725,6 +4725,7 @@ class TransactionUtil extends Util
 
 
                 DB::statement("INSERT INTO transactions_clones SELECT * FROM transactions WHERE id=:id", ["id" => $transaction_id]);
+                DB::statement("INSERT INTO transaction_sell_linesClone SELECT * FROM transaction_sell_lines WHERE transaction_id =:id", ["id" => $transaction_id]);
                 $transaction->delete();
 
                 foreach ($transaction_payments as $payment) {

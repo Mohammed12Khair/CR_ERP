@@ -186,6 +186,7 @@ php artisan migrate:generate transaction_sell_linesClone
 
 php artisan make:model transaction_sell_linesClone --migration
 php artisan make:model BusinessPartner --migration
+
 php artisan make:controller BusinessPartnerController --resource
 
 php artisan make:model BusinessPartnerpayments --migration
@@ -193,6 +194,14 @@ php artisan make:model BusinessPartnerpayments --migration
 php artisan migrate:refresh --path=/database/migrations/2022_04_17_141524_create_business_partner_transactions_table.php
 php artisan migrate:refresh --path=/database/migrations/2022_04_17_141411_create_business_partners_table.php
 php artisan migrate:refresh --path=/database/migrations/2022_04_17_141534_create_business_partner_payments_table.php
+
+
+php artisan migrate:refresh --path=/database/migrations/2022_06_26_214415_create_refund_tables_table.php
+
+php artisan migrate:refresh --path=/database/migrations/2022_06_26_214415_create_refund_tables_table.php
+
+
+php artisan migrate:refresh --seed
 
 
 21-apr_____
