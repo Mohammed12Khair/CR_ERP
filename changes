@@ -223,3 +223,21 @@ ___الالتزامات
 تغير البوب للدفع
 ..
 تغير الجاش بورد في نفي اللنقطه
+
+
+
+
+____________Deplyu
+
+accounttransactions_clones 	  	Browse Browse 	Structure Structure 	Search Search 	Insert Insert 	Empty Empty 	Drop Drop 	34 	InnoDB 	utf8mb4_unicode_ci 	16.0 KiB 	-
+	purchaselines_clones 	  	Browse Browse 	Structure Structure 	Search Search 	Insert Insert 	Empty Empty 	Drop Drop 	15 	InnoDB 	utf8mb4_unicode_ci 	16.0 KiB 	-
+	transactions_clones 	  	Browse Browse 	Structure Structure 	Search Search 	Insert Insert 	Empty Empty 	Drop Drop 	40 	InnoDB 	utf8mb4_unicode_ci 	16.0 KiB 	-
+	
+    create table transaction_sell_linesClone as select * from transaction_sell_lines where 1=10
+
+    create table transaction_sell_lines_clones as select * from transaction_sell_lines where 1=10
+
+    create table transaction_sell_lines_purchase_linesClone as select * from transaction_sell_lines_purchase_lines where 1=10
+
+	transaction_sell_lines_clones 	  	Browse Browse 	Structure Structure 	Search Search 	Insert Insert 	Empty Empty 	Drop Drop 	6 	InnoDB 	utf8mb4_unicode_ci 	16.0 KiB 	-
+	transaction_sell_lines_purchase_linesClone
