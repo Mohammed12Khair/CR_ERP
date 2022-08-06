@@ -497,12 +497,15 @@ class SellPosController extends Controller
                         }
 
                         if ($product['enable_stock']) {
-                            $this->productUtil->decreaseProductQuantity(
+
+                             $this->productUtil->decreaseProductQuantity(
                                 $product['product_id'],
                                 $product['variation_id'],
                                 $input['location_id'],
                                 $decrease_qty
                             );
+
+                        
                         }
 
                         if ($product['product_type'] == 'combo') {
@@ -623,6 +626,7 @@ class SellPosController extends Controller
             $output = [
                 'success' => 0,
                 'msg' => $msg
+                // 'msg' => "File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage()
             ];
         }
 

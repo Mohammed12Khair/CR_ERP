@@ -391,6 +391,8 @@ class ProductUtil extends Util
     {
         $qty_difference = $new_quantity - $old_quantity;
 
+        // return $qty_difference;
+
         $product = Product::find($product_id);
 
         //Check if stock is enabled or not.
@@ -400,6 +402,8 @@ class ProductUtil extends Util
                 ->where('product_id', $product_id)
                 ->where('location_id', $location_id)
                 ->first();
+
+                // return $details;
 
             //If location details not exists create new one
             if (empty($details)) {
@@ -413,7 +417,8 @@ class ProductUtil extends Util
                           ]);
             }
             
-            $details->decrement('qty_available', $qty_difference);
+        //    return  
+           $details->decrement('qty_available', $qty_difference);
         }
 
         return true;

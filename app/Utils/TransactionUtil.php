@@ -3035,6 +3035,8 @@ class TransactionUtil extends Util
 
             $qty_sum_query = $this->get_pl_quantity_sum_string('PL');
 
+            // return  $qty_sum_query;
+
             //Get purchase lines, only for products with enable stock.
             $query = Transaction::join('purchase_lines AS PL', 'transactions.id', '=', 'PL.transaction_id')
                 ->where('transactions.business_id', $business['id'])
@@ -3044,7 +3046,7 @@ class TransactionUtil extends Util
                     'opening_stock', 'production_purchase'
                 ])
                 ->where('transactions.status', 'received')
-                ->whereRaw("( $qty_sum_query ) < PL.quantity")
+                ->whereRaw("( $qty_sum_query ) <= PL.quantity")
                 ->where('PL.product_id', $line->product_id)
                 ->where('PL.variation_id', $line->variation_id);
 
