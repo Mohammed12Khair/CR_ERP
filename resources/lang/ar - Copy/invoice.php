@@ -35,7 +35,7 @@
 "layout_added_success" => "تمت إضافة تصميم الفاتورة بنجاح",
 "edit_invoice_layout" => "تعديل تصميم الفاتورة",
 "layout_updated_success" => "تم تحديث تصميم الفاتورة بنجاح",
-"used_in_locations" => "المستخدمة في الأماكن",
+"used_in_locations" => "المستطاولة في الأماكن",
 "show_business_name" => "عرض اسم النشاط",
 "show_location_name" => "عرض اسم المكان",
 "show_mobile_number" => "رقم الموبايل",

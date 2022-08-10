@@ -192,6 +192,139 @@ class TransactionPaymentController extends Controller
 
         return redirect()->back()->with(['status' => $output]);
     }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store_fast(Request $request)
+    {
+        try {
+
+            $business_id = $request->session()->get('user.business_id');
+            $transaction_id = $request->input('transaction_id');
+            $transaction = Transaction::where('business_id', $business_id)->with(['contact'])->findOrFail($transaction_id);
+
+            $transaction_before = $transaction->replicate();
+
+            if (!(auth()->user()->can('purchase.payments') || auth()->user()->can('sell.payments') || auth()->user()->can('all_expense.access') || auth()->user()->can('view_own_expense'))) {
+                abort(403, 'Unauthorized action.');
+            }
+
+            if ($transaction->payment_status != 'paid') {
+                $inputs = $request->only([
+                    'amount', 'method', 'note', 'card_number', 'card_holder_name',
+                    'card_transaction_number', 'card_type', 'card_month', 'card_year', 'card_security',
+                    'cheque_number', 'bank_account_number'
+                ]);
+                $inputs['paid_on'] = $this->transactionUtil->uf_date($request->input('paid_on'), true);
+                $inputs['transaction_id'] = $transaction->id;
+                $inputs['amount'] = $this->transactionUtil->num_uf($inputs['amount']);
+                $inputs['created_by'] = auth()->user()->id;
+                $inputs['payment_for'] = $transaction->contact_id;
+
+                if ($inputs['method'] == 'custom_pay_1') {
+                    $inputs['transaction_no'] = $request->input('transaction_no_1');
+                } elseif ($inputs['method'] == 'custom_pay_2') {
+                    $inputs['transaction_no'] = $request->input('transaction_no_2');
+                } elseif ($inputs['method'] == 'custom_pay_3') {
+                    $inputs['transaction_no'] = $request->input('transaction_no_3');
+                }
+
+                // need check 
+                if (!empty($request->input('account_id')) && $inputs['method'] != 'advance') {
+                    $inputs['account_id'] = $request->input('account_id');
+                }
+
+                $prefix_type = 'purchase_payment';
+                if (in_array($transaction->type, ['sell', 'sell_return'])) {
+                    $prefix_type = 'sell_payment';
+                } elseif (in_array($transaction->type, ['expense', 'expense_refund'])) {
+                    $prefix_type = 'expense_payment';
+                }
+
+                DB::beginTransaction();
+
+                $ref_count = $this->transactionUtil->setAndGetReferenceCount($prefix_type);
+                //Generate reference number
+                $inputs['payment_ref_no'] = $this->transactionUtil->generateReferenceNumber($prefix_type, $ref_count);
+
+                $inputs['business_id'] = $request->session()->get('business.id');
+                $inputs['document'] = $this->transactionUtil->uploadFile($request, 'document', 'documents');
+
+                //Pay from advance balance
+                $payment_amount = $inputs['amount'];
+                $contact_balance = !empty($transaction->contact) ? $transaction->contact->balance : 0;
+                if ($inputs['method'] == 'advance' && $inputs['amount'] > $contact_balance) {
+                    throw new AdvanceBalanceNotAvailable(__('lang_v1.required_advance_balance_not_available'));
+                }
+
+                if ($inputs['method'] == 'cheque') {
+                    try {
+                        $cheque_model = new bankcheques_payment();
+                        $cheque_model->business_id = $inputs['business_id'];
+                        $cheque_model->transaction_id = $transaction_id;
+                        $cheque_model->amount = $inputs['amount'];
+                        $cheque_model->cheque_number = $inputs['cheque_number'];
+                        $cheque_model->cheque_date = $request->input('cheque_date');
+                        $cheque_model->cheque_ref = $inputs['payment_ref_no'];
+                        $cheque_model->transaction_type = $transaction->type;
+                        $cheque_model->comment = $inputs['note'];
+                        $cheque_model->userid = $inputs['created_by'];
+                    } catch (Exception $e) {
+                        error_log('Error ' . strval($e));
+                    }
+                }
+
+                // cheque input date
+                if (!empty($inputs['amount'])) {
+                    if ($inputs['method'] == 'cheque') {
+                        $inputs['amount'] = 0;
+                    }
+                    $tp = TransactionPayment::create($inputs);
+                    $inputs['transaction_type'] = $transaction->type;
+                    event(new TransactionPaymentAdded($tp, $inputs));
+                }
+                if ($inputs['method'] == 'cheque') {
+                    try {
+                        $cheque_model->payment_id = $tp->id;
+                        $cheque_model->save();
+                    } catch (Exception $e) {
+                        error_log('Error Save ' . strval($e));
+                    }
+                }
+                //update payment status
+                $payment_status = $this->transactionUtil->updatePaymentStatus($transaction_id, $transaction->final_total);
+                $transaction->payment_status = $payment_status;
+
+                $this->transactionUtil->activityLog($transaction, 'payment_edited', $transaction_before);
+
+                DB::commit();
+            }
+
+            $output = [
+                'success' => true,
+                'msg' => __('purchase.payment_added_success')
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = __('messages.something_went_wrong');
+
+            if (get_class($e) == \App\Exceptions\AdvanceBalanceNotAvailable::class) {
+                $msg = $e->getMessage();
+            } else {
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            }
+
+            $output = [
+                'success' => false,
+                'msg' => $msg
+            ];
+        }
+
+        return redirect()->back()->with(['status' => $output]);
+    }
 
     /**
      * Display the specified resource.

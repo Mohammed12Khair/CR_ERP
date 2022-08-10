@@ -106,6 +106,64 @@
                 </div>
             </div>
             <hr>
+
+            <div class="row check_group">
+                <div class="col-md-1">
+                    <h4>@lang('lang_v1.booking')</h4>
+                </div>
+                <div class="col-md-2">
+                    <!-- <div class="checkbox">
+                        <label>
+                            <input type="checkbox" class="check_all input-icheck"> {{ __('role.select_all') }}
+                        </label>
+                    </div> -->
+                </div>
+                <div class="col-md-9">
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.cancelled', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.cancelled') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.waiting_1', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.waiting_1') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.booked', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.booked') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.completed', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.completed') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.DeleteAll', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.DeleteAll') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.UpdateAll', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.UpdateAll') }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
             <div class="row check_group">
                 <div class="col-md-1">
                     <h4>@lang( 'user.roles' )</h4>

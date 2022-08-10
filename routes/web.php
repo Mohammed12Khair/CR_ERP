@@ -404,6 +404,9 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     });
 
     Route::get('bookings/get-todays-bookings', 'Restaurant\BookingController@getTodaysBookings');
+    Route::get('bookings/get-all-bookings', 'Restaurant\BookingController@getAllBookings');
+    Route::get('bookings/linkInvoice/{id}', 'Restaurant\BookingController@linkInvoice')->name('bookings.linkInvoice');
+    Route::get('bookings/linkInvoiceGrand/{id}/{Bookingid}/{action}', 'Restaurant\BookingController@linkInvoiceGrand');
     Route::resource('bookings', 'Restaurant\BookingController');
 
     Route::resource('types-of-service', 'TypesOfServiceController');

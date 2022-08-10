@@ -28,6 +28,7 @@ use App\Media;
 use Illuminate\Auth\EloquentUserProvider;
 use Spatie\Activitylog\Models\Activity;
 use App\bankcheques_payment;
+use App\Restaurant\Booking;
 
 class SellController extends Controller
 {
@@ -418,6 +419,11 @@ class SellController extends Controller
                             if (auth()->user()->can("print_invoice")) {
                                 $html .= '<li><a href="#" class="print-invoice" data-href="' . route('sell.printInvoice', [$row->id]) . '"><i class="fas fa-print" aria-hidden="true"></i> ' . __("lang_v1.print_invoice") . '</a></li>
                                     <li><a href="#" class="print-invoice" data-href="' . route('sell.printInvoice', [$row->id]) . '?package_slip=true"><i class="fas fa-file-alt" aria-hidden="true"></i> ' . __("lang_v1.packing_slip") . '</a></li>';
+
+                                    // Add Link to Booking
+
+                                    $html .='<li><a href="' . route('bookings.linkInvoice', [$row->id]) . '"><i class="fas fa-print" aria-hidden="true"></i> ' . __("lang_v1.LinkBooking") . '</a></li>';
+
                             }
                             $html .= '<li class="divider"></li>';
                             if (!$only_shipments) {
@@ -510,6 +516,12 @@ class SellController extends Controller
                     if ($cheque->count() != 0) {
                         $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true">' . __('cheque.cheque') . '</i>';
                     }
+                    // Booking indicator
+                    $Booking_indicator = '';
+                    $booking = Booking::where('booking_invoice', $row->id);
+                    if ($booking->count() != 0) {
+                        $Booking_indicator = '<i class="glyphicon glyphicon-check" aria-hidden="true">حجز</i>';
+                    }
                     $invoice_no = $row->invoice_no;
                     if (!empty($row->woocommerce_order_id)) {
                         $invoice_no .= ' <i class="fab fa-wordpress text-primary no-print" title="' . __('lang_v1.synced_from_woocommerce') . '"></i>';
@@ -533,7 +545,7 @@ class SellController extends Controller
                         $invoice_no .= ' &nbsp;<small class="label bg-yellow label-round no-print" title="' . __('crm::lang.order_request') . '"><i class="fas fa-tasks"></i></small>';
                     }
 
-                    return $invoice_no . '   <strong style="color:brown;">' .  $cheque_indicator . '</strong>';
+                    return $invoice_no . '   <strong style="color:brown;">' .  $cheque_indicator . '</strong><strong style="color:black;">'. $Booking_indicator .'</strong>';
                 })
                 ->editColumn('shipping_status', function ($row) use ($shipping_statuses) {
                     $status_color = !empty($this->shipping_status_colors[$row->shipping_status]) ? $this->shipping_status_colors[$row->shipping_status] : 'bg-gray';

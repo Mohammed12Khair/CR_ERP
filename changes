@@ -241,3 +241,5 @@ accounttransactions_clones 	  	Browse Browse 	Structure Structure 	Search Search
 
 	transaction_sell_lines_clones 	  	Browse Browse 	Structure Structure 	Search Search 	Insert Insert 	Empty Empty 	Drop Drop 	6 	InnoDB 	utf8mb4_unicode_ci 	16.0 KiB 	-
 	transaction_sell_lines_purchase_linesClone
+
+    ALTER TABLE `bookings` ADD `booking_invoice` INT NULL AFTER `booking_note`; 
