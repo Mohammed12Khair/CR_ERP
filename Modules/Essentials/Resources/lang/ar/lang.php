@@ -51,7 +51,7 @@ return[
 "view_message" => "شاهد الرساله",
 "essentials_module" => "وحدة أساسيات",
 "new_message_notification" => "لديك رسائل جديدة من :sender",
-"hrm" => "HRM",
+"hrm" => "الموارد البشرية",
 "leave_type" => "نوع الإجازة",
 "all_leave_types" => "جميع أنواع الإجازات",
 "max_leave_count" => "عدد الإجازات الأقصى",
