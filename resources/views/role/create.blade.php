@@ -161,6 +161,20 @@
                             </label>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.LinkInvoice', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.LinkInvoice') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.unLinkInvoice', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.unLinkInvoice') }}
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr>

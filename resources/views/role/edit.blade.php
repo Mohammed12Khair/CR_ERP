@@ -161,6 +161,20 @@
                             </label>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.UpdateAll', in_array('booking.LinkInvoice', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.LinkInvoice') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'booking.unLinkInvoice', in_array('booking.unLinkInvoice', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.unLinkInvoice') }}
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr>

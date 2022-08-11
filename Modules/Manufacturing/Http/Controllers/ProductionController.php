@@ -434,4 +434,358 @@ class ProductionController extends Controller
                                     ->where('mfg_parent_production_purchase_id', $production_purchase->id)
                                     ->with(['sell_lines', 'sell_lines.variations', 'sell_lines.variations.product_variation', 'sell_lines.variations.product', 'sell_lines.variations.product.unit'])
                                     ->first();
-        $purchase_line = $production_purchase->purcha
+        $purchase_line = $production_purchase->purchase_lines[0];
+
+        $recipe = MfgRecipe::where('variation_id', $purchase_line->variation_id)
+                        ->first();
+
+        $base_unit_multiplier = !empty($purchase_line->sub_unit) ? $purchase_line->sub_unit->base_unit_multiplier : 1;
+        $quantity = $purchase_line->quantity / $base_unit_multiplier;
+        $quantity_wasted = 0;
+        
+        if (!empty($production_purchase->mfg_wasted_units)) {
+            $quantity_wasted = $production_purchase->mfg_wasted_units;
+            $quantity += $quantity_wasted;
+        }
+
+        $actual_quantity = $quantity * $base_unit_multiplier;
+
+        $sub_units = $this->moduleUtil->getSubUnits($business_id, $purchase_line->variations->product->unit->id);
+        $unit_name = $purchase_line->variations->product->unit->short_name;
+        $sub_unit_id = $purchase_line->sub_unit_id;
+
+        $ingredients = [];
+        $total_ingredients_price = 0;
+        foreach ($production_sell->sell_lines as $sell_line) {
+            $variation = $sell_line->variations;
+
+            $line_sub_units = $this->moduleUtil->getSubUnits($business_id, $variation->product->unit->id);
+            $is_line_sub_unit = false;
+            $line_sub_unit_id = null;
+            $multiplier = 1;
+            $line_unit_name = $variation->product->unit->short_name;
+            $allow_decimal = $variation->product->unit->allow_decimal;
+            if (!empty($line_sub_units)) {
+                foreach ($line_sub_units as $key => $value) {
+                    if (!empty($sell_line->sub_unit_id) && $sell_line->sub_unit_id == $key) {
+                        $line_sub_unit_id = $sell_line->sub_unit_id;
+                        $multiplier = $value['multiplier'];
+                        $allow_decimal = $value['allow_decimal'];
+                        $line_unit_name = $value['name'];
+                    }
+                }
+                $is_line_sub_unit = true;
+            }
+
+            $unit_quantity = $sell_line->quantity / $actual_quantity;
+
+            $line_total_price = $variation->dpp_inc_tax * $sell_line->quantity;
+            $total_ingredients_price += $line_total_price;
+
+            $waste_percent = !empty($sell_line->mfg_waste_percent) ? $sell_line->mfg_waste_percent : 0;
+            $wasted_qty = $this->moduleUtil->calc_percentage($sell_line->quantity, $waste_percent);
+            $final_quantity = ($sell_line->quantity - $wasted_qty) / $multiplier;
+
+            $ingredients[] = [
+                'dpp_inc_tax' => $variation->dpp_inc_tax,
+                'quantity' => $sell_line->quantity / $multiplier,
+                'full_name' => $variation->full_name,
+                'variation_id' => $variation->id,
+                'unit' => $line_unit_name,
+                'allow_decimal' => $allow_decimal,
+                'variation' => $variation,
+                'enable_stock' => $variation->product->enable_stock,
+                'is_sub_unit' => $is_line_sub_unit,
+                'sub_units' => $line_sub_units,
+                'sub_unit_id' => $line_sub_unit_id,
+                'multiplier' => $multiplier,
+                'unit_quantity' => $unit_quantity,
+                'total_price' => $line_total_price,
+                'waste_percent' =>  $waste_percent,
+                'final_quantity' => $final_quantity,
+                'id' => $sell_line->id
+           ];
+        }
+
+        $total_production_cost = 0;
+        if (!empty($recipe->extra_cost)) {
+            $total_production_cost = $this->transactionUtil->calc_percentage($total_ingredients_price, $recipe->extra_cost);
+        }
+
+        $business_locations = BusinessLocation::forDropdown($business_id);
+
+        $variation_name = $purchase_line->variations->product->name;
+        if ($purchase_line->variations->product->type == 'variable') {
+            $variation_name .= ' - ' .
+            $purchase_line->variations->product_variation->name .
+            ' - ' . $purchase_line->variations->name;
+        }
+        $variation_name .= ' (' . $purchase_line->variations->sub_sku . ')';
+        $recipe_dropdown = [$purchase_line->variation_id => $variation_name];
+
+        $business_details = $this->businessUtil->getDetails($business_id);
+        $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
+
+        $manufacturing_settings = $this->mfgUtil->getSettings($business_id);
+
+        return view('manufacturing::production.edit')->with(compact('production_purchase', 'production_sell', 'business_locations', 'recipe_dropdown', 'ingredients', 'business_details', 'pos_settings', 'sub_units', 'quantity', 'quantity_wasted', 'actual_quantity', 'recipe', 'unit_name', 'sub_unit_id', 'total_production_cost', 'manufacturing_settings'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param  Request $request
+     * @return Response
+     */
+    public function update(Request $request, $id)
+    {
+        $business_id = $request->session()->get('user.business_id');
+        if (!(auth()->user()->can('superadmin') || $this->moduleUtil->hasThePermissionInSubscription($business_id, 'manufacturing_module')) || !auth()->user()->can('manufacturing.access_production')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            $request->validate([
+                'transaction_date' => 'required',
+                'location_id' => 'required',
+                'final_total' => 'required'
+            ]);
+
+            //Create Production purchase
+            $transaction_data = $request->only([ 'ref_no', 'transaction_date', 'location_id', 'final_total']);
+
+            $is_final = !empty($request->input('finalize')) ? 1 : 0;
+
+            $manufacturing_settings = $this->mfgUtil->getSettings($business_id);
+
+            $transaction_data['status'] = $is_final ? 'received' : 'pending';
+            $transaction_data['payment_status'] = 'due';
+            $transaction_data['transaction_date'] = $this->productUtil->uf_date($transaction_data['transaction_date'], true);
+            $transaction_data['final_total'] = $this->productUtil->num_uf($transaction_data['final_total']);
+
+            $variation_id = $request->input('variation_id');
+            $variation = Variation::where('id', $variation_id)
+                                ->with(['product'])
+                                ->first();
+            $final_total = $request->input('final_total');
+            $quantity = $request->input('quantity');
+            $waste_units = $this->productUtil->num_uf($request->input('mfg_wasted_units'));
+            $uf_qty = $this->productUtil->num_uf($quantity);
+            if (!empty($waste_units)) {
+                $new_qty = $uf_qty - $waste_units;
+                $uf_qty = $new_qty;
+                $quantity = $this->productUtil->num_f($new_qty);
+            }
+
+            $final_total_uf = $this->productUtil->num_uf($final_total);
+
+            $unit_purchase_line_total = $final_total_uf / $uf_qty;
+
+            $unit_purchase_line_total_f = $this->productUtil->num_f($unit_purchase_line_total);
+
+            $transaction_data['mfg_wasted_units'] = $waste_units;
+            $transaction_data['mfg_production_cost'] = $this->productUtil->num_uf($request->input('production_cost'));
+            $transaction_data['mfg_is_final'] = $is_final;
+            $purchase_line_data = [
+                'variation_id' => $variation_id,
+                'quantity' => $quantity,
+                'product_id' => $variation->product_id,
+                'product_unit_id' => $variation->product->unit_id,
+                'pp_without_discount' => $unit_purchase_line_total_f,
+                'discount_percent' => 0,
+                'purchase_price' => $unit_purchase_line_total_f,
+                'purchase_price_inc_tax' => $unit_purchase_line_total_f,
+                'item_tax' => 0,
+                'purchase_line_tax_id' => null,
+                'mfg_date' => $this->transactionUtil->format_date($transaction_data['transaction_date'])
+            ];
+
+            if (request()->session()->get('business.enable_lot_number') == 1) {
+                $purchase_line_data['lot_number'] = $request->input('lot_number');
+            }
+
+            if (request()->session()->get('business.enable_product_expiry') == 1) {
+                $purchase_line_data['exp_date'] = $request->input('exp_date');
+            }
+
+            if (!empty($request->input('sub_unit_id'))) {
+                $purchase_line_data['sub_unit_id'] = $request->input('sub_unit_id');
+            }
+
+            $transaction = Transaction::where('business_id', $business_id)
+                                    ->where('type', 'production_purchase')
+                                    ->findOrFail($id);
+
+            //Finalized production should not be editable
+            if ($transaction->mfg_is_final == 1) {
+                $output = ['success' => 0,
+                            'msg' => __('messages.something_went_wrong')
+                        ];
+                return redirect()->action('\Modules\Manufacturing\Http\Controllers\ProductionController@index')->with('status', $output);
+            }
+            DB::beginTransaction();
+
+            $transaction->update($transaction_data);
+
+            $currency_details = $this->transactionUtil->purchaseCurrencyDetails($business_id);
+
+            $update_product_price = !empty($manufacturing_settings['enable_updating_product_price']) && $is_final ? true : false;
+
+            $this->productUtil->createOrUpdatePurchaseLines($transaction, [$purchase_line_data], $currency_details, $update_product_price);
+
+            //Adjust stock over selling if found
+            $this->productUtil->adjustStockOverSelling($transaction);
+
+            $transaction_sell_data = [
+                'transaction_date' => $transaction->transaction_date,
+                'status' => $is_final ? 'final' : 'draft',
+                'payment_status' => 'due',
+                'final_total' => $transaction->final_total
+            ];
+
+            //Create Sell Transfer transaction
+            $production_sell = Transaction::where('business_id', $business_id)
+                                    ->where('type', 'production_sell')
+                                    ->with('sell_lines', 'sell_lines.product', 'sell_lines.variations')
+                                    ->where('mfg_parent_production_purchase_id', $transaction->id)
+                                    ->first();
+
+            $production_sell->update($transaction_sell_data);
+
+            $sell_lines = [];
+            $ingredient_quantities = $request->input('ingredients');
+
+            foreach ($production_sell->sell_lines as $sell_line) {
+                $variation = $sell_line->variations;
+
+                $line_sub_unit_id = !empty($ingredient_quantities[$sell_line->id]['sub_unit_id']) ?
+                                $ingredient_quantities[$sell_line->id]['sub_unit_id'] : null;
+                $line_multiplier = 1;
+                if (!empty($line_sub_unit_id)) {
+                    $sub_units = $this->productUtil->getSubUnits($business_id, $sell_line->product->unit_id);
+                    $line_multiplier = !empty($sub_units[$line_sub_unit_id]['multiplier']) ? $sub_units[$line_sub_unit_id]['multiplier'] : 1;
+                }
+
+                $mfg_waste_percent = !empty($ingredient_quantities[$sell_line->id]['mfg_waste_percent']) ? $this->productUtil->num_uf($ingredient_quantities[$sell_line->id]['mfg_waste_percent']) : 0;
+
+                $sell_lines[] = [
+                    'product_id' => $variation->product_id,
+                    'variation_id' => $variation->id,
+                    'quantity' => $this->productUtil->num_uf($ingredient_quantities[$sell_line->id]['quantity']),
+                    'item_tax' => 0,
+                    'tax_id' => null,
+                    'unit_price' => $variation->dpp_inc_tax * $line_multiplier,
+                    'unit_price_inc_tax' => $variation->dpp_inc_tax * $line_multiplier,
+                    'enable_stock' => $sell_line->product->enable_stock,
+                    'product_unit_id' => $variation->product->unit_id,
+                    'sub_unit_id' => $line_sub_unit_id,
+                    'base_unit_multiplier' => $line_multiplier,
+                    'mfg_waste_percent' => $mfg_waste_percent
+                ];
+            }
+
+            if (!empty($sell_lines)) {
+                $this->transactionUtil->createOrUpdateSellLines($production_sell, $sell_lines, $transaction->location_id, false, 'draft', ['mfg_waste_percent' => 'mfg_waste_percent']);
+            }
+
+            if ($transaction_sell_data['status'] == 'final') {
+                foreach ($sell_lines as $sell_line) {
+                    if ($sell_line['enable_stock']) {
+                        $line_qty = $sell_line['quantity'] * $sell_line['base_unit_multiplier'];
+                        $this->productUtil->decreaseProductQuantity(
+                            $sell_line['product_id'],
+                            $sell_line['variation_id'],
+                            $production_sell->location_id,
+                            $line_qty
+                        );
+                    }
+                }
+
+                //Map sell lines with purchase lines
+                $business = ['id' => $business_id,
+                            'accounting_method' => $request->session()->get('business.accounting_method'),
+                            'location_id' => $production_sell->location_id
+                        ];
+                $this->transactionUtil->mapPurchaseSell($business, $production_sell->sell_lines, 'production_purchase');
+            }
+            
+            DB::commit();
+            
+            $output = ['success' => 1,
+                            'msg' => __('lang_v1.updated_success')
+                        ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            
+            $output = ['success' => 0,
+                            'msg' => __('messages.something_went_wrong')
+                        ];
+        }
+
+        return redirect()->action('\Modules\Manufacturing\Http\Controllers\ProductionController@index')->with('status', $output);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $business_id = request()->session()->get('user.business_id');
+        if (!(auth()->user()->can('superadmin') || $this->moduleUtil->hasThePermissionInSubscription($business_id, 'manufacturing_module')) || !auth()->user()->can('manufacturing.access_production')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            try {
+                $transaction = Transaction::where('id', $id)
+                            ->where('business_id', $business_id)
+                            ->where('type', 'production_purchase')
+                            ->where('mfg_is_final', 0)
+                            ->delete();
+                $output = [
+                    'success' => true,
+                    'msg' => __('lang_v1.deleted_success')
+                ];
+            } catch (\Exception $e) {
+                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+
+                $output['success'] = false;
+                $output['msg'] = trans("messages.something_went_wrong");
+            }
+
+            return $output;
+        }
+    }
+
+    /**
+     * Retrives data for manufacturing report.
+     * @return Response
+     */
+    public function getManufacturingReport()
+    {
+        $business_id = request()->session()->get('user.business_id');
+
+        if (request()->ajax()) {
+            $start_date = request()->get('start_date');
+            $end_date = request()->get('end_date');
+            $location_id = request()->get('location_id');
+
+            $production_totals = $this->mfgUtil->getProductionTotals($business_id, $location_id, $start_date, $end_date);
+
+            $total_sold = $this->mfgUtil->getTotalSold($business_id, $location_id, $start_date, $end_date);
+            
+
+            $output['total_production'] = $production_totals['total_production'];
+            $output['total_production_cost'] = $production_totals['total_production_cost'];
+            $output['total_sold'] = $total_sold;
+
+            return $output;
+        }
+
+        $business_locations = BusinessLocation::forDropdown($business_id, true);
+        return view('manufacturing::production.report')->with(compact('business_locations'));
+    }
+}

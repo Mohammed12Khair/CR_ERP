@@ -62,16 +62,22 @@
                                     ?>
                                 </td>
                                 <td>
+
+                                    @can('booking.LinkInvoice')
                                     <?php
                                     if ($query_line->booking_invoice == 0) {
-                                        echo "<a href='" . action('Restaurant\BookingController@linkInvoiceGrand', [$id, $query_line->id,'grand']) . "' class='btn btn-sm btn-success'>تاكيد الحجز</a>";
-                                    } else {
-                                        echo "<a href='" . action('Restaurant\BookingController@linkInvoiceGrand', [$id, $query_line->id,'delete']) . "' class='btn btn-sm btn-danger'> سحب الفاتورة</a>";
+                                        echo "<a href='" . action('Restaurant\BookingController@linkInvoiceGrand', [$id, $query_line->id, 'grand']) . "' class='btn btn-sm btn-success'>تاكيد الحجز</a>";
                                     }
-
-
-
                                     ?>
+                                    @endcan
+
+                                    @can('booking.unLinkInvoice')
+                                    <?php
+                                    if ($query_line->booking_invoice > 0) {
+                                        echo "<a href='" . action('Restaurant\BookingController@linkInvoiceGrand', [$id, $query_line->id, 'delete']) . "' class='btn btn-sm btn-danger'> سحب الفاتورة</a>";
+                                    }
+                                    ?>
+                                    @endcan
                                 </td>
                             </tr>
                             @endforeach
