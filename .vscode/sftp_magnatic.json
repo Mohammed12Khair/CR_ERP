@@ -12,6 +12,8 @@
 //     "openSsh": false
 // }
 {
+
+    "remotePath": "/home/qwnukwnp/public_html/test/spa/",
     "name": "My Server",
     "host": "www.kaizengroups.net",
     "protocol": "sftp",

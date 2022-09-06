@@ -20,8 +20,21 @@
             <form action="{{ action('BusinessPartnerController@store') }}" method="post"> @csrf
                 {{-- <input name="id" type="text" class="form-control"> --}}
                 <div class="row">
+                <div class="form-group col-md-3">
+				{!! Form::label('supplier_id', __('purchase.supplier') . ':*') !!}
+				<div class="input-group">
+					<span class="input-group-addon">
+						<i class="fa fa-user"></i>
+					</span>
+					{!! Form::select('contact_id', [], null, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'supplier_id']); !!}
+					<span class="input-group-btn">
+						<!-- <button type="button" class="btn btn-default bg-white btn-flat add_new_supplier" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button> -->
+					</span>
+				</div>
+			</div>
+
                     <div class="form-group col-md-3">
-                        <label for="test">name</label>
+                        <label for="test">Account Name</label>
                         <input name="name" id="test" type="text" class="form-control">
                     </div>
                     <div class="form-group col-md-3">
@@ -55,3 +68,11 @@
     <!-- /.content -->
 
 @endsection
+
+
+@section('javascript')
+<script src="{{ asset('js/purchase.js?v=' . $asset_v) }}"></script>
+<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+@endsection
+
+

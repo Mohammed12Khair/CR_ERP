@@ -146,7 +146,8 @@ class ContactController extends Controller
                     </button>
                     <ul class="dropdown-menu dropdown-menu-left" role="menu">';
 
-                    $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay") . '</a></li>';
+                    $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay_customer") . '</a></li>';
+                    // $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=sell" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay") . '</a></li>';
                     
                     $html .= '<li><a href="' . action('RefundController@index', [$row->id]) . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>Refund</a></li>';
 
@@ -173,10 +174,6 @@ class ContactController extends Controller
                         } else {
                             $html .= __("messages.activate");
                         }
-
-
-                
-
                         $html .= "</a></li>";
                     }
 
@@ -362,6 +359,7 @@ class ContactController extends Controller
                     <ul class="dropdown-menu dropdown-menu-left" role="menu">';
 
                     $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=sell" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay_customer") . '</a></li>';
+                    // $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=purchase" class="pay_sale_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay") . '</a></li>';
                     $return_due = $row->total_sell_return - $row->sell_return_paid;
                     if ($return_due > 0) {
                         $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=sell_return" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay_sell_return_due") . '</a></li>';
@@ -608,6 +606,9 @@ class ContactController extends Controller
             $this->moduleUtil->getModuleData('after_contact_saved', ['contact' => $output['data'], 'input' => $request->input()]);
 
             $this->contactUtil->activityLog($output['data'], 'added');
+       
+       
+       
         } catch (\Exception $e) {
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
@@ -827,6 +828,8 @@ class ContactController extends Controller
                         //Disable login for associated users
                         User::where('crm_contact_id', $contact->id)
                             ->update(['allow_login' => 0]);
+
+                        $contact->update(["mobile"=>""]);
 
                         $contact->delete();
                     }
@@ -1255,16 +1258,15 @@ class ContactController extends Controller
      */
     public function getLedger()
     {
+
         if (!auth()->user()->can('supplier.view') && !auth()->user()->can('customer.view') && !auth()->user()->can('supplier.view_own') && !auth()->user()->can('customer.view_own')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $contact_id = request()->input('contact_id');
-
         $start_date = request()->start_date;
         $end_date =  request()->end_date;
-
         $contact = Contact::find($contact_id);
 
         if (!auth()->user()->can('supplier.view') && auth()->user()->can('supplier.view_own')) {
@@ -1288,9 +1290,9 @@ class ContactController extends Controller
             $mpdf->WriteHTML($html);
             $mpdf->Output();
         }
-
-        return view('contact.ledger')
-            ->with(compact('ledger_details', 'contact'));
+    
+        return view('contact.ledger')->with(compact('ledger_details', 'contact'));
+    
     }
 
     public function postCustomersApi(Request $request)

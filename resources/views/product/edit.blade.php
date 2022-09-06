@@ -68,7 +68,7 @@
 
 
           {{-- X --}}
-          <div class="col-sm-3" style="display: none;">
+          <div class="col-sm-3" >
             <div class="form-group">
               {!! Form::label('barcode_type', __('product.barcode_type') . ':*') !!}
                 {!! Form::select('barcode_type', $barcode_types, $product->barcode_type, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2', 'required']); !!}

@@ -8,11 +8,13 @@ use App\BusinessPartner;
 use App\BusinessPartnerPayments;
 use App\BusinessPartnerTransactions;
 use App\TransactionPayment;
+use App\Contact;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 use App\User;
 use Exception;
+use Illuminate\Support\Facades\App;
 use Twilio\Rest\Preview\TrustedComms\BusinessPage;
 
 class BusinessPartnerController extends Controller
@@ -43,7 +45,12 @@ class BusinessPartnerController extends Controller
                     return $row->id;
                 })
                 ->addColumn('name', function ($row) {
-                    return $row->name;
+                    try{
+                    $name=Contact::where("id",$row->contact_id)->first();
+                    }catch(Exception $e){
+                        return $row->name;
+                    }
+                    return $name->first_name;
                 })
                 ->addColumn('mobile', function ($row) {
                     return $row->mobile;
@@ -124,11 +131,14 @@ class BusinessPartnerController extends Controller
      */
     public function store(Request $request)
     {
+
+        // return $request->input('contact_id');
         $business_id = request()->session()->get('user.business_id');
 
         try {
             // $ID = $request->input('id');
             $name = $request->input('name');
+            $contact_id = $request->input('contact_id');
             $mobile = $request->input('mobile');
             $address = $request->input('address');
             $type = $request->input('type');
@@ -140,6 +150,7 @@ class BusinessPartnerController extends Controller
             $business_partner_save['address'] = $address;
             $business_partner_save['business_id'] = $business_id;
             $business_partner_save['type'] = $type;
+            $business_partner_save['contact_id'] = $contact_id;
             $business_partner_save['open_balance'] = $open_balance;
             $business_partner_save['created_by'] = $request->user()->id;
             $business_partner_save->save();

@@ -1394,8 +1394,8 @@ class SellPosController extends Controller
                 \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
                 $output['success'] = false;
-                $output['msg'] = trans("messages.something_went_wrong");
-                // $output['msg'] = $e->getMessage();
+                // $output['msg'] = trans("messages.something_went_wrong");
+                $output['msg'] = $e->getMessage();
             }
 
             return $output;
