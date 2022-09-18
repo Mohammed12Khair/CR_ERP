@@ -674,11 +674,7 @@ class TransactionUtil extends Util
      * @return boolean
      */
     public function createOrUpdatePaymentLines($transaction, $payments, $business_id = null, $user_id = null, $uf_data = true)
-    {
-
-        error_log("_______________");
-        error_log($payment['account_id']);
-        error_log("_______________");
+    {     
 
         $payments_formatted = [];
         $edit_ids = [0];

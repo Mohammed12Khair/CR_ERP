@@ -810,6 +810,8 @@ class TransactionPaymentController extends Controller
                 $show_advance = in_array($transaction->type, ['sell', 'purchase']) ? true : false;
                 $payment_types = $this->transactionUtil->payment_types($transaction->location, $show_advance);
 
+                $payment_types['loans']='سلف والعهد';
+
                 $paid_amount = $this->transactionUtil->getTotalPaid($transaction_id);
                 $amount = $transaction->final_total - $paid_amount;
                 if ($amount < 0) {

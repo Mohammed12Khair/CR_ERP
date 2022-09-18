@@ -19,7 +19,8 @@
 	<div class="row mb-12">
 		<div class="col-md-12">
 			<div class="row">
-				<div class="@if(empty($pos_settings['hide_product_suggestion'])) col-md-7 @else col-md-10 col-md-offset-1 @endif no-padding pr-12">
+				<!-- <div class="@if(empty($pos_settings['hide_product_suggestion'])) col-md-7 @else col-md-10 col-md-offset-1 @endif no-padding pr-12"> -->
+				<div class="@if(empty($pos_settings['hide_product_suggestion'])) @else col-md-10 col-md-offset-1 @endif no-padding pr-12">
 					<div class="box box-solid mb-12">
 						<div class="box-body pb-0">
 							{!! Form::hidden('location_id', $default_location->id ?? null , ['id' => 'location_id', 'data-receipt_printer_type' => !empty($default_location->receipt_printer_type) ? $default_location->receipt_printer_type : 'browser', 'data-default_payment_accounts' => $default_location->default_payment_accounts ?? '']); !!}

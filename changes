@@ -243,3 +243,16 @@ accounttransactions_clones 	  	Browse Browse 	Structure Structure 	Search Search
 	transaction_sell_lines_purchase_linesClone
 
     ALTER TABLE `bookings` ADD `booking_invoice` INT NULL AFTER `booking_note`; 
+
+
+    //
+create table transactions_clones_edit as select * from transactions_clones where 5=0;
+
+create table transaction_sell_linesClone_edit as select * from transaction_sell_lines where 1=10
+
+create table transaction_sell_lines_purchase_linesClone_edit as select * from transaction_sell_lines_purchase_lines where 1=10
+
+create table purchase_lines_edit as select * from purchase_lines where 1=9;
+
+
+ALTER TABLE `transaction_payments` ADD `cheque_date` VARCHAR(10) NULL AFTER `updated_at`;

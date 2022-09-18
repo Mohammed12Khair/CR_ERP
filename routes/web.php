@@ -472,4 +472,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
         ->name('packing.downloadPdf');
     Route::get('/sells/invoice-url/{id}', 'SellPosController@showInvoiceUrl');
     Route::get('/show-notification/{id}', 'HomeController@showNotification');
+
+    Route::get('/purchases/deletepage/{id}', 'PurchaseController@deletePage');
+    Route::post('/purchases/deleteaction/', 'PurchaseController@deleteaction');
 });

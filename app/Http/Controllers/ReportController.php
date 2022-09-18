@@ -992,27 +992,27 @@ class ReportController extends Controller
                 ->editColumn('total_advance_payment', function ($row) {
                     return '<span data-orig-value="' . $row->total_advance_payment . '" >' . $this->transactionUtil->num_f($row->total_advance_payment, true) . '</span>';
                 })
-                ->editColumn('total_custom_pay_1', function ($row) {
-                    return '<span data-orig-value="' . $row->total_custom_pay_1 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_1, true) . '</span>';
-                })
-                ->editColumn('total_custom_pay_2', function ($row) {
-                    return '<span data-orig-value="' . $row->total_custom_pay_2 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_2, true) . '</span>';
-                })
-                ->editColumn('total_custom_pay_3', function ($row) {
-                    return '<span data-orig-value="' . $row->total_custom_pay_3 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_3, true) . '</span>';
-                })
-                ->editColumn('total_custom_pay_4', function ($row) {
-                    return '<span data-orig-value="' . $row->total_custom_pay_4 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_4, true) . '</span>';
-                })
-                ->editColumn('total_custom_pay_5', function ($row) {
-                    return '<span data-orig-value="' . $row->total_custom_pay_5 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_5, true) . '</span>';
-                })
-                ->editColumn('total_custom_pay_6', function ($row) {
-                    return '<span data-orig-value="' . $row->total_custom_pay_6 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_6, true) . '</span>';
-                })
-                ->editColumn('total_custom_pay_7', function ($row) {
-                    return '<span data-orig-value="' . $row->total_custom_pay_7 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_7, true) . '</span>';
-                })
+                // ->editColumn('total_custom_pay_1', function ($row) {
+                //     return '<span data-orig-value="' . $row->total_custom_pay_1 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_1, true) . '</span>';
+                // })
+                // ->editColumn('total_custom_pay_2', function ($row) {
+                //     return '<span data-orig-value="' . $row->total_custom_pay_2 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_2, true) . '</span>';
+                // })
+                // ->editColumn('total_custom_pay_3', function ($row) {
+                //     return '<span data-orig-value="' . $row->total_custom_pay_3 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_3, true) . '</span>';
+                // })
+                // ->editColumn('total_custom_pay_4', function ($row) {
+                //     return '<span data-orig-value="' . $row->total_custom_pay_4 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_4, true) . '</span>';
+                // })
+                // ->editColumn('total_custom_pay_5', function ($row) {
+                //     return '<span data-orig-value="' . $row->total_custom_pay_5 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_5, true) . '</span>';
+                // })
+                // ->editColumn('total_custom_pay_6', function ($row) {
+                //     return '<span data-orig-value="' . $row->total_custom_pay_6 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_6, true) . '</span>';
+                // })
+                // ->editColumn('total_custom_pay_7', function ($row) {
+                //     return '<span data-orig-value="' . $row->total_custom_pay_7 . '" >' . $this->transactionUtil->num_f($row->total_custom_pay_7, true) . '</span>';
+                // })
                 ->editColumn('closed_at', function ($row) {
                     if ($row->status == 'close') {
                         return $this->productUtil->format_date($row->closed_at, true);

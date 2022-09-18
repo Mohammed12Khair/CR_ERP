@@ -164,7 +164,7 @@
 									</div>
 									{!! Form::text('search_product', null, ['class' => 'form-control mousetrap', 'id' => 'search_product', 'placeholder' => __('lang_v1.search_product_placeholder'),
 									'disabled' => is_null($default_location)? true : false,
-									'autofocus' => is_null($default_location)? false : true,
+									'autofocus' => true,
 									]); !!}
 									<span class="input-group-btn">
 										<button type="button" class="btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{action('ProductController@quickAdd')}}" data-container=".quick_add_product_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>

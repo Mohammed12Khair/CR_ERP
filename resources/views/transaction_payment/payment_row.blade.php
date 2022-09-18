@@ -58,8 +58,59 @@
         <div class="col-md-12">
           @if(!empty($transaction->contact))
           <strong>@lang('lang_v1.advance_balance'):</strong> <span class="display_currency" data-currency_symbol="true">{{$transaction->contact->balance}}</span>
+          <br>
+          <strong>ؤصيد سلف و العهد:</strong> <span class="display_currency" data-currency_symbol="true">
+            {{$transaction->contact_id}}
+            <?php
+ $contact=App\BusinessPartner::where('contact_id',$contact->id)->first();
+ $business_pyments=App\BusinessPartnerPayments::where('owner',$contact->id)->where('is_active', 0)->get();
+ // $sum
+ 
+ // echo $contact->name . " data";
+
+
+ // $business_partner = BusinessPartner::where('id', $row->id)->first();
+
+ // Get Payments 
+ // $business_pyments = BusinessPartnerPayments::where('owner',  $row->id)->where('is_active', 0)->get();
+
+ $PymentId = [];
+ foreach ($business_pyments as $business_pyment) {
+     array_push($PymentId, $business_pyment->payment_id);
+ }
+
+ // Get Payment frmo account transactions
+ $account_transactions = App\AccountTransaction::whereIn('id', $PymentId)->get();
+
+ // loop and calcualte balance
+ $credit = 0;
+ $debit = 0;
+ foreach ($account_transactions as $account_transaction) {
+     if ($account_transaction->type == "credit") {
+         $credit += $account_transaction->amount;
+     }
+     if ($account_transaction->type == "debit") {
+         $debit += $account_transaction->amount;
+     }
+ }
+
+ // MAtch with open balance
+ if ($business_partner->type == "credit") {
+     $credit += $business_partner->open_balance;
+ }
+ // MAtch with open balance
+ if ($business_partner->type == "debit") {
+     $debit += $business_partner->open_balance;
+ }
+
+ $final_amount = $credit - $debit;
+ echo $final_amount;
+            ?>
+
+          </span>
 
           {!! Form::hidden('advance_balance', $transaction->contact->balance, ['id' => 'advance_balance', 'data-error-msg' => __('lang_v1.required_advance_balance_not_available')]); !!}
+          {!! Form::hidden('loan_balance', $final_amount, ['id' => 'loan_balance', 'data-error-msg' => __('lang_v1.required_advance_balance_not_available')]); !!}
           @endif
         </div>
       </div>
@@ -110,7 +161,7 @@
           </div>
         </div>
         @endif
-        
+
         <div class="col-md-4">
           <div class="form-group">
             {!! Form::label('document', __('purchase.attach_document') . ':') !!}

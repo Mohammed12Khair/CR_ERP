@@ -61,6 +61,7 @@ use App\InvoiceScheme;
 use App\SalesOrderController;
 use Razorpay\Api\Api;
 use App\TransactionPayment;
+use Exception;
 use Stripe\Charge;
 use Stripe\Stripe;
 
@@ -498,14 +499,12 @@ class SellPosController extends Controller
 
                         if ($product['enable_stock']) {
 
-                             $this->productUtil->decreaseProductQuantity(
+                            $this->productUtil->decreaseProductQuantity(
                                 $product['product_id'],
                                 $product['variation_id'],
                                 $input['location_id'],
                                 $decrease_qty
                             );
-
-                        
                         }
 
                         if ($product['product_type'] == 'combo') {
@@ -801,11 +800,11 @@ class SellPosController extends Controller
         $payment_types = $this->productUtil->payment_types($business_location, true);
         $location_printer_type = $business_location->receipt_printer_type;
         $sell_details = TransactionSellLine::join(
-                'products AS p',
-                'transaction_sell_lines.product_id',
-                '=',
-                'p.id'
-            )
+            'products AS p',
+            'transaction_sell_lines.product_id',
+            '=',
+            'p.id'
+        )
             ->join(
                 'variations AS variations',
                 'transaction_sell_lines.variation_id',
@@ -1050,6 +1049,12 @@ class SellPosController extends Controller
         }
 
         try {
+
+            try {
+                DB::statement("insert into transactions_clones_edit select * from transactions where id=:id", ["id" => $id]);
+                DB::statement("insert into transaction_sell_linesClone_edit select * from transaction_sell_lines where transaction_id=:id", ["id" => $id]);
+            } catch (Exception $w) {
+            }
             $input = $request->except('_token');
             //status is send as quotation from edit sales screen.
             $input['is_quotation'] = 0;
