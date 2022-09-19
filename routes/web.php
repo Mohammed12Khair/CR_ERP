@@ -119,6 +119,8 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/purchases/check_ref_number', 'PurchaseController@checkRefNumber');
     Route::resource('purchases', 'PurchaseController')->except(['show']);
     Route::get('/PurchaseHistory', 'PurchaseController@PurchaseHistory');
+    Route::get('/edithistory', 'PurchaseController@edithistory');
+    Route::get('/edithistorydetails/{id}/{type}', 'PurchaseController@edithistorydetails');
     Route::get('/showhistory/{id}', 'PurchaseController@showhistory');
 
     Route::get('/toggle-subscription/{id}', 'SellPosController@toggleRecurringInvoices');

@@ -211,7 +211,7 @@
 					<div class="@if(!empty($commission_agent)) col-sm-3 @else col-sm-4 @endif">
 						<div class="form-group">
 							{!! Form::label('status', __('sale.status') . ':*') !!}
-							{!! Form::select('status', $statuses, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+							{!! Form::select('status', $statuses,$statuses[1] , ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
 						</div>
 					</div>
 				@endif

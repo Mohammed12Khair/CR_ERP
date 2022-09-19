@@ -64,6 +64,34 @@ class PurchaseController extends Controller
         ];
     }
 
+
+    public function edithistory()
+    {
+
+        // return 500;
+        $business_id = request()->session()->get('user.business_id');
+        $data = DB::select("SELECT * FROM transactions_clones_edit WHERE business_id=:business_id order by updated_at desc limit 1000", ["business_id" => $business_id]);
+
+        return view('sell.edithistroy')->with('data', $data);
+    }
+
+    public function edithistorydetails($id, $type)
+    {
+
+
+        $business_id = request()->session()->get('user.business_id');
+        if ($type == 'sell') {
+            $data = DB::select("SELECT * FROM transaction_sell_linesClone_edit WHERE transaction_id=:transaction_id order by updated_at desc limit 1000", ["transaction_id" => $id]);
+        }
+
+        if ($type == 'purchase') {
+            $data = DB::select("SELECT * FROM purchase_lines_edit  WHERE transaction_id=:transaction_id order by updated_at desc limit 1000", ["transaction_id" => $id]);
+        }
+        return view('sell.edithistroydetails')->with('data', $data)->with('type', $type);
+    }
+
+
+
     /**
      * Display a listing of the resource.
      *

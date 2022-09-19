@@ -566,6 +566,7 @@ class AdminSidebarMenu
                                 //Backup menu
             
                 $sub->url(action('PurchaseController@PurchaseHistory'), __('purchase.PurchaseHistory'), ['icon' => 'fa fas fa-hdd', 'active' => request()->segment(1) == 'create'])->order(61);
+                $sub->url(action('PurchaseController@edithistory'), "تعديل", ['icon' => 'fa fas fa-hdd', 'active' => request()->segment(1) == 'create'])->order(61);
             
 
                         if (auth()->user()->can('tax_report.view')) {
