@@ -96,7 +96,7 @@ class SellController extends Controller
 
             DB::commit();
 
-            DB::statement("INSERT INTO deletereasone VALUES (NULL,:userid,:transaction_id,:deletereasone)", [
+            DB::statement("INSERT INTO deletereasone (userid,transaction_id,deletereasone) VALUES (:userid,:transaction_id,:deletereasone)", [
                 "userid" => $user_id,
                 "transaction_id" => $id,
                 "deletereasone" => $deletereasone

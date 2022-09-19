@@ -255,4 +255,9 @@ create table transaction_sell_lines_purchase_linesClone_edit as select * from tr
 create table purchase_lines_edit as select * from purchase_lines where 1=9;
 
 
+
 ALTER TABLE `transaction_payments` ADD `cheque_date` VARCHAR(10) NULL AFTER `updated_at`;
+
+
+ALTER TABLE `deletereasone` ADD `insert_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `deletereasone`; 
+

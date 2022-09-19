@@ -973,8 +973,8 @@ class PurchaseController extends Controller
 </div>
 </div>';
 
-        $resone = DB::select(DB::raw("select username,deletereasone from deletereasone a,users b where b.id=a.userid and a.transaction_id=:id"), ["id" => $id]);
-        $delete = "<p><br>" . $resone[0]->username . "<br>" . $resone[0]->deletereasone . "<br></p>";
+        $resone = DB::select(DB::raw("select username,deletereasone,insert_at from deletereasone a,users b where b.id=a.userid and a.transaction_id=:id"), ["id" => $id]);
+        $delete = "<p><bt>" . $resone[0]->insert_at . "<br>" . $resone[0]->username . "<br>" . $resone[0]->deletereasone . "<br></p>";
         $html = '<div class="modal-dialog modal-xl" role="document" >
         <div class="modal-content" >
           <div class="modal-footer" style="text-align:right!important;"><section class="content-header no-print">
@@ -1939,7 +1939,7 @@ class PurchaseController extends Controller
                 ->update(["status" => 3]);
 
 
-            DB::statement("INSERT INTO deletereasone VALUES (NULL,:userid,:transaction_id,:deletereasone)", [
+            DB::statement("INSERT INTO deletereasone (userid,transaction_id,deletereasone) VALUES (:userid,:transaction_id,:deletereasone)", [
                 "userid" => $user_id,
                 "transaction_id" => $id,
                 "deletereasone" => $deletereasone
