@@ -944,12 +944,15 @@ class PurchaseController extends Controller
 </table>
 </div>
 </div>';
+
+        $resone = DB::select(DB::raw("select username,deletereasone from deletereasone a,users b where b.id=a.userid and a.transaction_id=:id"), ["id" => $id]);
+        $delete = "<p><br>" . $resone[0]->username . "<br>" . $resone[0]->deletereasone . "<br></p>";
         $html = '<div class="modal-dialog modal-xl" role="document" >
         <div class="modal-content" >
           <div class="modal-footer" style="text-align:right!important;"><section class="content-header no-print">
           <h1>ألمشتريات الملغية<small></small>
           </h1>
-      </section>' . $purchase_Table . $accountpay_Table . $purchase_line_Table . '     
+      </section>' . $purchase_Table . $accountpay_Table . $purchase_line_Table . $delete . '     
             <button type="button" class="btn btn-primary no-print" aria-label="Print" 
             onclick="$(this).closest(\'div.modal-content\').printThis();"><i class="fa fa-print"></i> ' . __('messages.print') . '
             </button>
@@ -957,6 +960,9 @@ class PurchaseController extends Controller
           </div>
         </div>
       </div>';
+
+
+        //  $html ="ererferf";
         return  $html;
     }
 

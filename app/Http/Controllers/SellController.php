@@ -70,6 +70,49 @@ class SellController extends Controller
         ];
     }
 
+
+    public function deletePage(Request $request, $id)
+    {
+        $user_id = $request->session()->get('user.id');
+        return view('sell.delete')->with('id', $id)->with('user_id', $user_id);
+        return $id;
+    }
+
+
+
+    public function deleteaction(Request $request)
+    {
+        $deletereasone = $request->input('deletereasone');
+        $user_id = $request->input('user_id');
+        $id = $request->input('transaction_id');
+
+
+        try {
+            $business_id = request()->session()->get('user.business_id');
+            //Begin transaction
+            DB::beginTransaction();
+
+            $output = $this->transactionUtil->deleteSale($business_id, $id);
+
+            DB::commit();
+
+            DB::statement("INSERT INTO deletereasone VALUES (NULL,:userid,:transaction_id,:deletereasone)", [
+                "userid" => $user_id,
+                "transaction_id" => $id,
+                "deletereasone" => $deletereasone
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output['success'] = false;
+            // $output['msg'] = trans("messages.something_went_wrong");
+            $output['msg'] = $e->getMessage();
+        }
+
+        return redirect('sells')->with('status', $output);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -377,7 +420,8 @@ class SellController extends Controller
                                 }
                             }
 
-                            $delete_link = '<li><a href="' . action('SellPosController@destroy', [$row->id]) . '" class="delete-sale"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                            // $delete_link = '<li><a href="' . action('SellPosController@destroy', [$row->id]) . '" class="delete-sale"><i class="fas fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                            $delete_link = '<li><a href="' . action('SellController@deletePage', [$row->id]) . '" ><i class="fas fa-trash"></i>' . __("messages.delete") . '</a></li>';
                             if ($row->is_direct_sale == 0) {
                                 if (auth()->user()->can("sell.delete")) {
                                     $html .= $delete_link;
@@ -420,10 +464,9 @@ class SellController extends Controller
                                 $html .= '<li><a href="#" class="print-invoice" data-href="' . route('sell.printInvoice', [$row->id]) . '"><i class="fas fa-print" aria-hidden="true"></i> ' . __("lang_v1.print_invoice") . '</a></li>
                                     <li><a href="#" class="print-invoice" data-href="' . route('sell.printInvoice', [$row->id]) . '?package_slip=true"><i class="fas fa-file-alt" aria-hidden="true"></i> ' . __("lang_v1.packing_slip") . '</a></li>';
 
-                                    // Add Link to Booking
+                                // Add Link to Booking
 
-                                    $html .='<li><a href="' . route('bookings.linkInvoice', [$row->id]) . '"><i class="fas fa-print" aria-hidden="true"></i> ' . __("lang_v1.LinkBooking") . '</a></li>';
-
+                                $html .= '<li><a href="' . route('bookings.linkInvoice', [$row->id]) . '"><i class="fas fa-print" aria-hidden="true"></i> ' . __("lang_v1.LinkBooking") . '</a></li>';
                             }
                             $html .= '<li class="divider"></li>';
                             if (!$only_shipments) {
@@ -512,7 +555,7 @@ class SellController extends Controller
                 ->editColumn('invoice_no', function ($row) use ($is_crm) {
                     // Edit cheque_indicator
                     $cheque_indicator = '';
-                    $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status','unset');
+                    $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status', 'unset');
                     if ($cheque->count() != 0) {
                         $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true">' . __('cheque.cheque') . '</i>';
                     }
@@ -545,7 +588,7 @@ class SellController extends Controller
                         $invoice_no .= ' &nbsp;<small class="label bg-yellow label-round no-print" title="' . __('crm::lang.order_request') . '"><i class="fas fa-tasks"></i></small>';
                     }
 
-                    return $invoice_no . '   <strong style="color:brown;">' .  $cheque_indicator . '</strong><strong style="color:black;">'. $Booking_indicator .'</strong>';
+                    return $invoice_no . '   <strong style="color:brown;">' .  $cheque_indicator . '</strong><strong style="color:black;">' . $Booking_indicator . '</strong>';
                 })
                 ->editColumn('shipping_status', function ($row) use ($shipping_statuses) {
                     $status_color = !empty($this->shipping_status_colors[$row->shipping_status]) ? $this->shipping_status_colors[$row->shipping_status] : 'bg-gray';

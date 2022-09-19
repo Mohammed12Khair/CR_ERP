@@ -4,7 +4,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>@lang('lang_v1.deleteResone')<i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="@include('purchase.partials.keyboard_shortcuts_details')" data-html="true" data-trigger="hover" data-original-title="" title=""></i></h1>
-    <form action="<?php echo action('PurchaseController@deleteaction'); ?>" method="POST">
+    <form action="<?php echo action('SellController@deleteaction'); ?>" method="POST">
     @csrf     <input name="transaction_id" value="{{$id}}" type="text" hidden>
         <input name="user_id" value="{{$user_id}}" type="text" hidden>
         <br>

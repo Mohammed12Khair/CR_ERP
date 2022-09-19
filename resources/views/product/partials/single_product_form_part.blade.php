@@ -39,7 +39,7 @@
           </td>
 
           <td>
-            <br/>
+            <!-- <br/> -->
             {!! Form::text('profit_percent', @num_format($profit_percent), ['class' => 'form-control input-sm input_number', 'id' => 'profit_percent', 'required']); !!}
           </td>
 

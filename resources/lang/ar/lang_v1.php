@@ -3,6 +3,7 @@ return [
    "LinkInvoice"=>"ربط الفاتورة بالحجز",
    "unLinkInvoice"=>"الغاء ربط الفاتورة بالحجز",
    "UpdateAll"=>"تحديث الحجوزات",
+   "deleteResone"=>" تعليق الحذف",
    "DeleteAll"=>"مسح الحجوزات",
    "booking"=>"الحجوزات",
    "LinkBooking"=>"مرتبطة بحجز",
