@@ -176,6 +176,7 @@
                                     ''
                                 @endif" id="ledger_tab">
                         @include('contact.partials.ledger_tab')
+                        
                     </div>
                     @if(in_array($contact->type, ['both', 'supplier']))
                     <div class="tab-pane
@@ -306,6 +307,8 @@
         </div>
     </div>
 </section>
+
+
 <!-- /.content -->
 <div class="modal fade payment_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
 </div>

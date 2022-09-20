@@ -38,10 +38,10 @@
                 <td class="align-right">@format_currency($ledger_details['total_invoice'])</td>
             </tr>
         @endif
-        <tr>
+        <!-- <tr>
             <td>@lang('sale.total_paid')</td>
             <td class="align-right">@format_currency($ledger_details['total_paid'])</td>
-        </tr>
+        </tr> -->
         <tr>
             <td>@lang('lang_v1.advance_balance')</td>
             <td class="align-right">@format_currency($contact->balance)</td>
@@ -99,6 +99,14 @@
         </tr>
         <tr>
             <td><strong>@lang('lang_v1.balance_due')</strong></td>
+            <td class="align-right">@format_currency($ledger_details['balance_due'])</td>
+        </tr>
+        <tr>
+            <td><strong>مستحق المبيعات</strong></td>
+            <td class="align-right">@format_currency($ledger_details['balance_due'])</td>
+        </tr>
+        <tr>
+            <td><strong>مستحق المشتريات</strong></td>
             <td class="align-right">@format_currency($ledger_details['balance_due'])</td>
         </tr>
     </table>
@@ -162,4 +170,5 @@
             </tbody>
         </table>
     </div>
+
 </div>

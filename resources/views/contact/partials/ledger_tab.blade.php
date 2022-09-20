@@ -19,6 +19,8 @@
                 {!! Form::label('ledger_date_range', __('report.date_range') . ':') !!}
                 {!! Form::text('ledger_date_range', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control', 'readonly']); !!}
             </div>
+
+            
         </div>
         <div class="col-md-9 text-right">
             <button data-href="{{action('ContactController@getLedger')}}?contact_id={{$contact->id}}&action=pdf" class="btn btn-default btn-xs" id="print_ledger_pdf"><i class="fas fa-file-pdf"></i></button>
