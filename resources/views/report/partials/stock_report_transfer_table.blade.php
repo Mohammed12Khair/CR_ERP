@@ -66,7 +66,8 @@ type='purchase_transfer' and location_id in (:location_id)) group by product_id"
         foreach ($Transfer_transaction_ as  $Transfer_transaction) {
             if ($Transfer_transaction->product_id  == $product_id) {
                 $a=round((($Transfer_transaction->quantity / $total_quantati) * $expense_value) / $Transfer_transaction->quantity, 2);
-                $b=round(get_product_price($Transfer_transaction->product_id), 2);
+                // $b=round(get_product_price($Transfer_transaction->product_id), 2);
+                $b=round($Transfer_transaction->purchase_price, 2);
                 $c=$a+$b;
                 echo "<tr>";
                 echo "<td>" . get_location_name($location_2->location_id) . "</td>";
@@ -74,6 +75,7 @@ type='purchase_transfer' and location_id in (:location_id)) group by product_id"
                 echo "<td>" .  get_product_name($Transfer_transaction->product_id) . "</td>";
                 echo "<td>" .  $Transfer_transaction->created_at . "</td>";
                 echo "<td>" . round(get_product_price($Transfer_transaction->product_id), 2) . "</td>";
+                echo "<td>" .  $b . "</td>";
                 echo "<td>" . round((($Transfer_transaction->quantity / $total_quantati) * $expense_value) / $Transfer_transaction->quantity, 2) . "</td>";
                 echo "<td>" .  $c  . "</td>";
                 // echo $location_id . ' ' .  " Product_id=" .  $Transfer_transaction->product_id  . ' Transfer_Quantati=' . $Transfer_transaction->quantity . ' %=' . (($Transfer_transaction->quantity / $total_quantati) * $expense_value) / $Transfer_transaction->quantity . '<br>';
@@ -135,6 +137,7 @@ type='purchase_transfer' and location_id in (:location_id)) group by product_id"
         <th>@lang('product.t_date')</th>
         <th>@lang('product.priceCostBuy')</th>
         <th>@lang('product.priceCost')</th>
+        <th>@lang('product.priceCost') عند التحويل</th>
         <th>@lang('product.priceCost') + @lang('product.priceCostBuy')</th>
     </tr>
     <?php

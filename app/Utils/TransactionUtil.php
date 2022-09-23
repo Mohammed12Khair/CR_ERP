@@ -674,7 +674,7 @@ class TransactionUtil extends Util
      * @return boolean
      */
     public function createOrUpdatePaymentLines($transaction, $payments, $business_id = null, $user_id = null, $uf_data = true)
-    {     
+    {
 
         $payments_formatted = [];
         $edit_ids = [0];
@@ -5231,6 +5231,17 @@ class TransactionUtil extends Util
         $total_paid = $total_invoice_paid + $total_purchase_paid - $total_sell_return_paid - $total_purchase_return_paid;
         $curr_due = $total_invoice + $total_purchase - $total_paid + $beginning_balance + $opening_balance_due;
 
+        // $total_purchase - $opening_balance_due
+        // $curr_due_purchase = $total_purchase . '-'. $total_purchase_paid ;
+        $curr_due_purchase = $total_purchase - $total_purchase_paid;
+        // $opening_balance_due -$total_paid
+        // $curr_due_sell = $total_paid - $opening_balance_due;
+        // $curr_due_sell = $total_invoice . '+' .  $total_purchase . '-' . $total_paid . '+' . $beginning_balance . '+' . $opening_balance_due;
+        //one $curr_due_sell = $total_invoice ;//. '+' .  $total_purchase . '-' . $total_paid . '+' . $beginning_balance . '+' . $opening_balance_due;
+        //two $curr_due_sell = $total_invoice_paid ;
+        $curr_due_sell = $total_invoice - $total_invoice_paid;
+
+        // // $curr_due_sell = $opening_balance_due;
         //Sort by date
         if (!empty($ledger)) {
             usort($ledger, function ($a, $b) {
@@ -5290,6 +5301,8 @@ class TransactionUtil extends Util
             'total_purchase' => $total_purchase,
             'beginning_balance' => $beginning_balance + $opening_balance_due,
             'balance_due' => $curr_due,
+            'balance_due_purchase' => $curr_due_purchase,
+            'balance_due_sell' => $curr_due_sell,
             'total_paid' => $total_paid
         ];
 
@@ -5439,6 +5452,8 @@ class TransactionUtil extends Util
 
         $total_paid = $total_invoice_paid + $total_purchase_paid - $total_sell_return_paid - $total_purchase_return_paid;
         $curr_due = $total_invoice + $total_purchase - $total_paid + $beginning_balance + $opening_balance_due;
+        // $curr_due_purchase=$total_purchase;
+        // $curr_due_sell=$total_invoice;
 
         //Sort by date
         if (!empty($ledger)) {
@@ -5486,7 +5501,7 @@ class TransactionUtil extends Util
 
             $ledger[$key]['balance'] = $balance;
         }
-
+        // $curr_due=10000;
         $output = [
             'ledger' => $ledger,
             'start_date' => $start_date,
@@ -5495,6 +5510,8 @@ class TransactionUtil extends Util
             'total_purchase' => $total_purchase,
             'beginning_balance' => $beginning_balance + $opening_balance_due,
             'balance_due' => $curr_due,
+            // 'balance_due_purchase' => $curr_due_purchase,
+            // 'balance_due_sell' => $curr_due_sell,
             'total_paid' => $total_paid
         ];
 
