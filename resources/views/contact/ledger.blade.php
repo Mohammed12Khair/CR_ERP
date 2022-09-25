@@ -136,8 +136,8 @@
                 @foreach ($ledger_details['ledger'] as $data)
                 <?php
                 // echo $data['debit'] .' ____';
-                // echo $data['payment_method'];
-                // if ($data['debit'] == 0) {
+                // echo $data['method'];
+                // if ($data['method'] == 'cheque') {
                 //     continue;
                 // }
                 ?>

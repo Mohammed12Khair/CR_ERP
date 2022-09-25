@@ -5124,6 +5124,10 @@ class TransactionUtil extends Util
 
         foreach ($transactions as $transaction) {
 
+            // if($transaction->payment){
+
+            // }
+
             if ($transaction->type == 'opening_balance') {
                 //Skip opening balance, it will be added in the end
                 $opening_balance += $transaction->final_total;
@@ -5170,7 +5174,16 @@ class TransactionUtil extends Util
 
         $paymentTypes = $this->payment_types(null, true, $business_id);
 
+        // unset($paymentTypes['cheque']);
+        // $payment_types['cheque']
+    
         foreach ($payments as $payment) {
+
+            // Khair 
+            // to hide the cheque payments
+            if($payment->method =='cheque'){
+                continue;
+            }
 
             if ($payment->transaction_type == 'opening_balance') {
                 $opening_balance_paid += $payment->amount;
