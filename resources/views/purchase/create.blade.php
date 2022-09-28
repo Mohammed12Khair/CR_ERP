@@ -47,9 +47,9 @@ $custom_labels = json_decode(session('business.custom_labels'), true);
 		</div>
 		<div class="@if(!empty($default_purchase_status)) col-sm-4 @else col-sm-3 @endif">
 			<div class="form-group">
-				{!! Form::label('ref_no', __('purchase.ref_no').':') !!}
+				{!! Form::label('ref_no', __('purchase.ref_no').':*') !!}
 				@show_tooltip(__('lang_v1.leave_empty_to_autogenerate'))
-				{!! Form::text('ref_no', null, ['class' => 'form-control']); !!}
+				{!! Form::text('ref_no', null, ['class' => 'form-control','required']); !!}
 			</div>
 		</div>
 		<div class="@if(!empty($default_purchase_status)) col-sm-4 @else col-sm-3 @endif">
