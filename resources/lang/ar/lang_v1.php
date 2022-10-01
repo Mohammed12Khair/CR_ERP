@@ -1,5 +1,6 @@
 <?php
 return [
+   "mandatoryInvoicenumber"=>"رقم الفاتوره اجباري",
    "LinkInvoice"=>"ربط الفاتورة بالحجز",
    "unLinkInvoice"=>"الغاء ربط الفاتورة بالحجز",
    "UpdateAll"=>"تحديث الحجوزات",

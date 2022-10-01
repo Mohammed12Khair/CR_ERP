@@ -55,10 +55,20 @@
 
             <div class="@if(!empty($default_purchase_status)) col-sm-4 @else col-sm-3 @endif">
               <div class="form-group">
-                {!! Form::label('ref_no', __('purchase.ref_no') . '*') !!}
+
+              @if($business_details->pur_invoice_man == 1)
+              {!! Form::label('ref_no', __('purchase.ref_no') . '*') !!}
                 @show_tooltip(__('lang_v1.leave_empty_to_autogenerate'))
                 {!! Form::text('ref_no', $purchase->ref_no, ['class' => 'form-control', 'required']); !!}
-              </div>
+            
+				      @else
+                {!! Form::label('ref_no', __('purchase.ref_no') . '') !!}
+                @show_tooltip(__('lang_v1.leave_empty_to_autogenerate'))
+                {!! Form::text('ref_no', $purchase->ref_no, ['class' => 'form-control',]); !!}
+            
+				@endif
+
+            </div>
             </div>
             
             <div class="@if(!empty($default_purchase_status)) col-sm-4 @else col-sm-3 @endif">

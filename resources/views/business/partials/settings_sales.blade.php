@@ -167,4 +167,26 @@
             </div>
         </div>
     </div>
+
+
+    
+    <div class="clearfix"></div>
+    <div class="col-sm-6">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <?php
+
+                        if ($business->sel_invoice_man == 0) {
+                            echo '<input name="sel_invoice_man" type="checkbox" class="input-icheck" value="1" >';
+                        } else {
+                            echo '<input name="sel_invoice_man" type="checkbox" class="input-icheck" value="1"  checked>';
+                        }
+                        ?>
+                        {{ __( 'lang_v1.mandatoryInvoicenumber' ) }}
+                    </label>
+                    @show_tooltip(__('lang_v1.mandatoryInvoicenumber'))
+                </div>
+            </div>
+        </div>
 </div>

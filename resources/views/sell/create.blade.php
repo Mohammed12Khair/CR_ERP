@@ -225,8 +225,13 @@ $title = __('lang_v1.sales_order');
 			@can('edit_invoice_number')
 			<div class="col-sm-3">
 				<div class="form-group">
+					@if($business_details->sel_invoice_man == 1)
 					{!! Form::label('invoice_no', $sale_type == 'sales_order' ? __('restaurant.order_no') : __('sale.invoice_no') . ':*') !!}
 					{!! Form::text('invoice_no', null, ['required', 'class' => 'form-control', 'placeholder' => $sale_type == 'sales_order' ? __('restaurant.order_no') : __('sale.invoice_no')]); !!}
+					@else
+					{!! Form::label('invoice_no', $sale_type == 'sales_order' ? __('restaurant.order_no') : __('sale.invoice_no') . ':') !!}
+					{!! Form::text('invoice_no', null, [ 'class' => 'form-control', 'placeholder' => $sale_type == 'sales_order' ? __('restaurant.order_no') : __('sale.invoice_no')]); !!}
+					@endif
 					<p class="help-block">@lang('lang_v1.keep_blank_to_autogenerate')</p>
 				</div>
 			</div>

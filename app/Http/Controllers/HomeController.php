@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BusinessLocation;
+use App\Business;
 
 use App\Charts\CommonChart;
 use App\Currency;
@@ -52,6 +53,7 @@ class HomeController extends Controller
         $this->restUtil = $restUtil;
     }
 
+   
     /**
      * Show the application dashboard.
      *
@@ -59,10 +61,20 @@ class HomeController extends Controller
      */
     public function index()
     {
+        
+
+        // $business = Business::where('id', 1)->first();
+        // // return $business;
+        // $start_month = $business->fy_start_month;
+        // return $start_month;
+
+
 
         $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
    
         $business_id = request()->session()->get('user.business_id');
+
+        // return $business_id;
 
         $is_admin = $this->businessUtil->is_admin(auth()->user());
 
