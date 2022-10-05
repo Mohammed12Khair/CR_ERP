@@ -60,7 +60,8 @@ class BusinessUtil extends Util
                         'created_by' => $user_id,
                         'is_default' => 1,
                         'contact_id' => $contact_id,
-                        'credit_limit' => 0
+                        'credit_limit' => 0,
+                        'mobile' => \Carbon::now()
                     ];
         Contact::create($customer);
 

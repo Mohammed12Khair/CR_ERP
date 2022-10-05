@@ -148,7 +148,7 @@ class ContactController extends Controller
 
                     $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=purchase" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay_customer") . '</a></li>';
                     // $html .= '<li><a href="' . action('TransactionPaymentController@getPayContactDue', [$row->id]) . '?type=sell" class="pay_purchase_due"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>' . __("lang_v1.pay") . '</a></li>';
-                    
+
                     $html .= '<li><a href="' . action('RefundController@index', [$row->id]) . '"><i class="fas fa-money-bill-alt" aria-hidden="true"></i>Refund</a></li>';
 
                     $return_due = $row->total_purchase_return - $row->purchase_return_paid;
@@ -606,9 +606,6 @@ class ContactController extends Controller
             $this->moduleUtil->getModuleData('after_contact_saved', ['contact' => $output['data'], 'input' => $request->input()]);
 
             $this->contactUtil->activityLog($output['data'], 'added');
-       
-       
-       
         } catch (\Exception $e) {
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
@@ -832,7 +829,10 @@ class ContactController extends Controller
                         User::where('crm_contact_id', $contact->id)
                             ->update(['allow_login' => 0]);
 
-                        $contact->update(["mobile"=>""]);
+                        $currentTimeX = \Carbon::now();
+                        // $result = $date->format('Y-m-d-H-i-s');
+
+                        $contact->update(["mobile" => $currentTimeX->toDateTimeString()]);
 
                         $contact->delete();
                     }
@@ -852,6 +852,7 @@ class ContactController extends Controller
                 $output = [
                     'success' => false,
                     'msg' => __("messages.something_went_wrong")
+                    // 'msg' =>$e->getMessage()
                 ];
             }
 
@@ -1293,9 +1294,8 @@ class ContactController extends Controller
             $mpdf->WriteHTML($html);
             $mpdf->Output();
         }
-    
+
         return view('contact.ledger')->with(compact('ledger_details', 'contact'));
-    
     }
 
     public function postCustomersApi(Request $request)

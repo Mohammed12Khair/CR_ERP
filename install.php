@@ -42,6 +42,7 @@ $changes=[
 "ALTER TABLE `transaction_payments` ADD `cheque_date` VARCHAR(10) NULL AFTER `updated_at`",
 "CREATE TABLE deletereasone ( `id` INT NULL AUTO_INCREMENT ,  `userid` INT(11) NULL ,  `transaction_id` INT(11) NULL ,  `deletereasone` INT(11) NULL ,  `insert_at` TIMESTAMP NOT NULL ,    PRIMARY KEY  (`id`)) ENGINE = InnoDB;",
 "ALTER TABLE `deletereasone` ADD `insert_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `deletereasone`",
+"ALTER TABLE contacts ADD CONSTRAINT mobile_unique UNIQUE (mobile)",
 "ALTER TABLE `deletereasone` CHANGE `deletereasone` `deletereasone` VARCHAR(500) NULL DEFAULT NULL; ",
 "ALTER TABLE `transaction_sell_lines_clones` ADD `mfg_waste_percent` INT(11) NULL AFTER `quantity`",
 "ALTER TABLE `business` ADD `pur_invoice_man` INT(1) NULL DEFAULT '0' AFTER `is_active`, ADD `sel_invoice_man` INT(1) NULL DEFAULT '0' AFTER

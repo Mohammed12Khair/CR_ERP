@@ -330,6 +330,7 @@ class BusinessController extends BaseController
 
             $output = ['success' => 0,
                             'msg' => __('messages.something_went_wrong')
+                            // 'msg' =>$e->getMessage()
                         ];
 
             return back()->with('status', $output)->withInput();
