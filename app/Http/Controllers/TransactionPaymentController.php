@@ -810,7 +810,7 @@ class TransactionPaymentController extends Controller
                 $show_advance = in_array($transaction->type, ['sell', 'purchase']) ? true : false;
                 $payment_types = $this->transactionUtil->payment_types($transaction->location, $show_advance);
 
-                $payment_types['loans']='سلف والعهد';
+                // $payment_types['loans']='سلف والعهد';
 
                 $paid_amount = $this->transactionUtil->getTotalPaid($transaction_id);
                 $amount = $transaction->final_total - $paid_amount;
@@ -945,6 +945,7 @@ class TransactionPaymentController extends Controller
             //Accounts
             $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
 
+            
             return view('transaction_payment.pay_supplier_due_modal')
                 ->with(compact('contact_details', 'payment_types', 'payment_line', 'due_payment_type', 'ob_due', 'amount_formated', 'accounts'));
         }

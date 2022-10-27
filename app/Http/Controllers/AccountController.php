@@ -820,7 +820,7 @@ class AccountController extends Controller
      */
     public function cashFlow()
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.access') &&  !auth()->user()->can('lang_v1_cash_flow')) {
             abort(403, 'Unauthorized action.');
         }
 

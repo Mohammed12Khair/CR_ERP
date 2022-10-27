@@ -46,7 +46,11 @@ $changes=[
 "ALTER TABLE `deletereasone` CHANGE `deletereasone` `deletereasone` VARCHAR(500) NULL DEFAULT NULL; ",
 "ALTER TABLE `transaction_sell_lines_clones` ADD `mfg_waste_percent` INT(11) NULL AFTER `quantity`",
 "ALTER TABLE `business` ADD `pur_invoice_man` INT(1) NULL DEFAULT '0' AFTER `is_active`, ADD `sel_invoice_man` INT(1) NULL DEFAULT '0' AFTER
-`pur_invoice_man`"
+`pur_invoice_man`",
+"CREATE TABLE activeexpensis as select * from activeaccounts where 1=0",
+"ALTER TABLE `activeexpensis` CHANGE `account_id` `expens_id` INT(11) NOT NULL",
+"ALTER TABLE `activeexpensis` ADD PRIMARY KEY(`id`)",
+"ALTER TABLE `activeexpensis` CHANGE `id` `id` INT(20) NOT NULL AUTO_INCREMENT"
 ];
 foreach($changes as $change){
     echo "\n";

@@ -17,6 +17,7 @@ use App\Account;
 use App\Activeaccounts;
 use App\Category;
 use App\category_view;
+use App\ExpenseCategory;
 
 class ManageUserController extends Controller
 {
@@ -75,8 +76,55 @@ class ManageUserController extends Controller
             ->with('All_Accounts', $All_Accounts)
             ->with('active_accounts_data', $active_accounts_data);
     }
+    public function ExpensManageAdd(Request $request)
+    {
 
+        // return $request->input('account_id') . request()->session()->get('user.business_id') . $request->input('userid');
+        $business_id = request()->session()->get('user.business_id');
+        DB::statement("INSERT INTO activeexpensis (expens_id,userid,business_id) VALUES
+        (:expens_id,:userid,:business_id)", ["expens_id" => $request->input('account_id'), "userid" => $request->input('userid'), "business_id" => $business_id]);
+        return redirect()->back();
+    }
 
+    public function ExpensManageDelete(Request $request)
+    {
+        DB::statement(
+            "DELETE FROM activeexpensis where userid=:userid and expens_id=:expens_id",
+            ["userid" => $request->input('userid'), "expens_id" => $request->input('account_id')]
+        );
+
+        return redirect()->back();
+    }
+
+    public function ExpensManage($id)
+    {
+
+        if (!auth()->user()->can('users_accounts_admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $business_id = request()->session()->get('user.business_id');
+        $All_Accounts = ExpenseCategory::where('business_id', $business_id)->where('deleted_at', NULL)->get();
+        $ActiveAccounts = DB::SELECT("SELECT * FROM activeexpensis WHERE business_id=:business_id AND userid=:userid", ['business_id' => $business_id, 'userid' => $id]);
+
+        $active_accounts_data = [];
+        foreach ($ActiveAccounts as $ActiveAccount) {
+            // error_log($ActiveAccount->expens_id);
+            array_push($active_accounts_data, $ActiveAccount->expens_id);
+        }
+
+        foreach ($All_Accounts as $All_Account) {
+            error_log($All_Account->id);
+            if (in_array($All_Account->id, $active_accounts_data)) {
+                error_log("In array");
+            } else {
+                error_log("Not In array");
+            }
+        }
+        return view('manage_user.expens')
+            ->with('id', $id)
+            ->with('All_Accounts', $All_Accounts)
+            ->with('active_accounts_data', $active_accounts_data);
+    }
 
     public function CategoryManagerAdd(Request $request)
     {
@@ -181,7 +229,10 @@ class ManageUserController extends Controller
                 @endcan
                     @can("users_accounts_admin")
                     <a href="{{action(\'ManageUserController@CategoryManager\', [$id])}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-check"></i> @lang("lang_v1.category")</a>
-                @endcan'
+                @endcan
+                @can("users_accounts_admin")
+                <a href="{{action(\'ManageUserController@ExpensManage\', [$id])}}" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-check"></i> @lang("lang_v1.Expens")</a>
+            @endcan'
                 )
                 ->filterColumn('full_name', function ($query, $keyword) {
                     $query->whereRaw("CONCAT(COALESCE(surname, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) like ?", ["%{$keyword}%"]);

@@ -14,12 +14,14 @@
 <section class="content">
     @component('components.widget', ['class' => 'box-primary', 'title' => __( 'expense.all_your_expense_categories' )])
         @slot('tool')
+        @can('expense.catgory_add')
             <div class="box-tools">
                 <button type="button" class="btn btn-block btn-primary btn-modal" 
                 data-href="{{action('ExpenseCategoryController@create')}}" 
                 data-container=".expense_category_modal">
                 <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
             </div>
+            @endcan
         @endslot
         <div class="table-responsive">
             <table class="table table-bordered table-striped" id="expense_category_table">

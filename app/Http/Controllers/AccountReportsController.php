@@ -40,7 +40,7 @@ class AccountReportsController extends Controller
      */
     public function balanceSheet()
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.access') && !auth()->user()->can('account_balance_sheet') ) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -215,7 +215,7 @@ class AccountReportsController extends Controller
      */
     public function trialBalance()
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.access') && !auth()->user()->can('account.trial_balance') ) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -429,7 +429,7 @@ class AccountReportsController extends Controller
      */
     public function paymentAccountReport()
     {
-        if (!auth()->user()->can('account.access')) {
+        if (!auth()->user()->can('account.access') &&!auth()->user()->can('account_payment_account_report') ) {
             abort(403, 'Unauthorized action.');
         }
 

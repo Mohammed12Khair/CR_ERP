@@ -123,6 +123,8 @@ class BusinessController extends Controller
 
         // return  $request->get('fy_start_month');
 
+        // return "test";
+
         try {
             $validator = $request->validate(
                 [
@@ -250,6 +252,7 @@ class BusinessController extends Controller
     public function postCheckUsername(Request $request)
     {
         $username = $request->input('username');
+        
 
         if (!empty($request->input('username_ext'))) {
             $username .= $request->input('username_ext');
@@ -503,6 +506,8 @@ class BusinessController extends Controller
      */
     public function postCheckEmail(Request $request)
     {
+     
+     
         $email = $request->input('email');
 
         $query = User::where('email', $email);

@@ -159,6 +159,15 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('users/accounts/add', 'ManageUserController@AccountManageAdd');
     Route::post('users/accounts/delete', 'ManageUserController@AccountManageDelete');
 
+
+    // Expensie 
+    Route::get('users/expensis/{id}', 'ManageUserController@ExpensManage');
+    Route::post('users/expensis/add', 'ManageUserController@ExpensManageAdd');
+    Route::post('users/expensis/delete', 'ManageUserController@ExpensManageDelete');
+
+
+
+
     Route::get('users/category/{id}', 'ManageUserController@CategoryManager');
     Route::post('users/category/add', 'ManageUserController@CategoryManagerAdd');
     Route::post('users/category/delete', 'ManageUserController@CategoryManagerDelete');

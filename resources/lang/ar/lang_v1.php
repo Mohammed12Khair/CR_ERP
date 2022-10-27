@@ -1,5 +1,9 @@
 <?php
 return [
+   "Expens"=>" فئات مصروف",
+   "expense_catgory_add"=>"أضافه فئات مصروف",
+   "expense_catgory_delete"=>"مسح فئات المصاريف",
+   "expense_catgory_edit"=>"تعديل فئات المصاريف",
    "mandatoryInvoicenumber"=>"رقم الفاتوره اجباري",
    "LinkInvoice"=>"ربط الفاتورة بالحجز",
    "unLinkInvoice"=>"الغاء ربط الفاتورة بالحجز",

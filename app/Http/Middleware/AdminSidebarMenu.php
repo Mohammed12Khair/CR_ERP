@@ -452,26 +452,34 @@ class AdminSidebarMenu
                             __('account.list_accounts'),
                             ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
                         );
-                        $sub->url(
+                        if (auth()->user()->can('account_balance_sheet')){
+                       $sub->url(
                             action('AccountReportsController@balanceSheet'),
                             __('account.balance_sheet'),
                             ['icon' => 'fa fas fa-book', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'balance-sheet']
                         );
+                    }
+                        if (auth()->user()->can('account_trial_balance')){
                         $sub->url(
                             action('AccountReportsController@trialBalance'),
                             __('account.trial_balance'),
                             ['icon' => 'fa fas fa-balance-scale', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'trial-balance']
                         );
+                    }
+                        if (auth()->user()->can('lang_v1_cash_flow')){
                         $sub->url(
                             action('AccountController@cashFlow'),
                             __('lang_v1.cash_flow'),
                             ['icon' => 'fa fas fa-exchange-alt', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'cash-flow']
                         );
+                    }
+                        if (auth()->user()->can('account_payment_account_report')){
                         $sub->url(
                             action('AccountReportsController@paymentAccountReport'),
                             __('account.payment_account_report'),
                             ['icon' => 'fa fas fa-file-alt', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'payment-account-report']
                         );
+                    }
                     },
                     ['icon' => 'fa fas fa-money-check-alt']
                 )->order(50);
@@ -493,6 +501,7 @@ class AdminSidebarMenu
                         //     __('lang_v1.cheque_list'),
                         //     ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'account' && request()->segment(2) == 'account']
                         // );
+                        
                         $sub->url(
                             action('bankcheques@AdvanceSearch'),
                             __('lang_v1.cheque_check'),

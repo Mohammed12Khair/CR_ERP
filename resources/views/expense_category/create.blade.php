@@ -21,12 +21,16 @@
 
       <div class="form-group">
         {!! Form::label('expense', __( 'expense.expense_shipt' ) . ':*') !!}
+        <?php
 
+        $SomeRandomData = 0;
+
+        ?>
         <select class="form-control" name="transfer">
-          <option value="0" <?php if ($account_type->cheque == 0) {
+          <option value="0" <?php if ($SomeRandomData == 0) {
                               echo 'selected';
                             } ?>>@lang( 'expense.expense_shipt_no' )</option>
-          <option value="1" <?php if ($account_type->cheque == 1) {
+          <option value="1" <?php if ($SomeRandomData == 1) {
                               echo 'selected';
                             } ?>>@lang( 'expense.expense_shipt_yes' )</option>
         </select>

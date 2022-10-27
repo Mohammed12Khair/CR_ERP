@@ -20,12 +20,16 @@
 
       <div class="form-group">
         {!! Form::label('cheque', __( 'cheque.account_cheque' ) . ':*') !!}
+<?php
 
+$random=0;
+
+?>
         <select class="form-control" name="cheque">
-          <option value="0" <?php if ($account_type->cheque == 0) {
+          <option value="0" <?php if ($random== 0) {
                               echo 'selected';
                             } ?>>@lang( 'cheque.account_cheque_no' )</option>
-          <option value="1" <?php if ($account_type->cheque == 1) {
+          <option value="1" <?php if ($random== 1) {
                               echo 'selected';
                             } ?>>@lang( 'cheque.account_cheque_yes' )</option>
         </select>

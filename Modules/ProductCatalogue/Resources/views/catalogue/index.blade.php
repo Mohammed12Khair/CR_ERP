@@ -65,10 +65,28 @@
                         if (!function_exists('Get_Price_live')) {
                             function Get_Price_live($product_id, $price_group_id)
                             {
+                                
+                                   if( $price_group_id == 0 ){
+                                     //  echo "Zero";
+                                   
+                                 $priceG = DB::select(DB::raw('select default_sell_price from variations where product_id=:product_id'), ['product_id' => $product_id]);
+                                      foreach ($priceG as $priceG_) {
+                                  
+                                    return $priceG_->default_sell_price;
+                                }
+                              
+                                  
+                               }
+                               
                                 $priceG = DB::select(DB::raw('select price_inc_tax  from variation_group_prices a,variations b where a.price_group_id=:price_group_id and b.id=a.variation_id and b.product_id =:product_id limit 1'), ['price_group_id' => $price_group_id, 'product_id' => $product_id]);
+                           
+                               
                                 foreach ($priceG as $priceG_) {
+                                  
                                     return $priceG_->price_inc_tax;
                                 }
+                                
+                                
                             }
                         }
                         ?>
@@ -102,6 +120,7 @@
                                     {{-- <span class="display_currency" data-currency_symbol="true">{{($max_price)}}</span> @if ($max_price != $min_price) - <span class="display_currency" data-currency_symbol="true">{{($min_price)}}</span> @endif --}}
                                     <span class="display_currency" data-currency_symbol="true">
                                         <?php
+                                        //echo $product->id;
                                         echo Get_Price_live($product->id, $selling_Group_val);
                                         ?>
                                     </span>

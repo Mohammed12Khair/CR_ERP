@@ -1525,6 +1525,32 @@
 
                         <!-- End -->
 
+                        <!-- New oct-10 -->
+
+                        <div class="col-md-12">
+                            <div class="checkbox">
+                                <label>
+                                    {!! Form::checkbox('permissions[]', 'expense.catgory_add', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.expense_catgory_add') }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkbox">
+                                <label>
+                                    {!! Form::checkbox('permissions[]', 'expense.catgory_delete', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.expense_catgory_delete') }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkbox">
+                                <label>
+                                    {!! Form::checkbox('permissions[]', 'expense.catgory_edit', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.expense_catgory_edit') }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- New oct-10 -->
+
 
 
                     </div>
@@ -1647,7 +1673,6 @@
                             </label>
                         </div>
                     </div>
-                    <!-- New -->
                     <div class="col-md-12">
                         <div class="checkbox">
                             <label>
@@ -1655,6 +1680,38 @@
                             </label>
                         </div>
                     </div>
+                 <!-- NEW -->
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account_balance_sheet', false, ['class' => 'input-icheck']) !!} {{ __('account.balance_sheet') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account_trial_balance', false, ['class' => 'input-icheck']) !!} {{ __('account.trial_balance') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'lang_v1_cash_flow', false, ['class' => 'input-icheck']) !!} {{ __('lang_v1.cash_flow') }}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account_payment_account_report', false, ['class' => 'input-icheck']) !!} {{ __('account.payment_account_report') }}
+                            </label>
+                        </div>
+                    </div>
+
+
+                        <!-- NEW -->
                     {{-- Cheques --}}
                     <div class="col-md-12">
                         <div class="checkbox">

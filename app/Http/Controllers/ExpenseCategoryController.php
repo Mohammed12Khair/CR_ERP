@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\ExpenseCategory;
+use DB;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Constraint\Count;
 use Yajra\DataTables\Facades\DataTables;
 
 class ExpenseCategoryController extends Controller
@@ -18,20 +20,41 @@ class ExpenseCategoryController extends Controller
         if (!(auth()->user()->can('expense.add') || auth()->user()->can('expense.edit'))) {
             abort(403, 'Unauthorized action.');
         }
-
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
+            $userid = request()->session()->get('user.id');
+
+
+            // Filter expens khair
+            $ActiveAccounts = DB::SELECT("SELECT * FROM activeexpensis WHERE business_id=:business_id AND userid=:userid", ['business_id' => $business_id, 'userid' => $userid]);
+
+            $active_accounts_data = [];
+            foreach ($ActiveAccounts as $ActiveAccount) {
+                // error_log($ActiveAccount->expens_id);
+                array_push($active_accounts_data, $ActiveAccount->expens_id);
+            }
+            // $expens_id=DB::
 
             $expense_category = ExpenseCategory::where('business_id', $business_id)
+            ->whereIn('id',$active_accounts_data)
                 ->select(['name', 'code', 'id']);
 
             return Datatables::of($expense_category)
                 ->addColumn(
                     'action',
                     function ($row) {
-                        return '<button data-href="' . action('ExpenseCategoryController@edit', [$row->id]) . '" class="btn btn-xs btn-primary btn-modal" data-container=".expense_category_modal"><i class="glyphicon glyphicon-edit"></i>' .  __("messages.edit") . '</button>
-                    &nbsp;
-                    <button data-href="' . action('ExpenseCategoryController@destroy', [$row->id]) . '" class="btn btn-xs btn-danger delete_expense_category"><i class="glyphicon glyphicon-trash"></i>' . __("messages.delete") . '</button>';
+                        $returnHtml = "";
+                        if (auth()->user()->can('expense.catgory_edit')) {
+                            $returnHtml .= '<button data-href="' . action('ExpenseCategoryController@edit', [$row->id]) . '" class="btn btn-xs btn-primary btn-modal" data-container=".expense_category_modal"><i class="glyphicon glyphicon-edit"></i>' .  __("messages.edit") . '</button>
+                            &nbsp;';
+                        }
+
+                        if (auth()->user()->can('expense.catgory_delete')) {
+                            $returnHtml .= '  <button data-href="' . action('ExpenseCategoryController@destroy', [$row->id]) . '" class="btn btn-xs btn-danger delete_expense_category"><i class="glyphicon glyphicon-trash"></i>' . __("messages.delete") . '</button>';
+                        }
+
+
+                        return $returnHtml;
                     }
                     // '<button data-href="{{action(\'ExpenseCategoryController@edit\', [$id])}}" class="btn btn-xs btn-primary btn-modal" data-container=".expense_category_modal"><i class="glyphicon glyphicon-edit"></i>  @lang("messages.edit")</button>
                     //     &nbsp;

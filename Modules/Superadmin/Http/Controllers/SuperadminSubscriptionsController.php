@@ -127,7 +127,10 @@ class SuperadminSubscriptionsController extends BaseController
 
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
             
-            $output = ['success' => 0, 'msg' => __('messages.something_went_wrong') ];
+            $output = ['success' => 0,
+             'msg' => __('messages.something_went_wrong')
+            //  'msg' =>$e->getMessage()
+             ];
         }
 
         return back()->with('status', $output);

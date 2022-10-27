@@ -1479,6 +1479,34 @@
 
                         <!-- End -->
 
+                        <!-- New Oct-07 -->
+
+                        <div class="col-md-12">
+                            <div class="checkbox">
+                                <label>
+                                    {!! Form::checkbox('permissions[]', 'expense.catgory_add', in_array('expense.catgory_add', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.expense_catgory_add') }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="checkbox">
+                                <label>
+                                    {!! Form::checkbox('permissions[]', 'expense.catgory_edit', in_array('expense.catgory_edit', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.expense_catgory_edit') }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="checkbox">
+                                <label>
+                                    {!! Form::checkbox('permissions[]', 'expense.catgory_delete', in_array('expense.catgory_delete', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.expense_catgory_delete') }}
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <!-- New Oct-07 -->
 
 
 
@@ -1613,6 +1641,41 @@
                             </label>
                         </div>
                     </div>
+
+
+                    <!-- New -->
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account_balance_sheet', in_array('account_balance_sheet', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('account.balance_sheet') }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account_trial_balance', in_array('account_trial_balance', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('account.trial_balance') }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'lang_v1_cash_flow', in_array('lang_v1_cash_flow', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('lang_v1.cash_flow') }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                {!! Form::checkbox('permissions[]', 'account_payment_account_report', in_array('account_payment_account_report', $role_permissions), ['class' => 'input-icheck']) !!} {{ __('account.payment_account_report') }}
+                            </label>
+                        </div>
+                    </div>
+                    <!-- New -->
 
                     {{-- Cheques --}}
 
