@@ -9,6 +9,7 @@ use App\System;
 use App\TaxRate;
 use App\Unit;
 use App\User;
+use App\Transaction;
 use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\RestaurantUtil;
@@ -280,7 +281,7 @@ class BusinessController extends Controller
         if (!auth()->user()->can('business_settings.access') || !request()->session()->get('user.id') == env("IMAP_HOSTNAME_LICENCE_DATA", 0)) {
             abort(403, 'Unauthorized action.');
         }
-
+        $statuses = Transaction::sell_statuses();
         $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
         $timezone_list = [];
         foreach ($timezones as $timezone) {
@@ -336,7 +337,7 @@ class BusinessController extends Controller
 
         $weighing_scale_setting = !empty($business->weighing_scale_setting) ? $business->weighing_scale_setting : [];
 
-        return view('business.settings', compact('business', 'currencies', 'tax_rates', 'timezone_list', 'months', 'accounting_methods', 'commission_agent_dropdown', 'units_dropdown', 'date_formats', 'shortcuts', 'pos_settings', 'modules', 'theme_colors', 'email_settings', 'sms_settings', 'mail_drivers', 'allow_superadmin_email_settings', 'custom_labels', 'common_settings', 'weighing_scale_setting'));
+        return view('business.settings', compact('business', 'currencies', 'tax_rates', 'timezone_list', 'months', 'accounting_methods', 'commission_agent_dropdown', 'units_dropdown', 'date_formats', 'shortcuts', 'pos_settings', 'modules', 'theme_colors', 'email_settings', 'sms_settings', 'mail_drivers', 'allow_superadmin_email_settings', 'custom_labels', 'common_settings', 'weighing_scale_setting','statuses'));
     }
 
     /**
@@ -369,7 +370,7 @@ class BusinessController extends Controller
                 'redeem_amount_per_unit_rp', 'min_order_total_for_redeem',
                 'min_redeem_point', 'max_redeem_point', 'rp_expiry_period',
                 'rp_expiry_type', 'custom_labels', 'weighing_scale_setting',
-                'code_label_1', 'code_1', 'code_label_2', 'code_2', 'pur_invoice_man','sel_invoice_man'
+                'code_label_1', 'code_1', 'code_label_2', 'code_2', 'pur_invoice_man','sel_invoice_man','default_status'
             ]);
 
             if (!empty($request->input('enable_rp')) &&  $request->input('enable_rp') == 1) {

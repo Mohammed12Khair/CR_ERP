@@ -209,8 +209,23 @@ $title = __('lang_v1.sales_order');
 			@else
 			<div class="@if(!empty($commission_agent)) col-sm-3 @else col-sm-4 @endif">
 				<div class="form-group">
+
 					{!! Form::label('status', __('sale.status') . ':*') !!}
-					{!! Form::select('status', $statuses, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+
+					<select name="status" class="form-control">
+						<?php
+						foreach ($statuses as $key => $value) {
+							if ($key == session('business.default_status')) {
+								echo $key . " X " . session('business.default_status') . "TRUE";
+								echo "<option value=" . $key . " selected='true'>" . $value . "</option>";
+							} else {
+								echo $key . " X " . session('business.default_status') . "FASLE";
+								echo "<option value=" . $key . ">" . $value . "</option>";
+							}
+						}
+						?>
+					</select>
+					<!-- {!! Form::select('status', $statuses, "final", ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!} -->
 				</div>
 			</div>
 			@endif

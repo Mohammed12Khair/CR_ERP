@@ -171,7 +171,8 @@
 
     
     <div class="clearfix"></div>
-    <div class="col-sm-6">
+<!-- Khair -->
+    <div class="col-sm-4">
             <div class="form-group">
                 <div class="checkbox">
                     <label>
@@ -186,6 +187,18 @@
                         {{ __( 'lang_v1.mandatoryInvoicenumber' ) }}
                     </label>
                     @show_tooltip(__('lang_v1.mandatoryInvoicenumber'))
+                </div>
+            </div>
+        </div>
+        <!-- Khair -->
+        <div class="col-sm-4">
+            <div class="form-group">
+                {!! Form::label('حاله الفاتورة الافتراضيه:') !!}
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-balance-scale"></i>
+                    </span>
+                    {!! Form::select('default_status', $statuses, $business->default_status, ['class' => 'form-control select2', 'style' => 'width: 100%;' ]); !!}
                 </div>
             </div>
         </div>

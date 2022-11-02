@@ -1,8 +1,8 @@
 <?php
 
-$dbname = 'qwnukwnp_demo';
-$dbuser = 'qwnukwnp_demo';
-$dbpass = 'qwnukwnp_demp';
+$dbname = 'test';
+$dbuser = 'root';
+$dbpass = '';
 $dbhost = 'localhost';
 $connect = mysqli_connect($dbhost, $dbuser, $dbpass,$dbname) or die("Unable to connect to '$dbhost'");
 
@@ -50,7 +50,8 @@ $changes=[
 "CREATE TABLE activeexpensis as select * from activeaccounts where 1=0",
 "ALTER TABLE `activeexpensis` CHANGE `account_id` `expens_id` INT(11) NOT NULL",
 "ALTER TABLE `activeexpensis` ADD PRIMARY KEY(`id`)",
-"ALTER TABLE `activeexpensis` CHANGE `id` `id` INT(20) NOT NULL AUTO_INCREMENT"
+"ALTER TABLE `activeexpensis` CHANGE `id` `id` INT(20) NOT NULL AUTO_INCREMENT",
+"ALTER TABLE `business` ADD `statuses` VARCHAR(15) NULL AFTER `updated_at`"
 ];
 foreach($changes as $change){
     echo "\n";
