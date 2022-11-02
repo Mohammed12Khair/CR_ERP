@@ -61,20 +61,20 @@ class StockAdjustmentController extends Controller
                 'BL.id'
             )
                 ->leftJoin('users as u', 'transactions.created_by', '=', 'u.id')
-                    ->where('transactions.business_id', $business_id)
-                    ->where('transactions.type', 'stock_adjustment')
-                    ->select(
-                        'transactions.id',
-                        'transaction_date',
-                        'ref_no',
-                        'BL.name as location_name',
-                        'adjustment_type',
-                        'final_total',
-                        'total_amount_recovered',
-                        'additional_notes',
-                        'transactions.id as DT_RowId',
-                        DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by")
-                    );
+                ->where('transactions.business_id', $business_id)
+                ->where('transactions.type', 'stock_adjustment')
+                ->select(
+                    'transactions.id',
+                    'transaction_date',
+                    'ref_no',
+                    'BL.name as location_name',
+                    'adjustment_type',
+                    'final_total',
+                    'total_amount_recovered',
+                    'additional_notes',
+                    'transactions.id as DT_RowId',
+                    DB::raw("CONCAT(COALESCE(u.surname, ''),' ',COALESCE(u.first_name, ''),' ',COALESCE(u.last_name,'')) as added_by")
+                );
 
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
@@ -92,7 +92,7 @@ class StockAdjustmentController extends Controller
             if (!empty($location_id)) {
                 $stock_adjustments->where('transactions.location_id', $location_id);
             }
-            
+
             return Datatables::of($stock_adjustments)
                 ->addColumn('action', '<button type="button" data-href="{{  action("StockAdjustmentController@show", [$id]) }}" class="btn btn-primary btn-xs btn-modal" data-container=".view_modal"><i class="fa fa-eye" aria-hidden="true"></i> @lang("messages.view")</button>
                  &nbsp;
@@ -111,9 +111,10 @@ class StockAdjustmentController extends Controller
                     return __('stock_adjustment.' . $row->adjustment_type);
                 })
                 ->setRowAttr([
-                'data-href' => function ($row) {
-                    return  action('StockAdjustmentController@show', [$row->id]);
-                }])
+                    'data-href' => function ($row) {
+                        return  action('StockAdjustmentController@show', [$row->id]);
+                    }
+                ])
                 ->rawColumns(['final_total', 'action', 'total_amount_recovered'])
                 ->make(true);
         }
@@ -142,7 +143,7 @@ class StockAdjustmentController extends Controller
         $business_locations = BusinessLocation::forDropdown($business_id);
 
         return view('stock_adjustment.create')
-                ->with(compact('business_locations'));
+            ->with(compact('business_locations'));
     }
 
     /**
@@ -160,14 +161,14 @@ class StockAdjustmentController extends Controller
         try {
             DB::beginTransaction();
 
-            $input_data = $request->only([ 'location_id', 'transaction_date', 'adjustment_type', 'additional_notes', 'total_amount_recovered', 'final_total', 'ref_no']);
+            $input_data = $request->only(['location_id', 'transaction_date', 'adjustment_type', 'additional_notes', 'total_amount_recovered', 'final_total', 'ref_no']);
             $business_id = $request->session()->get('user.business_id');
 
             //Check if subscribed or not
             if (!$this->moduleUtil->isSubscribed($business_id)) {
                 return $this->moduleUtil->expiredResponse(action('StockAdjustmentController@index'));
             }
-        
+
             $user_id = $request->session()->get('user.id');
 
             $input_data['type'] = 'stock_adjustment';
@@ -214,33 +215,36 @@ class StockAdjustmentController extends Controller
                 $stock_adjustment->stock_adjustment_lines()->createMany($product_data);
 
                 //Map Stock adjustment & Purchase.
-                $business = ['id' => $business_id,
-                                'accounting_method' => $request->session()->get('business.accounting_method'),
-                                'location_id' => $input_data['location_id']
-                            ];
+                $business = [
+                    'id' => $business_id,
+                    'accounting_method' => $request->session()->get('business.accounting_method'),
+                    'location_id' => $input_data['location_id']
+                ];
                 $this->transactionUtil->mapPurchaseSell($business, $stock_adjustment->stock_adjustment_lines, 'stock_adjustment');
 
                 $this->transactionUtil->activityLog($stock_adjustment, 'added', null, [], false);
             }
 
-            $output = ['success' => 1,
-                            'msg' => __('stock_adjustment.stock_adjustment_added_successfully')
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('stock_adjustment.stock_adjustment_added_successfully')
+            ];
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
             $msg = trans("messages.something_went_wrong");
-                
+
             if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
                 $msg = $e->getMessage();
             }
-            
-            $output = ['success' => 0,
-                            'msg' => $msg
-                        ];
+
+            $output = [
+                'success' => 0,
+                'msg' => $msg
+            ];
         }
 
         return redirect('stock-adjustments')->with('status', $output);
@@ -259,10 +263,10 @@ class StockAdjustmentController extends Controller
         }
         $business_id = request()->session()->get('user.business_id');
         $stock_adjustment = Transaction::where('transactions.business_id', $business_id)
-                    ->where('transactions.id', $id)
-                    ->where('transactions.type', 'stock_adjustment')
-                    ->with(['stock_adjustment_lines', 'location', 'business', 'stock_adjustment_lines.variation', 'stock_adjustment_lines.variation.product', 'stock_adjustment_lines.variation.product_variation', 'stock_adjustment_lines.lot_details'])
-                    ->first();
+            ->where('transactions.id', $id)
+            ->where('transactions.type', 'stock_adjustment')
+            ->with(['stock_adjustment_lines', 'location', 'business', 'stock_adjustment_lines.variation', 'stock_adjustment_lines.variation.product', 'stock_adjustment_lines.variation.product_variation', 'stock_adjustment_lines.lot_details'])
+            ->first();
 
         $lot_n_exp_enabled = false;
         if (request()->session()->get('business.enable_lot_number') == 1 || request()->session()->get('business.enable_product_expiry') == 1) {
@@ -270,12 +274,12 @@ class StockAdjustmentController extends Controller
         }
 
         $activities = Activity::forSubject($stock_adjustment)
-           ->with(['causer', 'subject'])
-           ->latest()
-           ->get();
+            ->with(['causer', 'subject'])
+            ->latest()
+            ->get();
 
         return view('stock_adjustment.show')
-                ->with(compact('stock_adjustment', 'lot_n_exp_enabled', 'activities'));
+            ->with(compact('stock_adjustment', 'lot_n_exp_enabled', 'activities'));
     }
 
     /**
@@ -317,9 +321,9 @@ class StockAdjustmentController extends Controller
                 DB::beginTransaction();
 
                 $stock_adjustment = Transaction::where('id', $id)
-                                    ->where('type', 'stock_adjustment')
-                                    ->with(['stock_adjustment_lines'])
-                                    ->first();
+                    ->where('type', 'stock_adjustment')
+                    ->with(['stock_adjustment_lines'])
+                    ->first();
 
                 //Add deleted product quantity to available quantity
                 $stock_adjustment_lines = $stock_adjustment->stock_adjustment_lines;
@@ -341,19 +345,21 @@ class StockAdjustmentController extends Controller
 
                 //Remove Mapping between stock adjustment & purchase.
 
-                $output = ['success' => 1,
-                            'msg' => __('stock_adjustment.delete_success')
-                        ];
+                $output = [
+                    'success' => 1,
+                    'msg' => __('stock_adjustment.delete_success')
+                ];
 
                 DB::commit();
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __('messages.something_went_wrong')
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __('messages.something_went_wrong')
+            ];
         }
         return $output;
     }
@@ -385,9 +391,9 @@ class StockAdjustmentController extends Controller
                 }
             }
             $product->lot_numbers = $lot_numbers;
-            
+
             return view('stock_adjustment.partials.product_table_row')
-            ->with(compact('product', 'row_index'));
+                ->with(compact('product', 'row_index'));
         }
     }
 
@@ -405,8 +411,8 @@ class StockAdjustmentController extends Controller
 
         try {
             $purchase_line = PurchaseLine::where('id', $purchase_line_id)
-                                    ->with(['transaction'])
-                                    ->first();
+                ->with(['transaction'])
+                ->first();
 
             if (!empty($purchase_line)) {
                 DB::beginTransaction();
@@ -455,30 +461,33 @@ class StockAdjustmentController extends Controller
                 );
 
                 //Map Stock adjustment & Purchase.
-                $business = ['id' => $business_id,
-                                'accounting_method' => request()->session()->get('business.accounting_method'),
-                                'location_id' => $purchase_line->transaction->location_id
-                            ];
+                $business = [
+                    'id' => $business_id,
+                    'accounting_method' => request()->session()->get('business.accounting_method'),
+                    'location_id' => $purchase_line->transaction->location_id
+                ];
                 $this->transactionUtil->mapPurchaseSell($business, $stock_adjustment->stock_adjustment_lines, 'stock_adjustment', false, $purchase_line->id);
 
                 DB::commit();
 
-                $output = ['success' => 1,
-                            'msg' => __('lang_v1.stock_removed_successfully')
-                        ];
+                $output = [
+                    'success' => 1,
+                    'msg' => __('lang_v1.stock_removed_successfully')
+                ];
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
             $msg = trans("messages.something_went_wrong");
-                
+
             if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
                 $msg = $e->getMessage();
             }
-            
-            $output = ['success' => 0,
-                            'msg' => $msg
-                        ];
+
+            $output = [
+                'success' => 0,
+                'msg' => $msg
+            ];
         }
         return $output;
     }

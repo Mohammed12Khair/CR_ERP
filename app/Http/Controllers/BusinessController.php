@@ -121,7 +121,7 @@ class BusinessController extends Controller
         // return redirect('/');
         // }
 
-        // return  $request->get('fy_start_month');
+        // return  $request;
 
         // return "test";
 
@@ -237,7 +237,8 @@ class BusinessController extends Controller
 
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                // 'msg' => __('messages.something_went_wrong')
+                'msg' => $e->getMessage()
             ];
 
             return back()->with('status', $output)->withInput();

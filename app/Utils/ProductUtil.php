@@ -1964,6 +1964,7 @@ class ProductUtil extends Util
                                     'transactions.ref_no'
                                 )
                                 ->orderBy('transactions.transaction_date', 'asc')
+                                // ->orderBy('transactions.transaction_date', 'desc')
                                 ->get();
 
         $stock_history_array = [];

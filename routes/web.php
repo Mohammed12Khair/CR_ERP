@@ -108,6 +108,8 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/products/quick_add', 'ProductController@quickAdd');
     Route::post('/products/save_quick_product', 'ProductController@saveQuickProduct');
     Route::get('/products/get-combo-product-entry-row', 'ProductController@getComboProductEntryRow');
+    Route::get('/products/reportOne', 'ProductController@reportindex1');
+    Route::get('/products/reportTwo', 'ProductController@reportindex2');
     Route::post('/products/toggle-woocommerce-sync', 'ProductController@toggleWooCommerceSync');
 
     Route::resource('products', 'ProductController');

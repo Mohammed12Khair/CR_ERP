@@ -400,6 +400,20 @@ class AdminSidebarMenu
                                 ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'stock-adjustments' && request()->segment(2) == null]
                             );
                         }
+                        if (auth()->user()->can('purchase.view')) {
+                            $sub->url(
+                                action('ProductController@reportindex2'),
+                                " تقرير المخزون",
+                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'stock-adjustments' && request()->segment(2) == null]
+                            );
+                        }
+                        if (auth()->user()->can('purchase.view')) {
+                            $sub->url(
+                                action('ProductController@reportindex1'),
+                                " تقاير تحويلات المخزون",
+                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'stock-adjustments' && request()->segment(2) == null]
+                            );
+                        }
                         if (auth()->user()->can('purchase.create')) {
                             $sub->url(
                                 action('StockAdjustmentController@create'),

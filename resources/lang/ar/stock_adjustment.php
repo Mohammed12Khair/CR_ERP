@@ -1,6 +1,6 @@
 <?php 
  return [ 
-"stock_adjustment" => "المخزون الهالك",
+"stock_adjustment" => "اداره المخزون",
 "stock_adjustments" => "المخزون الهالك",
 "list" => "قائمة المخزون الهالك",
 "add" => "أضف تالف",
