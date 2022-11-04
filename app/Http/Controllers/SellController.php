@@ -1226,6 +1226,7 @@ class SellController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // sdf
     public function create()
     {
         $sale_type = request()->get('sale_type', '');

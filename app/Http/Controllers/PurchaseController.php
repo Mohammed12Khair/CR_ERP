@@ -305,6 +305,18 @@ class PurchaseController extends Controller
                 $purchases->where('transactions.status', request()->status);
             }
 
+            if (!empty(request()->payment_type)) {
+                error_log("query_to_get_cheque");
+                $transaction_with_cheque = [];
+                $query_to_get_cheques = DB::select(DB::raw("Select a.transaction_id transactionIDTest from transaction_payments a,bankcheques_payments b where a.payment_ref_no =b.cheque_ref"));
+                foreach ($query_to_get_cheques as $query_to_get_cheque) {
+                    error_log($query_to_get_cheque->transactionIDTest);
+                    error_log("query_to_get_cheque");
+                    array_push($transaction_with_cheque, $query_to_get_cheque->transactionIDTest);
+                }
+                $purchases->whereIn('transactions.id', $transaction_with_cheque);
+            }
+
             if (!empty(request()->start_date) && !empty(request()->end_date)) {
                 $start = request()->start_date;
                 $end =  request()->end_date;
@@ -692,7 +704,7 @@ class PurchaseController extends Controller
         $common_settings = !empty(session('business.common_settings')) ? session('business.common_settings') : [];
 
         return view('purchase.create')
-            ->with(compact('business_details','taxes', 'orderStatuses', 'business_locations', 'currency_details', 'default_purchase_status', 'customer_groups', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'accounts_cheques', 'bl_attributes', 'common_settings'));
+            ->with(compact('business_details', 'taxes', 'orderStatuses', 'business_locations', 'currency_details', 'default_purchase_status', 'customer_groups', 'types', 'shortcuts', 'payment_line', 'payment_types', 'accounts', 'accounts_cheques', 'bl_attributes', 'common_settings'));
     }
 
     /**
