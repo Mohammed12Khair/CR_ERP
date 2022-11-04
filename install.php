@@ -51,7 +51,7 @@ $changes=[
 "ALTER TABLE `activeexpensis` CHANGE `account_id` `expens_id` INT(11) NOT NULL",
 "ALTER TABLE `activeexpensis` ADD PRIMARY KEY(`id`)",
 "ALTER TABLE `activeexpensis` CHANGE `id` `id` INT(20) NOT NULL AUTO_INCREMENT",
-"ALTER TABLE `business` ADD `statuses` VARCHAR(15) NULL AFTER `updated_at`"
+"ALTER TABLE `business` ADD `default_status` VARCHAR(15) NULL AFTER `updated_at`"
 ];
 foreach($changes as $change){
     echo "\n";

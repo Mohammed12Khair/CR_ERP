@@ -386,7 +386,7 @@ class PurchaseController extends Controller
                     $cheque_indicator = '';
                     $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status', 'unset');
                     if ($cheque->count() != 0) {
-                        $cheque_indicator = '<i class="fas fa-money-bill-alt" aria-hidden="true"></i>';
+                        $cheque_indicator = '<span>cheque</span><i class="fas fa-money-bill-alt" aria-hidden="true"></i>';
                     }
 
                     $refund_indicator = '';
@@ -430,6 +430,9 @@ class PurchaseController extends Controller
                     }
                     return $due_html;
                 })
+                // ->editColumn('testing', function ($row) {
+                //     return "testing";
+                // })
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can("purchase.view")) {

@@ -46,6 +46,35 @@
             <td class="align-right">@format_currency($contact->balance)</td>
         </tr>
         <tr>
+            <td>الشيكات المستحقه</td>
+            <?php
+            function getPaid()
+            {
+                $PaidAmount = DB::select(DB::raw("select sum(amount) Cash from transaction_payments where note like 'PP2022_0009%'"));
+                return $PaidAmount->Cash;
+            }
+            $openAmount = 0;
+            $TheContact_id = $contact->id;
+            $ref = [];
+            $AllCheques = DB::select(DB::raw("select payment_ref_no ref,b.amount amount from transaction_payments a,bankcheques_payments b  
+            where a.payment_ref_no =b.cheque_ref and a.transaction_id in 
+            (select id from transactions where contact_id=:contact_id)"), ["contact_id" => $TheContact_id]);
+            foreach ($AllCheques as $Cheque) {
+                $openAmount += $Cheque->amount;
+                array_push($ref, $Cheque->ref);
+            }
+            // error_log($openAmount);
+            $paidAmount = 0;
+            foreach ($ref as $refreance) {
+                $ref_edit = trim(str_replace('/', '_', $refreance));
+                $SelectPAid = App\TransactionPayment::where('note', 'like', $ref_edit . '%')->sum('amount');
+                $paidAmount+=$SelectPAid;
+            }
+            $finalCheque = $openAmount - $paidAmount;
+            ?>
+            <td class="align-right">@format_currency($finalCheque)</td>
+        </tr>
+        <tr>
             <td><strong>السلف و العهد</strong></td>
             <td class="align-right">
                 <?php
@@ -156,10 +185,10 @@
                         @endif
                     </td>
                     <td class="ws-nowrap align-right">
-                        @if ($data['credit'] != ''  && $data['credit'] > 0 )
+                        @if ($data['credit'] != '' && $data['credit'] > 0 )
                         @format_currency($data['credit'])
                         @else
-                       
+
                         @endif
                     </td>
                     <td class="ws-nowrap align-right">{{ $data['balance'] }}</td>
