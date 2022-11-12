@@ -565,6 +565,13 @@ class SellPosController extends Controller
 
                 DB::commit();
 
+                // khair 11-Nov-2022
+                $ItemsPurchases = TransactionSellLine::where("transaction_id", $transaction->id)->get();
+                $now = \Carbon::now()->toDateTimeString();
+                foreach ($ItemsPurchases as $ItemsPurchase) {
+                    DB::select(DB::raw("INSERT INTO transaction_sell_lines_delivery (id,rowid,transaction_id,product_id,quantity,created) values (:id,:rowid,:transaction_id,:product_id,:quantity,:created)"), ["rowid" => $ItemsPurchase->id, "transaction_id" => $ItemsPurchase->transaction_id, "product_id" => $ItemsPurchase->product_id, "quantity" => $ItemsPurchase->quantity, "created" => $now, "id" => 0]);
+                }
+
                 if ($request->input('is_save_and_print') == 1) {
                     $url = $this->transactionUtil->getInvoiceUrl($transaction->id, $business_id);
                     return redirect()->to($url . '?print_on_load=true');

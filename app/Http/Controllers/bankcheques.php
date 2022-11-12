@@ -87,6 +87,7 @@ class bankcheques extends Controller
 
             return Datatables::of($cheques)
                 ->addColumn('action', function ($row) {
+                    
                     $key = str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id;
                     $total_payment = TransactionPayment::where([
                         ['note', '=', $key],
@@ -112,19 +113,32 @@ class bankcheques extends Controller
                     }
                     return $action;
                 })
-                ->editColumn('Status', function ($row) {
+                ->addColumn('Status', function ($row) {
+                    $returnHtml='';
                     $key = str_replace('/', '_', $row->cheque_ref) . '_' . $row->payment_id;
                     $total_payment = TransactionPayment::where([
                         ['note', '=', $key],
                         ['business_id', '=', $row->business_id]
                     ])->sum('amount');
+                    // return "<strong>Data</strong>";
                     if ($total_payment == 0) {
-                        return 'New';
+                        // برتقالي
+                        // data-status-name="استلام" data-orig-value="received">استلام
+                        // </span>
+                        $returnHtml.="<span class='label bg-light-green status-label' >تحت التحصيل</span>";
+                        return "<span class='label bg-light-green status-label' >تحت التحصيل</span>";
                     } elseif ($total_payment > 0 && $total_payment != $row->amount) {
-                        return 'Partial';
+                        // return "<span class='label bg-light-green status-label' >مدفوع جزئي</span>";
+                        $returnHtml.="<span class='label bg-light-green status-label' >تحت التحصيل</span>";
+                      
                     } elseif ($total_payment == $row->amount) {
-                        return 'Paid';
+                        // return "<span class='label bg-light-green status-label' >مدفوع</span>";
+                        $returnHtml.="<span class='label bg-light-green status-label' >تحت التحصيل</span>";
+                      
                     }
+
+                    return $returnHtml;
+                    
                 })
                 ->addColumn('created_at', function ($row) {
                     return $row->created_at;

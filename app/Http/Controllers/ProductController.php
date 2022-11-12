@@ -327,6 +327,17 @@ class ProductController extends Controller
             ));
     }
 
+
+    public function GetDetails($id)
+    {
+        $deleivery = DB::select(
+            "select a.transaction_id,c.name,a.product_id,a.quantity,b.quantity from purchase_lines a,transaction_sell_lines_delivery b,products c where a.id=b.rowid and c.id=a.product_id and a.transaction_id=:transaction_id",
+            ["transaction_id" => $id]);
+
+
+        return $deleivery;
+    }
+
     public function reportindex1()
     {
 
@@ -598,17 +609,17 @@ class ProductController extends Controller
         //     'is_woocommerce'
         // ));
         return view('product.index1')
-        ->with(compact(
-            'rack_enabled',
-            'categories',
-            'brands',
-            'units',
-            'taxes',
-            'business_locations',
-            'show_manufacturing_data',
-            'pos_module_data',
-            'is_woocommerce'
-        ));
+            ->with(compact(
+                'rack_enabled',
+                'categories',
+                'brands',
+                'units',
+                'taxes',
+                'business_locations',
+                'show_manufacturing_data',
+                'pos_module_data',
+                'is_woocommerce'
+            ));
     }
     public function reportindex2()
     {
@@ -881,17 +892,17 @@ class ProductController extends Controller
         //     'is_woocommerce'
         // ));
         return view('product.index2')
-        ->with(compact(
-            'rack_enabled',
-            'categories',
-            'brands',
-            'units',
-            'taxes',
-            'business_locations',
-            'show_manufacturing_data',
-            'pos_module_data',
-            'is_woocommerce'
-        ));
+            ->with(compact(
+                'rack_enabled',
+                'categories',
+                'brands',
+                'units',
+                'taxes',
+                'business_locations',
+                'show_manufacturing_data',
+                'pos_module_data',
+                'is_woocommerce'
+            ));
     }
 
     /**
@@ -2759,9 +2770,12 @@ class ProductController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         if (request()->ajax()) {
-
-            $stock_details = $this->productUtil->getVariationStockDetails($business_id, $id, request()->input('location_id'));
-            $stock_history = $this->productUtil->getVariationStockHistory($business_id, $id, request()->input('location_id'));
+            error_log("Product _ID");
+            error_log(request()->input('product_ID'));
+            // $stock_details = $this->productUtil->getVariationStockDetails($business_id, $id, request()->input('location_id'));
+            // $stock_history = $this->productUtil->getVariationStockHistory($business_id, $id, request()->input('location_id'));
+            $stock_details = $this->productUtil->getVariationStockDetails($business_id, request()->input('product_ID'), request()->input('location_id'));
+            $stock_history = $this->productUtil->getVariationStockHistory($business_id, request()->input('product_ID'), request()->input('location_id'));
 
             return view('product.stock_history_details')
                 ->with(compact('stock_details', 'stock_history'));
@@ -2770,13 +2784,16 @@ class ProductController extends Controller
         $product = Product::where('business_id', $business_id)
             ->with(['variations', 'variations.product_variation'])
             ->findOrFail($id);
+        $product_all = Product::where('business_id', $business_id)->get();
+
+
 
         //Get all business locations
         $business_locations = BusinessLocation::forDropdown($business_id);
 
 
         return view('product.stock_history')
-            ->with(compact('product', 'business_locations'));
+            ->with(compact('product', 'business_locations', 'product_all'));
     }
 
     /**

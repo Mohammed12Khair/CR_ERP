@@ -68,6 +68,7 @@ class RestaurantUtil extends Util
                 }, '=', 0);
             }
 
+
             if ($filter['line_order_status'] == 'served') {
                 $query->whereHas('sell_lines', function($q) {
                     $q->where('res_line_order_status', '!=', 'served');

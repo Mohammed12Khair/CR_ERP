@@ -27,6 +27,7 @@ class AdminSidebarMenu
             $pos_settings = !empty(session('business.pos_settings')) ? json_decode(session('business.pos_settings'), true) : [];
 
             $is_admin = auth()->user()->hasRole('Admin#' . session('business.id')) ? true : false;
+           
             //Home
             $menu->url(action('HomeController@index'), __('home.home'), ['icon' => 'fa fas fa-tachometer-alt', 'active' => request()->segment(1) == 'home'])->order(5);
 
@@ -404,6 +405,13 @@ class AdminSidebarMenu
                             $sub->url(
                                 action('ProductController@reportindex2'),
                                 " تقرير المخزون",
+                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'stock-adjustments' && request()->segment(2) == null]
+                            );
+                        }
+                        if (auth()->user()->can('purchase.view')) {
+                            $sub->url(
+                                action('ProductController@productStockHistory',$id=1),
+                                " تقرير  حركه المخزون",
                                 ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'stock-adjustments' && request()->segment(2) == null]
                             );
                         }

@@ -394,6 +394,7 @@ class PurchaseController extends Controller
                 })
                 ->removeColumn('id')
                 ->editColumn('ref_no', function ($row) {
+
                     // Edit
                     $cheque_indicator = '';
                     $cheque = bankcheques_payment::where('transaction_id', $row->id)->where('status', 'unset');
@@ -845,6 +846,13 @@ class PurchaseController extends Controller
             $this->transactionUtil->activityLog($transaction, 'added');
 
             DB::commit();
+
+            // khair 11-Nov-2022
+            $ItemsPurchases = PurchaseLine::where("transaction_id", $transaction->id)->get();
+            $now = \Carbon::now()->toDateTimeString();
+            foreach ($ItemsPurchases as $ItemsPurchase) {
+                DB::select(DB::raw("INSERT INTO transaction_sell_lines_delivery (id,rowid,transaction_id,product_id,quantity,created) values (:id,:rowid,:transaction_id,:product_id,:quantity,:created)"), ["rowid" => $ItemsPurchase->id, "transaction_id" => $ItemsPurchase->transaction_id, "product_id" => $ItemsPurchase->product_id, "quantity" => $ItemsPurchase->quantity, "created" => $now, "id" => 0]);
+            }
 
             // Add refund 
             if ($refund_total > 0) {

@@ -102,7 +102,7 @@
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#product_list_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-cubes"
-                                        aria-hidden="true"></i> @lang('lang_v1.all_products')</a>
+                                        aria-hidden="true"></i>تقرير المخزون</a>
                             </li>
                             @can('stock_report.view')
                                 <!-- <li>
@@ -117,7 +117,6 @@
                                 </li> -->
                             @endcan
                         </ul>
-
                         <div class="tab-content">
                             <div class="tab-pane active" id="product_list_tab">
                      

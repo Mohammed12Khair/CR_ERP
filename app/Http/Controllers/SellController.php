@@ -241,6 +241,19 @@ class SellController extends Controller
                 $customer_id = request()->customer_id;
                 $sells->where('contacts.id', $customer_id);
             }
+
+            if (!empty(request()->payment_type)) {
+                error_log("query_to_get_cheque");
+                $transaction_with_cheque = [];
+                $query_to_get_cheques = DB::select(DB::raw("Select a.transaction_id transactionIDTest from transaction_payments a,bankcheques_payments b where a.payment_ref_no =b.cheque_ref"));
+                foreach ($query_to_get_cheques as $query_to_get_cheque) {
+                    error_log($query_to_get_cheque->transactionIDTest);
+                    error_log("query_to_get_cheque");
+                    array_push($transaction_with_cheque, $query_to_get_cheque->transactionIDTest);
+                }
+                $sells->whereIn('transactions.id', $transaction_with_cheque);
+            }
+
             if (!empty(request()->start_date) && !empty(request()->end_date)) {
                 $start = request()->start_date;
                 $end =  request()->end_date;

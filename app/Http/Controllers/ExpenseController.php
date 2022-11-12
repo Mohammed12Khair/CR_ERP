@@ -150,6 +150,18 @@ class ExpenseController extends Controller
                 $expenses->whereIn('transactions.location_id', $permitted_locations);
             }
 
+            if (!empty(request()->payment_type)) {
+                error_log("query_to_get_cheque");
+                $transaction_with_cheque = [];
+                $query_to_get_cheques = DB::select(DB::raw("Select a.transaction_id transactionIDTest from transaction_payments a,bankcheques_payments b where a.payment_ref_no =b.cheque_ref"));
+                foreach ($query_to_get_cheques as $query_to_get_cheque) {
+                    error_log($query_to_get_cheque->transactionIDTest);
+                    error_log("query_to_get_cheque");
+                    array_push($transaction_with_cheque, $query_to_get_cheque->transactionIDTest);
+                }
+                $expenses->whereIn('transactions.id', $transaction_with_cheque);
+            }
+
             //Add condition for payment status for the list of expense
             if (request()->has('payment_status')) {
                 $payment_status = request()->get('payment_status');

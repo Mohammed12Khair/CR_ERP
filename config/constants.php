@@ -46,7 +46,7 @@ return [
 
     'enable_sell_in_diff_currency' => false,
     'currency_exchange_rate' => 1,
-    'orders_refresh_interval' => 600, //Auto refresh interval on Kitchen and Orders page in seconds,
+    'orders_refresh_interval' => 10, //Auto refresh interval on Kitchen and Orders page in seconds,
 
     'default_date_format' => 'm/d/Y', //Default date format to be used if session is not set. All valid formats can be found on https://www.php.net/manual/en/function.date.php
     

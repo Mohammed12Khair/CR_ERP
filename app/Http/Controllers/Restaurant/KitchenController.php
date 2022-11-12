@@ -49,7 +49,9 @@ class KitchenController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $orders = $this->restUtil->getAllOrders($business_id, ['line_order_status' => 'received']);
+        $orders_custom = $this->restUtil->getAllOrders($business_id, ['line_order_status' => 'orders_custom']);
 
+        
 
         return view('restaurant.kitchen.index', compact('orders'));
     }
@@ -178,7 +180,7 @@ class KitchenController extends Controller
         }
 
         $orders = $this->restUtil->getAllOrders($business_id, $filter);
-        return view('restaurant.partials.show_orders_2', compact('orders', 'orders_for'));
+        return view('restaurant.partials.show_orders', compact('orders', 'orders_for'));
     }
 
     /**

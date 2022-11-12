@@ -37,17 +37,13 @@
 				                <!-- /btn-group -->
 				                {!! Form::select('booking_status', $booking_statuses, $booking->booking_status, ['class' => 'form-control', 'placeholder' => __('restaurant.change_booking_status'), 'required']); !!}
 				                <div class="input-group-btn">
-								@can('booking.UpdateAll')
 				                  <button type="submit" class="btn btn-primary">@lang('messages.update')</button>
-				              	@endcan
-								</div>
+				                </div>
 				             </div>
 						{!! Form::close() !!}
 					</div>
 					<div class="col-sm-3 text-center">
-						@can('booking.DeleteAll')
 						<button type="button" class="btn btn-danger" id="delete_booking" data-href="{{action('Restaurant\BookingController@destroy', [$booking->id])}}">@lang('restaurant.delete_booking')</button>
-					@endcan
 					</div>
 				</div>
 			<br>

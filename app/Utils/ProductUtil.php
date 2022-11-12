@@ -1188,6 +1188,8 @@ class ProductUtil extends Util
                 if ($transaction->status == 'received') {
                     $this->updateProductQuantity($transaction->location_id, $data['product_id'], $data['variation_id'], $new_quantity_f, 0, $currency_details);
                 }
+
+
             }
 
             $purchase_line->quantity = $new_quantity;
@@ -2008,7 +2010,7 @@ class ProductUtil extends Util
                     'quantity_change' => $quantity_change,
                     'stock' => $this->roundQuantity($stock),
                     'type' => 'stock_adjustment',
-                    'type_label' => __('stock_adjustment.stock_adjustment'),
+                    'type_label' => __('stock_adjustment.stock_adjustment_failed'),
                     'ref_no' => $stock_line->ref_no,
                     'transaction_id' => $stock_line->transaction_id
                 ];

@@ -188,7 +188,7 @@
 						<td><?php
 							if ($Type == "purchase" || $Type == "sell") {
 								if ($selectref_no > 0) {
-									echo __('lang_v1.' . App\Transaction::where('ref_no', $history['ref_no'])->first()->payment_status);
+									echo __('lang_v1.' . App\Transaction::where('ref_no', $history['ref_no'])->first()->payment_status );
 								} else {
 									echo  __('lang_v1.' . App\Transaction::where('invoice_no', $history['ref_no'])->first()->payment_status);
 								}

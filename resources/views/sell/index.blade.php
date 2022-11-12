@@ -139,6 +139,9 @@ $(document).ready( function(){
                 if($('#shipping_status').length) {
                     d.shipping_status = $('#shipping_status').val();
                 }
+                if($('#sell_list_filter_payment_type').length) {
+                    d.payment_type = $('#sell_list_filter_payment_type').val();
+                }
 
                 if($('#sell_list_filter_source').length) {
                     d.source = $('#sell_list_filter_source').val();
@@ -207,7 +210,7 @@ $(document).ready( function(){
         }
     });
 
-    $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status, #created_by, #sales_cmsn_agnt, #service_staffs, #shipping_status, #sell_list_filter_source',  function() {
+    $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status, #created_by, #sales_cmsn_agnt, #service_staffs, #shipping_status, #sell_list_filter_source,#sell_list_filter_payment_type',  function() {
         sell_table.ajax.reload();
     });
 
