@@ -12,15 +12,26 @@
 	?>
 	</select>
 </div> -->
-@forelse($customstatus as $order)
+@forelse($orders_custom as $order)
+
+<?php
+
+
+?>
+
 @foreach ($order->sell_lines as $user)
 @php
 
-if ($user->parent_sell_line_id > 0 or $user->res_line_order_status == 'served') {
+
+
+if ($user->res_line_order_status == 'served') {
+continue;
+}
+if ($user->res_line_order_status == null) {
 continue;
 }
 
-if ($user->parent_sell_line_id > 0 or $user->res_line_order_status == 'cooked') {
+if ($user->res_line_order_status == 'cooked') {
 continue;
 }
 
@@ -28,14 +39,14 @@ continue;
 
 if($order->shipping_status == 'ordered')
 {
-continue;
+//continue;
 }
 @endphp
 <?php
-echo $order->res_order_status . " | " . $order->shipping_status;
+// echo $order->res_order_status . " | " . $order->shipping_status;
 
-if($order->res_order_status == 'served' or $order->res_order_status == 'cooked'){
-continue;
+if ($order->res_order_status == 'served' or $order->res_order_status == 'cooked') {
+	continue;
 }
 
 
@@ -63,11 +74,11 @@ try {
 	$name = '';
 }
 ?>
-<a href="#" class=" mark_as_cooked_btn" data-href="{{action('Restaurant\KitchenController@markAsCookedOne', [$user->id])}}">
+<a href="#" class=" mark_as_cooked_btn" data-href="{{action('Restaurant\KitchenController@markAsCookedOneCooked', [$user->id])}}">
 	<div class="col-md-3 col-xs-6 order_div Type{{$product->category_id}}" style="height: 100%;">
 		@if($order->shipping_status == 'packed' || $order->shipping_status == 'shipped' || $order->shipping_status == 'delivered' || $order->shipping_status == 'cancelled' )
 		<div class="small-box bg-info rounded" style="border-radius: 14px!important;">
-		<div style="text-align:center;" ><i class="fa fa-truck"></i></div>
+			<div style="text-align:center;"><i class="fa fa-truck"></i></div>
 			@else
 			<div class="small-box bg-gray rounded" style="border-radius: 14px!important;">
 				@endif

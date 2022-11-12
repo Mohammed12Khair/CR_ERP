@@ -22,8 +22,15 @@ class RestaurantUtil extends Util
      *
      * @return obj $orders
      */
+
     public function getAllOrders($business_id, $filter = [])
     {
+
+        error_log("test");
+        // orders_custom
+        foreach($filter as $one){
+            error_log($one);
+        }
         $query = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
                 ->leftjoin(
                     'business_locations AS bl',
@@ -55,6 +62,16 @@ class RestaurantUtil extends Util
         }
 
         if ( !empty($filter['line_order_status'])) {
+            // Status
+            if ($filter['line_order_status'] == 'orders_custom') {
+                $query->whereHas('sell_lines', function($q) {
+                    $q->whereNotNull('res_line_order_status')
+                      ->orWhere('res_line_order_status', 'orders_custom');
+                }, '>=', 1);
+
+                // $query->whereNotNull('res');
+            }
+
             if ($filter['line_order_status'] == 'received') {
                 $query->whereHas('sell_lines', function($q) {
                     $q->whereNull('res_line_order_status')
@@ -66,6 +83,8 @@ class RestaurantUtil extends Util
                 $query->whereHas('sell_lines', function($q) {
                     $q->where('res_line_order_status', '!=', 'cooked');
                 }, '=', 0);
+
+
             }
 
 

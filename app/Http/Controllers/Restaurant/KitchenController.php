@@ -53,7 +53,7 @@ class KitchenController extends Controller
 
         
 
-        return view('restaurant.kitchen.index', compact('orders'));
+        return view('restaurant.kitchen.index', compact('orders','orders_custom'));
     }
 
 
@@ -68,6 +68,46 @@ class KitchenController extends Controller
         // }
         try {
             $business_id = request()->session()->get('user.business_id');
+            $sl = TransactionSellLine::where('id', $id)
+                ->update(['res_line_order_status' => 'orders_custom']);
+            $s2 = TransactionSellLine::where('parent_sell_line_id', $id)
+                ->update(['res_line_order_status' => 'orders_custom']);
+            // $sl = TransactionSellLine::where('id', $id)
+            //     ->update(['res_line_order_status' => 'cooked']);
+            // $s2 = TransactionSellLine::where('parent_sell_line_id', $id)
+            //     ->update(['res_line_order_status' => 'cooked']);
+
+            $output = [
+                'success' => 1,
+                'msg' => trans("restaurant.order_successfully_marked_cooked")
+            ];
+        } catch (\Exception $e) {
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => trans("messages.something_went_wrong")
+            ];
+        }
+
+        return $output;
+    }
+
+    /**
+     * Marks an order as cooked
+     * @return json $output
+     */
+    public function markAsCookedOneCooked($id)
+    {
+        // if (!auth()->user()->can('sell.update')) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+        try {
+            // $business_id = request()->session()->get('user.business_id');
+            // $sl = TransactionSellLine::where('id', $id)
+            //     ->update(['res_line_order_status' => 'orders_custom']);
+            // $s2 = TransactionSellLine::where('parent_sell_line_id', $id)
+            //     ->update(['res_line_order_status' => 'orders_custom']);
             $sl = TransactionSellLine::where('id', $id)
                 ->update(['res_line_order_status' => 'cooked']);
             $s2 = TransactionSellLine::where('parent_sell_line_id', $id)
@@ -181,6 +221,34 @@ class KitchenController extends Controller
 
         $orders = $this->restUtil->getAllOrders($business_id, $filter);
         return view('restaurant.partials.show_orders', compact('orders', 'orders_for'));
+    }
+    /**
+     * Retrives fresh orders
+     *
+     * @return Json $output
+     */
+    public function refreshOrdersList_3(Request $request)
+    {
+        // if (!auth()->user()->can('sell.view')) {
+        //     abort(403, 'Unauthorized action.');
+        // }
+        $business_id = request()->session()->get('user.business_id');
+        $orders_for = $request->orders_for;
+        $filter = [];
+        $service_staff_id = request()->session()->get('user.id');
+
+        if (!$this->restUtil->is_service_staff($service_staff_id) && !empty($request->input('service_staff_id'))) {
+            $service_staff_id = $request->input('service_staff_id');
+        }
+
+        if ($orders_for == 'kitchen') {
+            $filter['line_order_status'] = 'orders_custom';
+        } elseif ($orders_for == 'waiter') {
+            $filter['waiter_id'] = $service_staff_id;
+        }
+
+        $orders_custom = $this->restUtil->getAllOrders($business_id, $filter);
+        return view('restaurant.partials.show_orders_ongoing', compact('orders_custom', 'orders_for'));
     }
 
     /**

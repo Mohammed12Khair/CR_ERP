@@ -411,9 +411,11 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
         Route::get('/kitchen/mark-as-cooked/{id}', 'Restaurant\KitchenController@markAsCooked');
         // Mohammed Khair
         Route::get('/kitchen/mark-as-cooked_item/{id}', 'Restaurant\KitchenController@markAsCookedOne');
+        Route::get('/kitchen/mark-as-cooked_item2/{id}', 'Restaurant\KitchenController@markAsCookedOneCooked');
 
         Route::post('/refresh-orders-list', 'Restaurant\KitchenController@refreshOrdersList');
         Route::post('/refresh-orders-list2', 'Restaurant\KitchenController@refreshOrdersList_2');
+        Route::post('/refresh-orders-list3', 'Restaurant\KitchenController@refreshOrdersList_3');
         Route::post('/refresh-line-orders-list', 'Restaurant\KitchenController@refreshLineOrdersList');
 
         Route::get('/orders', 'Restaurant\OrderController@index');
