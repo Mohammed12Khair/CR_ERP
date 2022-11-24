@@ -1,5 +1,5 @@
 <?php
-
+//#    "remotePath": "public_html/officially_magnetic_v2/",
 $dbname = 'test';
 $dbuser = 'root';
 $dbpass = '';
