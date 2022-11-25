@@ -17,9 +17,18 @@
         </div>
         <div class="box-body">
             <input type="hidden" id="orders_for" value="kitchen">
-            <div class="row" id="orders_div">
-                <div clas="col-md-4">
-                    @include('restaurant.partials.show_orders', array('orders_for' => 'kitchen'))
+            <div class="row">
+                <div class="col-md-6">
+                    <h1 style="text-align:center;"> الطلبات الجديدة</h1>
+                    <div id="orders_div" style="border:1px solid grey;">
+                        @include('restaurant.partials.show_orders', array('orders_for' => 'kitchen'))
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h1 style="text-align:center;">تحت التجهيز</h1>
+                    <div style="background-color: grey;border:1px solid grey;"  id="orders_div_old">
+                        @include('restaurant.partials.show_orders_ongoing', array('orders_for' => 'kitchen'))
+                    </div>
                 </div>
             </div>
         </div>
