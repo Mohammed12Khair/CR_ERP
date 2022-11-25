@@ -15,7 +15,7 @@
 @forelse($orders as $order)
 @foreach ($order->sell_lines as $user)
 @php
-if ($user->parent_sell_line_id > 0 or $user->res_line_order_status == 'orders_custom') {
+if ($user->parent_sell_line_id > 0 or $user->res_line_order_status == 'cooked') {
 continue;
 }
 
@@ -25,12 +25,6 @@ continue;
 }
 @endphp
 <?php
-
-
-if ($order->res_order_status == 'orders_custom') {
-	continue;
-}
-
 $product = \App\Product::where('id', $user->product_id)->first();
 $variation = \App\Variation::where('id', $user->variation_id)->first();
 $user_id = Auth::id();
