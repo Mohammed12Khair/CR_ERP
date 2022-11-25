@@ -275,6 +275,9 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/payments/add_payment_cheque/{transaction_id}/{payment_ref_data}/{open_amount}', 'TransactionPaymentController@addPayment_cheque');
     Route::get('/payments/add_payment_cheque_accept/{transaction_id}/{payment_ref_data}/{open_amount}', 'TransactionPaymentController@addPayment_cheque_accept');
     Route::get('/payments/pay-contact-due/{contact_id}', 'TransactionPaymentController@getPayContactDue');
+    // Khair delivery
+    Route::get('/payments/showDelivery/{id}', 'TransactionPaymentController@showDelivery');
+    Route::post('/payments/showDeliveryUpdate', 'TransactionPaymentController@showDeliveryUpdate');
     Route::post('/payments/pay-contact-due', 'TransactionPaymentController@postPayContactDue');
     Route::resource('payments', 'TransactionPaymentController');
 

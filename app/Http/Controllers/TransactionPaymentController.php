@@ -363,6 +363,92 @@ class TransactionPaymentController extends Controller
         }
     }
 
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showDelivery($id)
+    {
+        if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (request()->ajax()) {
+            $transaction = Transaction::where('id', $id)
+                ->with(['contact', 'business', 'transaction_for'])
+                ->first();
+            $payments_query = TransactionPayment::where('transaction_id', $id);
+
+            $accounts_enabled = false;
+            if ($this->moduleUtil->isModuleEnabled('account')) {
+                $accounts_enabled = true;
+                $payments_query->with(['payment_account']);
+            }
+
+            $payments = $payments_query->get();
+            $location_id = !empty($transaction->location_id) ? $transaction->location_id : null;
+            $payment_types = $this->transactionUtil->payment_types($location_id, true);
+
+
+            $payment_types = ['cheque_accept' => __('lang_v1.cheque_accept')] + $payment_types;
+
+            // khair
+            $delivey_status = DB::select(DB::raw("SELECT * FROM transaction_sell_lines_delivery"));
+
+            return view('transaction_payment.show_delivery')
+                ->with(compact('delivey_status', 'transaction', 'payments', 'payment_types', 'accounts_enabled'));
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showDeliveryUpdate(Request $request)
+    {
+        if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+        try {
+            $delivery = $request->get('delivery');
+            $id = $request->get('id');
+            $lop = count($id);
+            $dateTime = \Carbon::now();
+            // line
+            for ($i = 0; $i < $lop; $i++) {
+                DB::statement(
+                    "UPDATE transaction_sell_lines_delivery set delivery=:delivery,username=:username,created=:created WHERE id=:id",
+                    [
+                        "id" => $id[$i], "delivery" => $delivery[$i], "username" => request()->session()->get('user.id'), "created" => $dateTime
+                    ]
+                );
+                DB::statement(
+                    "INSERT INTO transaction_sell_lines_delivery_hist select * from transaction_sell_lines_delivery where  id=:id",
+                    [
+                        "id" => $id[$i]
+                    ]
+                );
+            }
+
+
+            $output = [
+                'success' => true,
+                'msg' => 'Delivery Update Done'
+            ];
+        } catch (Exception $e) {
+            $output = [
+                'success' => false,
+                'msg' =>  __('messages.something_went_wrong')
+            ];
+        }
+        return redirect()->back()->with('status', $output);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -531,12 +617,11 @@ class TransactionPaymentController extends Controller
                 }
                 DB::commit();
 
-                try{
-                    bankcheques_payment::where('payment_id',$payment->id)
-                    ->update(['status' => 'deleted']);
+                try {
+                    bankcheques_payment::where('payment_id', $payment->id)
+                        ->update(['status' => 'deleted']);
+                } catch (\Exception $e) {
 
-                }catch(Exception $e){
-                    
                     error_log("Error in delete payment cheuqe");
                 }
                 $output = [
@@ -945,7 +1030,7 @@ class TransactionPaymentController extends Controller
             //Accounts
             $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
 
-            
+
             return view('transaction_payment.pay_supplier_due_modal')
                 ->with(compact('contact_details', 'payment_types', 'payment_line', 'due_payment_type', 'ob_due', 'amount_formated', 'accounts'));
         }
@@ -975,9 +1060,9 @@ class TransactionPaymentController extends Controller
             //Accounts
             $accounts = $this->moduleUtil->accountsDropdown($business_id, true);
             $account_transaction_id = $Transaction_ID;
-        
+
             return view('transaction_payment.pay_partner_due_modal')
-                ->with(compact('owner','payment_types', 'payment_line','amount_formated', 'accounts', 'account_transaction_id'));
+                ->with(compact('owner', 'payment_types', 'payment_line', 'amount_formated', 'accounts', 'account_transaction_id'));
         }
     }
 

@@ -46,7 +46,7 @@
                         <th>@lang('sale.customer_name')</th>
                         <th>@lang('lang_v1.contact_no')</th>
                         <th>@lang('sale.location')</th>
-                        <th>@lang('sale.payment_status')</th>
+                        <th>@lang('purchase.payment_status_and_delivery')</th>
                         <th>@lang('lang_v1.payment_method')</th>
                         <th>@lang('sale.total_amount')</th>
                         <th>@lang('sale.total_paid')</th>

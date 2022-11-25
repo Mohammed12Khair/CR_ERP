@@ -56,7 +56,11 @@ $changes=[
 "ALTER TABLE `transaction_sell_lines_delivery` ADD `delivery` INT(255) NULL AFTER `quantity`, ADD `created` VARCHAR(500) NULL AFTER `delivery`",
 "ALTER TABLE `transaction_sell_lines_delivery` ADD `rowid` INT NULL AFTER `id`",
 "ALTER TABLE `transaction_sell_lines_delivery` ADD PRIMARY KEY(`id`)",
-"ALTER TABLE `transaction_sell_lines_delivery` CHANGE `delivery` `delivery` INT(255) NULL DEFAULT '0'"
+"ALTER TABLE `transaction_sell_lines_delivery` CHANGE `delivery` `delivery` INT(255) NULL DEFAULT '0'",
+"ALTER TABLE `transaction_sell_lines_delivery` CHANGE `id` `id` INT(15) UNSIGNED NOT NULL AUTO_INCREMENT",
+"create table transaction_sell_lines_delivery_hist as select * from transaction_sell_lines_delivery where 1=0",
+"ALTER TABLE `transaction_sell_lines_delivery_hist` ADD `username` INT(15) NULL AFTER `delivery`",
+"ALTER TABLE `transaction_sell_lines_delivery` ADD `username` INT(15) NULL AFTER `delivery`",
 ];
 foreach($changes as $change){
     echo "\n";
