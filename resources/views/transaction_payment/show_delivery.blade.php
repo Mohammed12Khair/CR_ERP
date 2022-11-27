@@ -167,24 +167,24 @@
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>#</th>
-                                    <th>row id </th>
-                                    <th>product</th>
-                                    <th>Quantati</th>
-                                    <th>delivery</th>
-                                    <th>delivered</th>
-                                    <th>Date</th>
+                                    <!-- <th>#</th>
+                                    <th>row id </th> -->
+                                    <th>المنتج</th>
+                                    <th>الكميه</th>
+                                    <th>المسلم</th>
+                                    <th>التسليم</th>
+                                    <th>التاريخ</th>
                                     <!-- <th class="no-print">Action</th> -->
                                 </tr>
                                 @forelse ($delivey_status as $delivey_statu)
                                 <tr>
-                                    <td>{{$delivey_statu->id}}</td>
-                                    <td>{{$delivey_statu->rowid}}</td>
+                                    <!-- <td>{{$delivey_statu->id}}</td>
+                                    <td>{{$delivey_statu->rowid}}</td> -->
                                     <td><?php echo App\Product::where('id', $delivey_statu->product_id)->first()->name; ?></td>
                                     <td>{{$delivey_statu->quantity}}</td>
                                     <td>{{$delivey_statu->delivery}}</td>
                                     <td>
-                                        <input class="form-control" type="number" min="0" max="{{$delivey_statu->quantity}}" value="{{$delivey_statu->quantity}}" name="delivery[]">
+                                        <input class="form-control" type="number" min="0" max="{{$delivey_statu->quantity}}" value="{{$delivey_statu->delivery}}" name="delivery[]">
                                         <input type="number" value="{{$delivey_statu->id}}" name="id[]" hidden>
                                         <!-- {{$delivey_statu->delivery}} -->
                                     </td>
@@ -200,8 +200,45 @@
                                 @endforelse
                             </table>
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                        <i></i>Save</button>
+                        <h1 style="text-align:left ;">
+                        <button type="submit" class="btn btn-primary" >
+                        <i></i>حفظ</button>
+                        </h1>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <!-- <th>#</th>
+                                    <th>row id </th> -->
+                                    <th>المنتج</th>
+                                    <th>الكميه</th>
+                                    <th>المسلم</th>
+                                    <th>المستخدم</th>
+                                    <!-- <th>delivered</th> -->
+                                    <th>التاريخ</th>
+                                    <!-- <th class="no-print">Action</th> -->
+                                </tr>
+                                @forelse ($delivey_status_hist as $delivey_statu)
+                                <tr>
+                                    <!-- <td>{{$delivey_statu->id}}</td>
+                                    <td>{{$delivey_statu->rowid}}</td> -->
+                                    <td><?php echo App\Product::where('id', $delivey_statu->product_id)->first()->name; ?></td>
+                                    <td>{{$delivey_statu->quantity}}</td>
+                                    <td>{{$delivey_statu->delivery}}</td>
+                                   
+                                    <td><?php echo App\User::where('id',$delivey_statu->username)->first()->username; ?></td>
+                                    <td>{{$delivey_statu->created}}</td>
+                                    <!-- <td class="no-print" style="display: flex;">
+                                        <button type="button" class="btn btn-info btn-xs edit_payment" data-href="{{action('TransactionPaymentController@edit', [$payment->id]) }}"><i class="glyphicon glyphicon-edit"></i></button>
+                                    </td> -->
+                                </tr>
+                                @empty
+                                <tr class="text-center">
+                                    <td colspan="6">@lang('purchase.no_records_found')</td>
+                                </tr>
+                                @endforelse
+                            </table>
+                        </div>
                 </div>
                     </div>
                 

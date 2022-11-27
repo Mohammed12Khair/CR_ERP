@@ -372,6 +372,8 @@ class TransactionPaymentController extends Controller
      */
     public function showDelivery($id)
     {
+
+    
         if (!auth()->user()->can('purchase.create') && !auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -396,10 +398,11 @@ class TransactionPaymentController extends Controller
             $payment_types = ['cheque_accept' => __('lang_v1.cheque_accept')] + $payment_types;
 
             // khair
-            $delivey_status = DB::select(DB::raw("SELECT * FROM transaction_sell_lines_delivery"));
+            $delivey_status = DB::select(DB::raw("SELECT * FROM transaction_sell_lines_delivery where transaction_id=:id"),["id"=>$id]);
+            $delivey_status_hist = DB::select(DB::raw("SELECT * FROM transaction_sell_lines_delivery_hist where transaction_id=:id order by created desc"),["id"=>$id]);
 
             return view('transaction_payment.show_delivery')
-                ->with(compact('delivey_status', 'transaction', 'payments', 'payment_types', 'accounts_enabled'));
+                ->with(compact('delivey_status_hist','delivey_status', 'transaction', 'payments', 'payment_types', 'accounts_enabled'));
         }
     }
 

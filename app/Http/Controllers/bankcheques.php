@@ -177,7 +177,7 @@ class bankcheques extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
         // return  $business_id;
-        $cheques = DB::select(DB::raw("
+        $cheques =  DB::select(DB::raw("
         select e.name client,a.id id,b.id payment_id,a.transaction_id transaction_id,a.cheque_number cheque_number,a.cheque_date cheque_date,a.transaction_type transaction_type,a.amount amount,c.username username,a.created_at created_at ,a.cheque_ref cheque_ref,a.business_id business_id 
         from bankcheques_payments a,transaction_payments b,users c,transactions d,contacts e where
         CONCAT(a.transaction_id,a.cheque_ref)=CONCAT(b.transaction_id,b.payment_ref_no) and a.userid=c.id and d.id=a.transaction_id and e.id=d.contact_id and  a.business_id=:business_id union all

@@ -541,6 +541,11 @@ class SellController extends Controller
                 ->editColumn(
                     'payment_status',
                     function ($row) {
+                        // Get Delivery Status
+                        // $DeliveryRemain = DB::select(DB::raw("SELECT * FROM transaction_sell_lines_delivery WHERE quantity!=delivery AND transaction_id=:transaction_id"), ["transaction_id" => $row->id]);
+                        // error_log("DeliveryRemain");
+                        // error_log($row->id);
+                        // error_log($DeliveryRemain->count());
                         $payment_status = Transaction::getPaymentStatus($row);
                         return (string) view('sell.partials.payment_status', ['payment_status' => $payment_status, 'id' => $row->id]);
                     }
@@ -641,7 +646,7 @@ class SellController extends Controller
                             $status = 'X<span class="label ' . $sales_order_statuses[$row->status]['class'] . '" >' . $sales_order_statuses[$row->status]['label'] . '</span>';
                         }
                     }
-                  
+
 
                     return $status;
                 })
