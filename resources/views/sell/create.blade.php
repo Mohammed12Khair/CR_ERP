@@ -212,8 +212,9 @@ $title = __('lang_v1.sales_order');
 
 					{!! Form::label('status', __('sale.status') . ':*') !!}
 
-					<select name="status" class="form-control">
+					<select name="status" id="status" class="form-control select2">
 						<?php
+						
 						foreach ($statuses as $key => $value) {
 							if ($key == session('business.default_status')) {
 								echo $key . " X " . session('business.default_status') . "TRUE";
@@ -223,6 +224,7 @@ $title = __('lang_v1.sales_order');
 								echo "<option value=" . $key . ">" . $value . "</option>";
 							}
 						}
+						
 						?>
 					</select>
 					<!-- {!! Form::select('status', $statuses, "final", ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!} -->
