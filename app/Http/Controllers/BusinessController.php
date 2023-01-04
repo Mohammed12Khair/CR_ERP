@@ -167,6 +167,8 @@ class BusinessController extends Controller
                 ]
             );
 
+       
+
             DB::beginTransaction();
 
             //Create owner.
@@ -244,6 +246,7 @@ class BusinessController extends Controller
 
             return back()->with('status', $output)->withInput();
         }
+    
     }
 
     /**

@@ -208,14 +208,21 @@ $title = __('lang_v1.sales_order');
 			<input type="hidden" name="status" id="status" value="{{$status}}">
 			@else
 			<div class="@if(!empty($commission_agent)) col-sm-3 @else col-sm-4 @endif">
-				<div class="form-group">
+			<?php
+echo session('business.default_status');
+						?>	
+			<div class="form-group">
 
 					{!! Form::label('status', __('sale.status') . ':*') !!}
 
 					<select name="status" id="status" class="form-control select2">
+						
 						<?php
+
+						
 						
 						foreach ($statuses as $key => $value) {
+							
 							if ($key == session('business.default_status')) {
 								echo $key . " X " . session('business.default_status') . "TRUE";
 								echo "<option value=" . $key . " selected='true'>" . $value . "</option>";
@@ -1010,7 +1017,8 @@ $title = __('lang_v1.sales_order');
 		</div>
 		@endif
 		@if(empty($status) || !in_array($status, ['quotation', 'draft']))
-		<div class="payment_row" @if($is_enabled_download_pdf) id="payment_rows_div" @endif>
+		<!-- <div  class="payment_row <?php if(session('business.default_status')=='proforma'){ echo 'hide'; } ?>" @if($is_enabled_download_pdf) id="payment_rows_div" @endif> -->
+		<div  class="payment_row " @if($is_enabled_download_pdf) id="payment_rows_div" @endif>
 			<div class="row">
 				<div class="col-md-12 mb-12">
 					<strong>@lang('lang_v1.advance_balance'):</strong> <span id="advance_balance_text"></span>
@@ -1071,6 +1079,16 @@ $title = __('lang_v1.sales_order');
 <script src="{{ asset('js/restaurant.js?v=' . $asset_v) }}"></script>
 @endif
 <script type="text/javascript">
+
+$(document).ready(function() {
+			if ($('#status').val() == 'final') {
+				$('#payment_rows_div').removeClass('hide');
+			} else {
+				$('#payment_rows_div').addClass('hide');
+			}
+		});
+
+
 	$(document).ready(function() {
 		$('#status').change(function() {
 			if ($(this).val() == 'final') {

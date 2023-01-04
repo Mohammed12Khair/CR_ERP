@@ -1,6 +1,6 @@
 <?php
 //#    "remotePath": "public_html/officially_magnetic_v2/",
-$dbname = 'test';
+$dbname = 'test2';
 $dbuser = 'root';
 $dbpass = '';
 $dbhost = 'localhost';

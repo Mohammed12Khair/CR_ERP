@@ -317,9 +317,20 @@ class ExpenseController extends Controller
         // Edit
         // $expense_categories = ExpenseCategory::where('business_id', $business_id)
         //                         ->pluck('name', 'id');
+
+        $user_id = request()->session()->get('user.id');
+
+        $activeExpens_q = DB::select(DB::raw("select expens_id from activeexpensis where userid=:userid"), ["userid" => $user_id]);
+        $activeExpensByUser = [];
+        foreach ($activeExpens_q as $id) {
+            array_push($activeExpensByUser, $id->expens_id);
+        }
+        // return $activeExpensByUser;
         $expense_categories = ExpenseCategory::where('business_id', $business_id)
             ->where('transfer', 0)
+            ->whereIn('id', $activeExpensByUser)
             ->pluck('name', 'id');
+
         $users = User::forDropdown($business_id, true, true);
 
         $taxes = TaxRate::forBusinessDropdown($business_id, true, true);
@@ -432,6 +443,8 @@ class ExpenseController extends Controller
         }
 
         $business_id = request()->session()->get('user.business_id');
+     
+        
 
         //Check if subscribed or not
         if (!$this->moduleUtil->isSubscribed($business_id)) {
@@ -440,11 +453,28 @@ class ExpenseController extends Controller
 
         $business_locations = BusinessLocation::forDropdown($business_id);
 
+        $user_id = request()->session()->get('user.id');
+
+        $activeExpens_q = DB::select(DB::raw("select expens_id from activeexpensis where userid=:userid"), ["userid" => $user_id]);
+        $activeExpensByUser = [];
+        foreach ($activeExpens_q as $id_value) {
+            array_push($activeExpensByUser, $id_value->expens_id);
+        }
+
+        // return $activeExpensByUser;
         $expense_categories = ExpenseCategory::where('business_id', $business_id)
+            ->where('transfer', 0)
+            ->whereIn('id',$activeExpensByUser)
             ->pluck('name', 'id');
+
+
+            // return $expense_categories;
+
         $expense = Transaction::where('business_id', $business_id)
             ->where('id', $id)
             ->first();
+
+            // return $expense ;
 
         $users = User::forDropdown($business_id, true, true);
 
