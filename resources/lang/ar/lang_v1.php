@@ -1,5 +1,10 @@
 <?php
 return [
+   "Account_Name"=>"اسم الحساب",
+   "Mobilex"=>"رقم الهاتف",
+   "Addressx"=>"العنوان",
+   "Balancex"=>"الرصيد",
+   "open_balance"=>"الرصيد الافتتاحي",
    "Expens"=>" فئات مصروف",
    "expense_catgory_add"=>"أضافه فئات مصروف",
    "expense_catgory_delete"=>"مسح فئات المصاريف",

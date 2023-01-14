@@ -74,10 +74,11 @@
             ?>
             <td class="align-right">@format_currency($finalCheque)</td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td><strong>السلف و العهد</strong></td>
             <td class="align-right">
                 <?php
+                /*
                 $contact = App\BusinessPartner::where('contact_id', $contact->id)->first();
                 $business_pyments = App\BusinessPartnerPayments::where('owner', $contact->id)->where('is_active', 0)->get();
                 // $sum
@@ -121,10 +122,10 @@
 
                 $final_amount = $credit - $debit;
                 echo $final_amount . " SDG";
-
+*/
                 ?>
             </td>
-        </tr>
+        </tr> -->
         <tr>
             <td><strong>@lang('lang_v1.balance_due')</strong></td>
             <td class="align-right">@format_currency($ledger_details['balance_due'])</td>

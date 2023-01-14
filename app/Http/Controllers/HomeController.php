@@ -21,6 +21,7 @@ use App\Utils\RestaurantUtil;
 use App\User;
 use Illuminate\Notifications\DatabaseNotification;
 use App\Media;
+use App\SellingPriceGroup;
 
 class HomeController extends Controller
 {
@@ -73,6 +74,10 @@ class HomeController extends Controller
         $enabled_modules = !empty(request()->session()->get('business.enabled_modules')) ? request()->session()->get('business.enabled_modules') : [];
    
         $business_id = request()->session()->get('user.business_id');
+
+        // Get Rate and selling groups
+        
+        $price_groups_rate = SellingPriceGroup::where('business_id', $business_id)->get();
 
         // return $business_id;
 
@@ -249,7 +254,7 @@ class HomeController extends Controller
 
         $common_settings = !empty(session('business.common_settings')) ? session('business.common_settings') : [];
 
-        return view('home.index', compact('date_filters', 'sells_chart_1', 'sells_chart_2', 'sells_chart_3', 'sells_chart_4', 'widgets', 'all_locations', 'common_settings', 'is_admin','enabled_modules'));
+        return view('home.index', compact('date_filters', 'sells_chart_1', 'sells_chart_2', 'sells_chart_3', 'sells_chart_4', 'widgets', 'all_locations', 'common_settings', 'is_admin','enabled_modules','price_groups_rate'));
     }
 
     /**

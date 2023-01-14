@@ -64,10 +64,11 @@
     });
 
     function load_stock_history(variation_id, location_id,product_ID) {
-        //alert(product_ID);
+        // alert(variation_id);
+        // alert(product_ID);
         $('#product_stock_history').fadeOut();
         $.ajax({
-            url: '/products/stock-history/' + variation_id + "?location_id=" + location_id + "&product_ID=" + product_ID,
+            url: '/products/stock-history/' + variation_id + "?location_id=" + location_id + "&product_ID=" + product_ID + "&variation_id=" + variation_id,
             dataType: 'html',
             success: function(result) {
                 $('#product_stock_history')

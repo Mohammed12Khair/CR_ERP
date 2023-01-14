@@ -47,6 +47,7 @@ class BusinessPartnerController extends Controller
                 ->addColumn('name', function ($row) {
                     try{
                     $name=Contact::where("id",$row->contact_id)->first();
+                    return $row->name;
                     }catch(Exception $e){
                         return $row->name;
                     }
@@ -120,7 +121,6 @@ class BusinessPartnerController extends Controller
         //
         return view('business_partner.create');
     }
-
 
 
     /**

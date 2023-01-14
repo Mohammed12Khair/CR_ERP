@@ -15,6 +15,11 @@
       </div>
 
       <div class="form-group">
+        {!! Form::label('rate', __( 'lang_v1.rate' ) . ':') !!}
+          {!! Form::number('rate', $spg->rate, ['class' => 'form-control','placeholder' => __( 'lang_v1.description' ), 'rows' => 3,'step'=>'any']); !!}
+      </div>
+
+      <div class="form-group">
         {!! Form::label('description', __( 'lang_v1.description' ) . ':') !!}
           {!! Form::textarea('description', $spg->description, ['class' => 'form-control','placeholder' => __( 'lang_v1.description' ), 'rows' => 3]); !!}
       </div>

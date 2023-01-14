@@ -3260,9 +3260,13 @@ class TransactionUtil extends Util
                     $sell_purchase_ids[] = $row['id'];
                 }
 
-                // Khair Deelte 13-Apr
-                DB::statement("INSERT INTO transaction_sell_lines_purchase_linesClone SELECT * FROM transaction_sell_lines_purchase_lines WHERE id=:id", ["id" => $sell_purchase_ids]);
+                // error_log($sell_purchase_ids);
+                // Khair Delete history 13-Apr
+                foreach($sell_purchase_ids as $sell_purchase_ids_one_line){
+                    DB::statement("INSERT INTO transaction_sell_lines_purchase_linesClone SELECT * FROM transaction_sell_lines_purchase_lines WHERE id=:id", ["id" => $sell_purchase_ids_one_line]);
 
+                }
+               
                 //Delete the lines.
                 TransactionSellLinesPurchaseLines::whereIn('id', $sell_purchase_ids)
                     ->delete();
@@ -4687,6 +4691,7 @@ class TransactionUtil extends Util
 
                 DB::statement("INSERT INTO transactions_clones SELECT * FROM transactions WHERE id=:id", ["id" => $transaction_id]);
                 $transaction->delete();
+                
             } else {
                 $business = Business::findOrFail($business_id);
                 $transaction_payments = $transaction->payment_lines;

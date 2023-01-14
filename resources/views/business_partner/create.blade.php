@@ -26,7 +26,7 @@
 					<span class="input-group-addon">
 						<i class="fa fa-user"></i>
 					</span>
-					{!! Form::select('contact_id', [], null, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'required', 'id' => 'supplier_id']); !!}
+					{!! Form::select('contact_id', [], null, ['class' => 'form-control', 'placeholder' => __('messages.please_select'), 'id' => 'supplier_id']); !!}
 					<span class="input-group-btn">
 						<!-- <button type="button" class="btn btn-default bg-white btn-flat add_new_supplier" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button> -->
 					</span>
@@ -34,28 +34,28 @@
 			</div>
 
                     <div class="form-group col-md-3">
-                        <label for="test">Account Name</label>
-                        <input name="name" id="test" type="text" class="form-control">
+                        <label for="test">@lang('lang_v1.Account_Name')</label>
+                        <input name="name" id="test" type="text" class="form-control" required>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="test">Mobile</label>
-                        <input name="mobile" id="test" type="text" class="form-control">
+                        <label for="test">@lang('lang_v1.Mobilex')</label>
+                        <input name="mobile" id="test" type="text" class="form-control" required>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="test">Address</label>
-                        <input name="address" id="test" type="text" class="form-control">
+                        <label for="test">@lang('lang_v1.Addressx')</label>
+                        <input name="address" id="test" type="text" class="form-control" required>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="test">Balance</label>
-                        <select name="type" class="form-control">
+                        <label for="test">@lang('lang_v1.Balancex')</label>
+                        <select name="type" class="form-control" required>
                             <option value="None">none</option>
                             <option value="credit">credit</option>
                             <option value="debit">debit</option>
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="test">open_balance</label>
-                        <input name="open_balance" id="test" type="number" class="form-control" value="0">
+                        <label for="test">@lang('lang_v1.open_balance')</label>
+                        <input name="open_balance" id="test" type="number" class="form-control" value="0" required>
                     </div>
                 </div>
                 <div class="row">

@@ -19,13 +19,13 @@
 <!-- Main content -->
 
 <section class="content content-custom no-print">
- 
 
- 
+
+
   @if(auth()->user()->can('sell.view') || auth()->user()->can('direct_sell.view'))
   @if(!empty($all_locations))
   <!-- sales chart start -->
- 
+
   <div class="row">
 
     <div class="col" id="sells_last_30_days">
@@ -81,7 +81,7 @@
         <div class="input-group">
           <button type="button" class="btn btn-primary" id="dashboard_date_filter">
             <span>
-              <i class="fa fa-calendar"></i> {{ __('messages.filter_by_date') }}
+              <i class="fa fa-calendar"></i>{{ __('messages.filter_by_date') }}
             </span>
             <i class="fa fa-caret-down"></i>
           </button>
@@ -282,6 +282,50 @@
     @endif
   </div>
   @endcan
+
+  <!-- View rates -->
+  <div class="row">
+    <div class="@if((session('business.enable_product_expiry') != 1) && auth()->user()->can('stock_report.view')) col-sm-12 @else col-sm-6 @endif">
+      @component('components.widget', ['class' => 'box-warning'])
+      @slot('icon')
+      <i class="fa fa-exclamation-triangle text-yellow" aria-hidden="true"></i>
+      @endslot
+      @slot('title')
+      Rates
+      @endslot
+      <table class="table table-bordered table-striped" id="stock_alert_table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>rate</th>
+            <th>description</th>
+            <!-- <th>@lang( 'sale.product' )</th>
+            <th>@lang( 'business.location' )</th>
+            <th>@lang( 'report.current_stock' )</th>
+            <th>@lang( 'report.current_stock' )</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($price_groups_rate as $price_groups_rate_line)
+          <tr>
+            <td>{{$price_groups_rate_line->id}}</td>
+            <td>{{$price_groups_rate_line->name}}</td>
+            <td>{{$price_groups_rate_line->rate}}</td>
+            <td>{{$price_groups_rate_line->description}}</td>
+          </tr>
+
+          @endforeach
+
+        </tbody>
+      </table>
+      @endcomponent
+    </div>
+  </div>
+
+  <!-- View rates -->
+
+
 
   @if(in_array('sales_order', $enabled_modules))
   @if(auth()->user()->can('so.view_all') || auth()->user()->can('so.view_own'))
@@ -645,22 +689,22 @@
     }
   });
 
-  $('document').ready(function(){
-    var show=false;
+  $('document').ready(function() {
+    var show = false;
     $('#sells_last_30_days').show();
     $('#sells_current_fy').hide();
 
-    $('#switch').click(function(){
-      if(show){
-      $('#sells_last_30_days').hide();
-      $('#sells_current_fy').show();
-      // $('#switch').text(last_year);
-      show=false
-      }else{
+    $('#switch').click(function() {
+      if (show) {
+        $('#sells_last_30_days').hide();
+        $('#sells_current_fy').show();
+        // $('#switch').text(last_year);
+        show = false
+      } else {
         $('#sells_last_30_days').show();
-      $('#sells_current_fy').hide();
-      // $('#switch').text(last_30days);
-        show=true;
+        $('#sells_current_fy').hide();
+        // $('#switch').text(last_30days);
+        show = true;
       }
 
     });

@@ -73,7 +73,8 @@ Table
 select a.id,a.transaction_id,a.serial,a.open_amount,b.type,a.payment_id,a.created_at from bankcheques a,transactions b where b.id=a.transaction_id
 
 
-$results = DB::select( DB::raw("select a.id,a.transaction_id,a.serial,a.open_amount,b.type,a.payment_id,a.created_at from bankcheques a,transactions b where b.id=a.transaction_id") );
+$results = 
+DB::select( DB::raw("select a.id,a.transaction_id,a.serial,a.open_amount,b.type,a.payment_id,a.created_at from bankcheques a,transactions b where b.id=a.transaction_id") );
 
 __Nov 24
 1- نحفظ الشيك بقسمه صفر من البوب و عمليه الشراء و البيع

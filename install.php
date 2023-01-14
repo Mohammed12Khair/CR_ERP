@@ -1,8 +1,8 @@
 <?php
 //#    "remotePath": "public_html/officially_magnetic_v2/",
-$dbname = 'test2';
-$dbuser = 'root';
-$dbpass = '';
+$dbname = 'qwnukwnp_dev2';
+$dbuser = 'qwnukwnp_dev2';
+$dbpass = 'qwnukwnp_dev2';
 $dbhost = 'localhost';
 $connect = mysqli_connect($dbhost, $dbuser, $dbpass,$dbname) or die("Unable to connect to '$dbhost'");
 
@@ -61,6 +61,9 @@ $changes=[
 "create table transaction_sell_lines_delivery_hist as select * from transaction_sell_lines_delivery where 1=0",
 "ALTER TABLE `transaction_sell_lines_delivery_hist` ADD `username` INT(15) NULL AFTER `delivery`",
 "ALTER TABLE `transaction_sell_lines_delivery` ADD `username` INT(15) NULL AFTER `delivery`",
+"ALTER TABLE `selling_price_groups` ADD `rate` INT(11) NULL DEFAULT '1' AFTER `is_active`",
+"ALTER TABLE `selling_price_groups` CHANGE `rate` `rate` DECIMAL(11) NULL DEFAULT '1'",
+"ALTER TABLE `selling_price_groups` CHANGE `rate` `rate` DECIMAL(22,4) NULL DEFAULT '1'",
 ];
 foreach($changes as $change){
     echo "\n";

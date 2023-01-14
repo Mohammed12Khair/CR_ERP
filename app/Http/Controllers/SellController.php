@@ -89,6 +89,7 @@ class SellController extends Controller
 
         try {
             $business_id = request()->session()->get('user.business_id');
+            
             //Begin transaction
             DB::beginTransaction();
 

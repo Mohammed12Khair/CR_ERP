@@ -85,7 +85,6 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     // Khair 11-Nov-2022
     Route::get('/products/stock-details/{id}', 'ProductController@GetDetails');
-    
     Route::get('/products/stock-history/{id}', 'ProductController@productStockHistory');
     Route::get('/delete-media/{media_id}', 'ProductController@deleteMedia');
     Route::post('/products/mass-deactivate', 'ProductController@massDeactivate');

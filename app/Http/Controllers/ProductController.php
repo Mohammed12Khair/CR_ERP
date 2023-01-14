@@ -20,6 +20,7 @@ use App\VariationGroupPrice;
 use App\VariationLocationDetails;
 use App\VariationTemplate;
 use App\Warranty;
+use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -2171,7 +2172,8 @@ class ProductController extends Controller
         $variation_prices = [];
         foreach ($product->variations as $variation) {
             foreach ($variation->group_prices as $group_price) {
-                $variation_prices[$variation->id][$group_price->price_group_id] = $group_price->price_inc_tax;
+                $rate=SellingPriceGroup::where('id',$group_price->price_group_id)->first();
+                $variation_prices[$variation->id][$group_price->price_group_id] = $group_price->price_inc_tax / $rate->rate;
             }
         }
         return view('product.add-selling-prices')->with(compact('product', 'price_groups', 'variation_prices'));
@@ -2210,7 +2212,14 @@ class ProductController extends Controller
                             ]);
                         }
 
-                        $variation_group_price->price_inc_tax = $this->productUtil->num_uf($value[$variation->id]);
+                        // Update Rateing Part
+                        $rate=SellingPriceGroup::where('id',$key)->first()->rate;
+
+
+                        $variation_group_price->price_inc_tax = $this->productUtil->num_uf($value[$variation->id] * $rate);
+
+                        // $variation_group_price->price_inc_tax = 
+                        // $variation_group_price->price_inc_tax = $this->productUtil->num_uf($value[$variation->id]);
                         $variation_group_prices[] = $variation_group_price;
                     }
                 }
@@ -2770,12 +2779,14 @@ class ProductController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         if (request()->ajax()) {
-            error_log("Product _ID");
-            error_log(request()->input('product_ID'));
+            // error_log("Product _ID");
+            // error_log(request()->input('product_ID'));
+            error_log("variation_id");
+            error_log(request()->input('variation_id'));
             // $stock_details = $this->productUtil->getVariationStockDetails($business_id, $id, request()->input('location_id'));
             // $stock_history = $this->productUtil->getVariationStockHistory($business_id, $id, request()->input('location_id'));
-            $stock_details = $this->productUtil->getVariationStockDetails($business_id, request()->input('product_ID'), request()->input('location_id'));
-            $stock_history = $this->productUtil->getVariationStockHistory($business_id, request()->input('product_ID'), request()->input('location_id'));
+            $stock_details = $this->productUtil->getVariationStockDetails($business_id, request()->input('variation_id'), request()->input('location_id'));
+            $stock_history = $this->productUtil->getVariationStockHistory($business_id, request()->input('variation_id'), request()->input('location_id'));
 
             return view('product.stock_history_details')
                 ->with(compact('stock_details', 'stock_history'));
