@@ -11,17 +11,31 @@
     <div class="modal-body">
       <div class="form-group">
         {!! Form::label('name', __( 'lang_v1.name' ) . ':*') !!}
-          {!! Form::text('name', $spg->name, ['class' => 'form-control', 'required', 'placeholder' => __( 'lang_v1.name' ) ]); !!}
+        {!! Form::text('name', $spg->name, ['class' => 'form-control', 'required', 'placeholder' => __( 'lang_v1.name' ) ]); !!}
       </div>
 
       <div class="form-group">
         {!! Form::label('rate', __( 'lang_v1.rate' ) . ':') !!}
-          {!! Form::number('rate', $spg->rate, ['class' => 'form-control','placeholder' => __( 'lang_v1.description' ), 'rows' => 3,'step'=>'any']); !!}
+        {!! Form::number('rate', $spg->rate, ['class' => 'form-control','placeholder' => __( 'lang_v1.description' ), 'rows' => 3,'step'=>'any']); !!}
+      </div>
+
+      <div class="form-group">
+        {!! Form::label('currencie', __( 'lang_v1.currencie' ) . ':') !!}
+        <select class="form-control" name="currencie">
+          <?php
+          $currnec = App\Currency::all();
+          echo "<option value='" . $spg->currencie . "'>" . App\Currency::where('id', $spg->currencie)->first()->code . "</option>";
+          foreach ($currnec as $currne) {
+            echo "<option value='" . $currne->id . "'>" . $currne->code . " " . $currne->symbol . "</option>";
+          }
+          ?>
+        </select>
+
       </div>
 
       <div class="form-group">
         {!! Form::label('description', __( 'lang_v1.description' ) . ':') !!}
-          {!! Form::textarea('description', $spg->description, ['class' => 'form-control','placeholder' => __( 'lang_v1.description' ), 'rows' => 3]); !!}
+        {!! Form::textarea('description', $spg->description, ['class' => 'form-control','placeholder' => __( 'lang_v1.description' ), 'rows' => 3]); !!}
       </div>
     </div>
 

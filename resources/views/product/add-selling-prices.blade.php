@@ -32,7 +32,12 @@
 											@endif
 											<th>@lang('lang_v1.default_selling_price_inc_tax')</th>
 											@foreach($price_groups as $price_group)
-											<th>{{$price_group->name}} <br><strong>Rate {{$price_group->rate}}</strong></th>
+											<th style="text-align:right;">{{$price_group->name}} <br><strong>@lang('lang_v1.rate') {{$price_group->rate}}<br>
+													<?php
+													$currnec = App\Currency::where('id', $price_group->currencie)->first();
+													echo $currnec->code . " " . $currnec->symbol;
+													?>
+												</strong></th>
 											@endforeach
 										</tr>
 									</thead>
@@ -47,8 +52,12 @@
 											<td><span class="display_currency" data-currency_symbol="true">{{$variation->sell_price_inc_tax}}</span></td>
 											@foreach($price_groups as $price_group)
 											<td>
-											
+												<?php
+												$rate = App\SellingPriceGroup::where('id', $price_group->id)->first()->rate;
+												echo "<strong>" . $rate * $variation_prices[$variation->id][$price_group->id] . "</strong>";
+												?>
 												{!! Form::text('group_prices[' . $price_group->id . '][' . $variation->id . ']', !empty($variation_prices[$variation->id][$price_group->id]) ? @num_format($variation_prices[$variation->id][$price_group->id]) : 0, ['class' => 'form-control input_number input-sm'] ); !!}
+
 											</td>
 											@endforeach
 										</tr>

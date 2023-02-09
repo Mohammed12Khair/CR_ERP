@@ -93,7 +93,7 @@ class SellingPriceGroupController extends Controller
         }
 
         try {
-            $input = $request->only(['name', 'description', 'rate']);
+            $input = $request->only(['name', 'description', 'rate','currencie']);
             $business_id = $request->session()->get('user.business_id');
             $input['business_id'] = $business_id;
 
@@ -166,7 +166,7 @@ class SellingPriceGroupController extends Controller
 
         if (request()->ajax()) {
             try {
-                $input = $request->only(['name', 'description', 'rate']);
+                $input = $request->only(['name', 'description', 'rate','currencie']);
                 $business_id = $request->session()->get('user.business_id');
 
                 $oldRate = SellingPriceGroup::where('business_id', $business_id)->findOrFail($id);
@@ -175,6 +175,7 @@ class SellingPriceGroupController extends Controller
                 $spg->name = $input['name'];
                 $spg->description = $input['description'];
                 $spg->rate = $input['rate'];
+                $spg->currencie = $input['currencie'];
                 error_log("  rate  ");
                 error_log($input['rate']);
                 $spg->save();

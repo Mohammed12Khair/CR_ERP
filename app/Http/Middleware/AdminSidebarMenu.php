@@ -267,6 +267,11 @@ class AdminSidebarMenu
                                 __('lang_v1.all_sales'),
                                 ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'sells' && request()->segment(2) == null]
                             );
+                            $sub->url(
+                                action('SellController@indexCustom'),
+                                'التسليم',
+                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'sells' && request()->segment(2) == null]
+                            );
                         }
                         if (in_array('add_sale', $enabled_modules) && auth()->user()->can('direct_sell.access')) {
                             $sub->url(

@@ -291,15 +291,16 @@
       <i class="fa fa-exclamation-triangle text-yellow" aria-hidden="true"></i>
       @endslot
       @slot('title')
-      Rates
+      @lang('lang_v1.rate')
       @endslot
       <table class="table table-bordered table-striped" id="stock_alert_table" style="width: 100%;">
         <thead>
           <tr>
             <th>id</th>
             <th>name</th>
-            <th>rate</th>
-            <th>description</th>
+            <th> @lang('lang_v1.rate')</th>
+            <th>عمله</th>
+            <th>الوصف</th>
             <!-- <th>@lang( 'sale.product' )</th>
             <th>@lang( 'business.location' )</th>
             <th>@lang( 'report.current_stock' )</th>
@@ -312,6 +313,9 @@
             <td>{{$price_groups_rate_line->id}}</td>
             <td>{{$price_groups_rate_line->name}}</td>
             <td>{{$price_groups_rate_line->rate}}</td>
+            <td><?php
+                echo App\Currency::where('id', $price_groups_rate_line->currencie)->first()->symbol . " - " . App\Currency::where('id', $price_groups_rate_line->currencie)->first()->code;
+                ?></td>
             <td>{{$price_groups_rate_line->description}}</td>
           </tr>
 

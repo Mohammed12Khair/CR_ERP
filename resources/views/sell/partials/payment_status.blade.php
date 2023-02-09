@@ -12,7 +12,7 @@ foreach($Remain as $Remains){
 if($result == 0){
     $word="تم التسليم";
     $colour="bg-green";
-}else{
+}else{ 
     $word=" مستحق التسليم";
     $colour="bg-red";
 }

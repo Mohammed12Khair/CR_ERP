@@ -1,8 +1,8 @@
 <?php
 //#    "remotePath": "public_html/officially_magnetic_v2/",
-$dbname = 'qwnukwnp_dev2';
-$dbuser = 'qwnukwnp_dev2';
-$dbpass = 'qwnukwnp_dev2';
+$dbname = 'qwnukwnp_dev3';
+$dbuser = 'qwnukwnp_dev3';
+$dbpass = 'qwnukwnp_dev3';
 $dbhost = 'localhost';
 $connect = mysqli_connect($dbhost, $dbuser, $dbpass,$dbname) or die("Unable to connect to '$dbhost'");
 
@@ -64,6 +64,8 @@ $changes=[
 "ALTER TABLE `selling_price_groups` ADD `rate` INT(11) NULL DEFAULT '1' AFTER `is_active`",
 "ALTER TABLE `selling_price_groups` CHANGE `rate` `rate` DECIMAL(11) NULL DEFAULT '1'",
 "ALTER TABLE `selling_price_groups` CHANGE `rate` `rate` DECIMAL(22,4) NULL DEFAULT '1'",
+"ALTER TABLE `selling_price_groups` ADD `currencie` INT(150) NULL AFTER `rate`",
+"ALTER TABLE `business` ADD `deliveryStatus` INT(10) NULL DEFAULT '0' AFTER `sel_invoice_man`",
 ];
 foreach($changes as $change){
     echo "\n";

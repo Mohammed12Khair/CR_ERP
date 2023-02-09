@@ -177,7 +177,6 @@
                 <div class="checkbox">
                     <label>
                         <?php
-
                         if ($business->sel_invoice_man == 0) {
                             echo '<input name="sel_invoice_man" type="checkbox" class="input-icheck" value="1" >';
                         } else {
@@ -185,6 +184,25 @@
                         }
                         ?>
                         {{ __( 'lang_v1.mandatoryInvoicenumber' ) }}
+                    </label>
+                    @show_tooltip(__('lang_v1.mandatoryInvoicenumber'))
+                </div>
+            </div>
+        </div>
+        <!-- Khair -->
+<!-- Khair -->
+    <div class="col-sm-4">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <?php
+                        if ($business->deliveryStatus == 0) {
+                            echo '<input name="deliveryStatus" type="checkbox" class="input-icheck" value="1" >';
+                        } else {
+                            echo '<input name="deliveryStatus" type="checkbox" class="input-icheck" value="1"  checked>';
+                        }
+                        ?>
+                         مرحله التسليم
                     </label>
                     @show_tooltip(__('lang_v1.mandatoryInvoicenumber'))
                 </div>

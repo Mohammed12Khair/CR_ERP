@@ -1,5 +1,7 @@
 <?php
 return [
+   "rate"=>"قيمة العمله",
+   "currencie"=>"نوع العمله",
    "Account_Name"=>"اسم الحساب",
    "Mobilex"=>"رقم الهاتف",
    "Addressx"=>"العنوان",
