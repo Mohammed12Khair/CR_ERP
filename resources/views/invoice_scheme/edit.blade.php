@@ -40,6 +40,12 @@
               {!! Form::text('name', $invoice->name, ['class' => 'form-control', 'required', 'placeholder' => __( 'invoice.name' ) ]); !!}
           </div>
         </div>
+        <div class="col-sm-12">
+          <div class="form-group">
+            {!! Form::label('description','description:*') !!}
+          {!! Form::select('description', ['0' => '0', '1' => '1'], $invoice->description, ['class' => 'form-control', 'required']); !!}
+          </div>
+        </div>
         <div id="invoice_format_settings">
         <div class="col-sm-6">
           <div class="form-group">

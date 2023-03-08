@@ -27,7 +27,7 @@
         @if(!empty($purchase->contact->email))
         <br>@lang('business.email'): {{$purchase->contact->email}}
         @endif
-    
+
       </address>
       @if($purchase->document_path)
 
@@ -148,6 +148,17 @@
               <th>#</th>
               <th>@lang('product.product_name')</th>
               <th>@lang('product.sku')</th>
+              <!-- Khair mar 08 -->
+              <?php
+                $invoiceShow=App\InvoiceScheme::where('business_id',request()->session()->get('user.business_id'))
+                ->where('is_default',1)->first()->description;
+                // error_log($invoiceShow);
+
+              ?>
+              @if($invoiceShow==1)
+              <th>decription</th>
+              @endif
+
               @if($purchase->type == 'purchase_order')
               <th class="text-right">@lang( 'lang_v1.quantity_remaining' )</th>
               @endif
@@ -191,6 +202,13 @@
               {{ $purchase_line->product->sku }}
               @endif
             </td>
+
+            @if($invoiceShow == 1)
+            <td>
+              {{ $purchase_line->product->product_description }}
+            </td>
+            @endif
+
             @if($purchase->type == 'purchase_order')
             <td>
               <span class="display_currency" data-is_quantity="true" data-currency_symbol="false">{{ $purchase_line->quantity - $purchase_line->po_quantity_purchased }}</span> @if(!empty($purchase_line->sub_unit)) {{$purchase_line->sub_unit->short_name}} @else {{$purchase_line->product->unit->short_name}} @endif
@@ -376,8 +394,8 @@
             <th>@lang('lang_v1.refund_2'):</th>
             <td></td>
             <td><span class="display_currency pull-right" data-currency_symbol="true">@if(!empty($refund->refund_total))
-        <br><span class="btn btn-sm btn-warning">Total Refund<br>{{ $refund->refund_total }}</span>
-        @endif</span></td>
+                <br><span class="btn btn-sm btn-warning">Total Refund<br>{{ $refund->refund_total }}</span>
+                @endif</span></td>
           </tr>
         </table>
       </div>

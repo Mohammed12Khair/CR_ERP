@@ -94,7 +94,7 @@ class InvoiceSchemeController extends Controller
         }
 
         try {
-            $input = $request->only(['name', 'scheme_type', 'prefix', 'start_number', 'total_digits']);
+            $input = $request->only(['name', 'scheme_type', 'prefix', 'start_number', 'total_digits','description']);
             $business_id = $request->session()->get('user.business_id');
             $input['business_id'] = $business_id;
 
@@ -168,7 +168,7 @@ class InvoiceSchemeController extends Controller
         }
 
         try {
-            $input = $request->only(['name', 'scheme_type', 'prefix', 'start_number', 'total_digits']);
+            $input = $request->only(['name', 'scheme_type', 'prefix', 'start_number', 'total_digits','description']);
 
             $invoice = InvoiceScheme::where('id', $id)->update($input);
 
