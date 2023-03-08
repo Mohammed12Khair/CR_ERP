@@ -11,13 +11,13 @@
 @endif
 
 <div class="table-responsive">
-
-  <div class="col-sm-6" style="display: none;">
+<br>
+  <div class="col-sm-6"  >
     {!! Form::label('single_dpp', trans('product.exc_of_tax') . ':*') !!}
 
     {!! Form::text('single_dpp', $default, ['class' => 'form-control input-sm dpp input_number', 'placeholder' => __('product.exc_of_tax'), 'required']); !!}
   </div>
-
+<br>
     <table class="table table-bordered add-product-price-table table-condensed {{$class}}">
         <tr>
           <th>@lang('product.default_purchase_price')</th>

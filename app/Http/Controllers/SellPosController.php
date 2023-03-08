@@ -315,6 +315,7 @@ class SellPosController extends Controller
         }
 
         try {
+
             $input = $request->except('_token');
 
             $input['is_quotation'] = 0;
@@ -566,6 +567,20 @@ class SellPosController extends Controller
 
                 DB::commit();
 
+                // Khair Approval
+                //$transaction->id
+
+                try {
+                    $ApprovalStatus = Business::where('id', $business_id)->first()->ApprovalStatus;
+                    if ($ApprovalStatus == 1) {
+                        DB::select(DB::raw("INSERT INTO transactions_approved (transaction_id,status) values (:transaction_id,1)"), ["transaction_id" => $transaction->id]);
+                    }else{
+                        DB::select(DB::raw("INSERT INTO transactions_approved (transaction_id,status) values (:transaction_id,0)"), ["transaction_id" => $transaction->id]);
+                    }
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                }
+
                 // khair 11-Nov-2022
                 $DeliveryStauts = Business::where('id', $business_id)->first()->deliveryStatus;
                 if ($DeliveryStauts == 1) {
@@ -576,7 +591,6 @@ class SellPosController extends Controller
 
                         DB::select(DB::raw("INSERT INTO transaction_sell_lines_delivery (id,rowid,transaction_id,product_id,quantity,created) values (:id,:rowid,:transaction_id,:product_id,:quantity,:created)"), ["rowid" => $ItemsPurchase->id, "transaction_id" => $ItemsPurchase->transaction_id, "product_id" => $ItemsPurchase->product_id, "quantity" => $ItemsPurchase->quantity, "created" => $now, "id" => 0]);
                     }
-                    
                 }
 
                 if ($request->input('is_save_and_print') == 1) {

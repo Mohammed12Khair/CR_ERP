@@ -24,3 +24,27 @@ if($result == 0){
 <a href="{{ action('TransactionPaymentController@showDelivery', [$id])}}" class="view_Delivery_modal payment-status-label" data-orig-value="{{$payment_status}}" data-status-name="{{__('lang_v1.' . $payment_status)}}">
 <span class="label {{$colour}}">{{$word}}
     </span></a>
+
+
+<?php
+$ApprovalStatus=0;
+$ApprovalStatusData=DB::select(DB::raw('SELECT * FROM transactions_approved WHERE status = 1 and transaction_id=:id'),["id"=>$id]);
+foreach($ApprovalStatusData as $ApprovalStatusDatas){
+    $ApprovalStatus=1;
+}
+
+if($ApprovalStatus > 0){
+    $result_out="Need Approved";
+   
+}else{
+    $result_out="Approved";
+}
+
+?>
+<br>
+<!-- <a href="{{ action('TransactionPaymentController@showDelivery', [$id])}}" class="payment-status-label"> -->
+<!-- <a href="#">data</a> -->
+<a href="{{ action('TransactionPaymentController@Approved', [$id])}}"  >
+<span class="label bg-light-green">{{$result_out}}
+    </span></a>
+ 

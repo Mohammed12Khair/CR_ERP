@@ -89,7 +89,7 @@ class SellController extends Controller
 
         try {
             $business_id = request()->session()->get('user.business_id');
-            
+
             //Begin transaction
             DB::beginTransaction();
 
@@ -114,7 +114,7 @@ class SellController extends Controller
         return redirect('sells')->with('status', $output);
     }
 
-    
+
 
     /**
      * Display a listing of the resource.
@@ -498,17 +498,19 @@ class SellController extends Controller
 
                                 if (auth()->user()->can("sell.khair")) {
                                     $html .= ' <li><a href="' . action('SellReturnController@add', [$row->id]) . '"><i class="fas fa-undo"></i> ' . __("lang_v1.sell_return") . '</a></li>';
-
                                 }
-                                 
-                                    //  <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fas fa-eye"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
-                               
+
+                                //  <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fas fa-eye"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
+
                             }
 
                             // $html .= '<li><a href="#" data-href="' . action('NotificationController@getTemplate', ["transaction_id" => $row->id, "template_for" => "new_sale"]) . '" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i>' . __("lang_v1.new_sale_notification") . '</a></li>';
                         } else {
                             $html .= '<li><a href="#" data-href="' . action('SellController@viewMedia', ["model_id" => $row->id, "model_type" => "App\Transaction", 'model_media_type' => 'shipping_document']) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-paperclip" aria-hidden="true"></i>' . __("lang_v1.shipping_documents") . '</a></li>';
                         }
+
+                        $html .='<li><a href="' . action('TransactionPaymentController@Approved', [$row->id]) . '"><i class="fas fa-paperclip" aria-hidden="true"></i>Approved</a></li>';
+                        $html .='<li><a href="' . action('TransactionPaymentController@Approved2', [$row->id]) . '"><i class="fas fa-paperclip" aria-hidden="true"></i>Reject</a></li>';
 
                         $html .= '</ul></div>';
 
@@ -733,6 +735,18 @@ class SellController extends Controller
             $sale_type = !empty(request()->input('sale_type')) ? request()->input('sale_type') : 'sell';
 
             $sells = $this->transactionUtil->getListSells($business_id, $sale_type);
+
+            // GEt approved list only
+            $ApprovalList=[];
+            $ApprovalListQuery = DB::select(DB::raw('SELECT transaction_id FROM transactions_approved where status=0'));
+            error_log("lineDatassdfsdfsdfsdfsdfsdf");
+            foreach ($ApprovalListQuery as $lineDatas) {
+                // error_log("llllllllllllllllllllloop");
+                // error_log($lineDatas->transaction_id);
+                array_push($ApprovalList,$lineDatas->transaction_id);
+            }
+
+            $sells->whereIn('transactions.id',$ApprovalList);
 
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
@@ -1087,17 +1101,18 @@ class SellController extends Controller
 
                                 if (auth()->user()->can("sell.khair")) {
                                     $html .= ' <li><a href="' . action('SellReturnController@add', [$row->id]) . '"><i class="fas fa-undo"></i> ' . __("lang_v1.sell_return") . '</a></li>';
-
                                 }
-                                 
-                                    //  <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fas fa-eye"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
-                               
+
+                                //  <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fas fa-eye"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
+
                             }
 
                             // $html .= '<li><a href="#" data-href="' . action('NotificationController@getTemplate', ["transaction_id" => $row->id, "template_for" => "new_sale"]) . '" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i>' . __("lang_v1.new_sale_notification") . '</a></li>';
                         } else {
                             $html .= '<li><a href="#" data-href="' . action('SellController@viewMedia', ["model_id" => $row->id, "model_type" => "App\Transaction", 'model_media_type' => 'shipping_document']) . '" class="btn-modal" data-container=".view_modal"><i class="fas fa-paperclip" aria-hidden="true"></i>' . __("lang_v1.shipping_documents") . '</a></li>';
                         }
+
+                      
 
                         $html .= '</ul></div>';
 
@@ -1106,20 +1121,24 @@ class SellController extends Controller
                 )
                 ->removeColumn('id')
                 ->editColumn(
-                    'final_total','-'
-                   
+                    'final_total',
+                    '-'
+
                     // '<span class="final-total" data-orig-value="{{$final_total}}">@format_currency($final_total)</span>'
                 )
                 ->editColumn(
-                    'tax_amount','-'
+                    'tax_amount',
+                    '-'
                     // '<span class="total-tax" data-orig-value="{{$tax_amount}}">@format_currency($tax_amount)</span>'
                 )
                 ->editColumn(
-                    'total_paid','-'
+                    'total_paid',
+                    '-'
                     // '<span class="total-paid" data-orig-value="{{$total_paid}}">@format_currency($total_paid)</span>'
                 )
                 ->editColumn(
-                    'total_before_tax','-'
+                    'total_before_tax',
+                    '-'
                     // '<span class="total_before_tax" data-orig-value="{{$total_before_tax}}">@format_currency($total_before_tax)</span>'
                 )
                 ->editColumn(
@@ -1150,7 +1169,8 @@ class SellController extends Controller
                     }
                 )
                 ->editColumn(
-                    'types_of_service_name',''
+                    'types_of_service_name',
+                    ''
                     // '<span class="service-type-label" data-orig-value="{{$types_of_service_name}}" data-status-name="{{$types_of_service_name}}">{{$types_of_service_name}}</span>'
                 )
                 ->addColumn('total_remaining', function ($row) {

@@ -442,10 +442,7 @@ class PurchaseController extends Controller
                         $due_html .= '<br><strong>' . __('lang_v1.purchase_return') . ':</strong> <a href="' . action("TransactionPaymentController@show", [$row->return_transaction_id]) . '" class="view_purchase_return_payment_modal"><span class="purchase_return" data-orig-value="' . $return_due . '">' . $this->transactionUtil->num_f($return_due, true) . '</span></a>';
                     }
                     return $due_html;
-                })
-                // ->editColumn('testing', function ($row) {
-                //     return "testing";
-                // })
+                })  
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can("purchase.view")) {

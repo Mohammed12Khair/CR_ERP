@@ -209,6 +209,27 @@
             </div>
         </div>
         <!-- Khair -->
+
+        <div class="col-sm-4">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <?php
+                        if ($business->ApprovalStatus == 0) {
+                            echo '<input name="ApprovalStatus" type="checkbox" class="input-icheck" value="1" >';
+                        } else {
+                            echo '<input name="ApprovalStatus" type="checkbox" class="input-icheck" value="1"  checked>';
+                        }
+                        ?>
+                         ApprovalStatus
+                    </label>
+                    @show_tooltip(__('lang_v1.mandatoryInvoicenumber'))
+                </div>
+            </div>
+        </div>
+        <!-- Khair -->
+
+
         <div class="col-sm-4">
             <div class="form-group">
                 {!! Form::label('حاله الفاتورة الافتراضيه:') !!}

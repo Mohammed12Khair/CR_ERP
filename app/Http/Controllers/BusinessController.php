@@ -375,7 +375,7 @@ class BusinessController extends Controller
                 'redeem_amount_per_unit_rp', 'min_order_total_for_redeem',
                 'min_redeem_point', 'max_redeem_point', 'rp_expiry_period',
                 'rp_expiry_type', 'custom_labels', 'weighing_scale_setting',
-                'code_label_1', 'code_1', 'code_label_2', 'code_2', 'pur_invoice_man','sel_invoice_man','default_status','deliveryStatus'
+                'code_label_1', 'code_1', 'code_label_2', 'code_2', 'pur_invoice_man','sel_invoice_man','default_status','deliveryStatus','ApprovalStatus'
             ]);
 
             if (!empty($request->input('enable_rp')) &&  $request->input('enable_rp') == 1) {
@@ -387,6 +387,7 @@ class BusinessController extends Controller
             $business_details['pur_invoice_man'] = !empty($business_details['pur_invoice_man']) ? 1 : 0;
             $business_details['sel_invoice_man'] = !empty($business_details['sel_invoice_man']) ? 1 : 0;
             $business_details['deliveryStatus'] = !empty($business_details['deliveryStatus']) ? 1 : 0;
+            $business_details['ApprovalStatus'] = !empty($business_details['ApprovalStatus']) ? 1 : 0;
             $business_details['amount_for_unit_rp'] = !empty($business_details['amount_for_unit_rp']) ? $this->businessUtil->num_uf($business_details['amount_for_unit_rp']) : 1;
             $business_details['min_order_total_for_rp'] = !empty($business_details['min_order_total_for_rp']) ? $this->businessUtil->num_uf($business_details['min_order_total_for_rp']) : 1;
             $business_details['redeem_amount_per_unit_rp'] = !empty($business_details['redeem_amount_per_unit_rp']) ? $this->businessUtil->num_uf($business_details['redeem_amount_per_unit_rp']) : 1;

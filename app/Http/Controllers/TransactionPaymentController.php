@@ -451,6 +451,60 @@ class TransactionPaymentController extends Controller
         }
         return redirect()->back()->with('status', $output);
     }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function Approved($id)
+    {
+        try {
+                DB::statement(
+                    "UPDATE transactions_approved set status=0 WHERE transaction_id=:transaction_id",
+                    [
+                        "transaction_id" => $id
+                    ]
+                );
+            $output = [
+                'success' => true,
+                'msg' => 'Delivery Update Done'
+            ];
+        } catch (Exception $e) {
+            $output = [
+                'success' => false,
+                'msg' =>  __('messages.something_went_wrong')
+            ];
+        }
+        return redirect()->back()->with('status', $output);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function Approved2($id)
+    {
+        try {
+                DB::statement(
+                    "UPDATE transactions_approved set status=1 WHERE transaction_id=:transaction_id",
+                    [
+                        "transaction_id" => $id
+                    ]
+                );
+            $output = [
+                'success' => true,
+                'msg' => 'Delivery Update Done'
+            ];
+        } catch (Exception $e) {
+            $output = [
+                'success' => false,
+                'msg' =>  __('messages.something_went_wrong')
+            ];
+        }
+        return redirect()->back()->with('status', $output);
+    }
 
     /**
      * Show the form for editing the specified resource.
