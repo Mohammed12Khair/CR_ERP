@@ -2769,7 +2769,6 @@ class ProductController extends Controller
 
         return $output;
     }
-
     public function productStockHistory($id)
     {
         if (!auth()->user()->can('product.view')) {
@@ -2779,34 +2778,25 @@ class ProductController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         if (request()->ajax()) {
-            // error_log("Product _ID");
-            // error_log(request()->input('product_ID'));
-            error_log("variation_id");
-            error_log(request()->input('variation_id'));
-            // $stock_details = $this->productUtil->getVariationStockDetails($business_id, $id, request()->input('location_id'));
-            // $stock_history = $this->productUtil->getVariationStockHistory($business_id, $id, request()->input('location_id'));
-            $stock_details = $this->productUtil->getVariationStockDetails($business_id, request()->input('variation_id'), request()->input('location_id'));
-            $stock_history = $this->productUtil->getVariationStockHistory($business_id, request()->input('variation_id'), request()->input('location_id'));
+
+            $stock_details = $this->productUtil->getVariationStockDetails($business_id, $id, request()->input('location_id'));
+            $stock_history = $this->productUtil->getVariationStockHistory($business_id, $id, request()->input('location_id'));
 
             return view('product.stock_history_details')
                 ->with(compact('stock_details', 'stock_history'));
         }
-
+        
         $product = Product::where('business_id', $business_id)
-            ->with(['variations', 'variations.product_variation'])
-            ->findOrFail($id);
-        $product_all = Product::where('business_id', $business_id)->get();
-
-
-
+                            ->with(['variations', 'variations.product_variation'])
+                            ->findOrFail($id);
+        
         //Get all business locations
         $business_locations = BusinessLocation::forDropdown($business_id);
-
+        
 
         return view('product.stock_history')
-            ->with(compact('product', 'business_locations', 'product_all'));
+                ->with(compact('product', 'business_locations'));
     }
-
     /**
      * Toggle WooComerce sync
      *

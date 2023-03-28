@@ -413,13 +413,13 @@ class AdminSidebarMenu
                                 ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'stock-adjustments' && request()->segment(2) == null]
                             );
                         }
-                        if (auth()->user()->can('purchase.view')) {
-                            $sub->url(
-                                action('ProductController@productStockHistory',$id=1),
-                                " تقرير  حركه المخزون",
-                                ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'stock-adjustments' && request()->segment(2) == null]
-                            );
-                        }
+                        // if (auth()->user()->can('purchase.view')) {
+                        //     $sub->url(
+                        //         action('ProductController@productStockHistory',$id=1),
+                        //         " تقرير  حركه المخزون",
+                        //         ['icon' => 'fa fas fa-list', 'active' => request()->segment(1) == 'stock-adjustments' && request()->segment(2) == null]
+                        //     );
+                        // }
                         if (auth()->user()->can('purchase.view')) {
                             $sub->url(
                                 action('ProductController@reportindex1'),

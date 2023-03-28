@@ -1,8 +1,8 @@
 <?php
 //#    "remotePath": "public_html/officially_magnetic_v2/",
-$dbname = 'qwnukwnp_dev3';
-$dbuser = 'qwnukwnp_dev3';
-$dbpass = 'qwnukwnp_dev3';
+$dbname = 'test';
+$dbuser = 'root';
+$dbpass = '';
 $dbhost = 'localhost';
 $connect = mysqli_connect($dbhost, $dbuser, $dbpass,$dbname) or die("Unable to connect to '$dbhost'");
 
@@ -69,6 +69,7 @@ $changes=[
 "ALTER TABLE `business` ADD `ApprovalStatus` INT(10) NULL DEFAULT '0' AFTER `deliveryStatus`",
 "CREATE TABLE  transactions_approved (`id` INT NOT NULL AUTO_INCREMENT , `transaction_id` INT(159) NOT NULL , `status` INT(159) NOT NULL DEFAULT '1' , PRIMARY KEY (`id`)) ENGINE = InnoDB",
 "ALTER TABLE `invoice_schemes` ADD `description` INT NULL DEFAULT '0' AFTER `is_default`",
+"CREATE TABLE `custom_config` (`id` INT NOT NULL AUTO_INCREMENT , `product_id` INT(250) NULL , `status` INT(250) NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB",
 ];
 foreach($changes as $change){
     echo "\n";
